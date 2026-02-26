@@ -204,6 +204,62 @@
         }
         .inquiry-box h3 { font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 6px; }
 
+        /* ── PADLOCK 게임 ── */
+        .padlock-game {
+            background: #f0faf0; border: 1.5px solid #8cc68c;
+            border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
+        }
+        .padlock-game h3 {
+            font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .padlock-desc { font-size: 13px; color: #555; margin-bottom: 10px; }
+        .padlock-stats { text-align: center; font-size: 13px; color: #666; margin-bottom: 10px; }
+        .padlock-board { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 12px; }
+        .plk-row { display: flex; gap: 6px; }
+        .plk-tile {
+            width: 44px; height: 44px; border: 2px solid #d0d0d0; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 700; background: #fff; color: #333;
+            transition: all 0.3s;
+        }
+        .plk-tile.correct { background: #6aaa64; border-color: #6aaa64; color: #fff; }
+        .plk-tile.present { background: #c9b458; border-color: #c9b458; color: #fff; }
+        .plk-tile.absent  { background: #787c7e; border-color: #787c7e; color: #fff; }
+        .padlock-input { display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+        .padlock-input.active { display: flex; }
+        .padlock-digits { display: flex; gap: 6px; }
+        .plk-cell {
+            width: 44px; height: 44px; border: 2px solid #4a90d9; border-radius: 8px;
+            text-align: center; font-size: 22px; font-weight: 700; font-family: inherit; outline: none;
+            -webkit-appearance: none; appearance: none;
+        }
+        .plk-cell:focus { border-color: #2c3e50; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
+        .plk-submit {
+            background: #4a90d9; color: #fff; border: none; border-radius: 8px;
+            padding: 10px 20px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+        }
+        .plk-submit:disabled { opacity: 0.4; cursor: default; }
+        .padlock-keypad { display: none; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 10px; max-width: 260px; margin-left: auto; margin-right: auto; }
+        .padlock-keypad.active { display: flex; }
+        .plk-key {
+            width: 42px; height: 42px; border: 1.5px solid #ccc; border-radius: 8px;
+            background: #fff; font-size: 18px; font-weight: 600; cursor: pointer; font-family: inherit;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .plk-key:active { background: #e8e8e8; }
+        .plk-key.del { width: 66px; font-size: 13px; font-weight: 700; }
+        .plk-start {
+            display: block; margin: 0 auto; background: #2d7a2d; color: #fff; border: none;
+            border-radius: 8px; padding: 10px 28px; font-size: 15px; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+        }
+        .plk-start.retry { background: #e67e22; }
+        .plk-start.hide { display: none; }
+        .padlock-result { text-align: center; font-size: 14px; font-weight: 600; margin-top: 8px; min-height: 20px; }
+        .padlock-result.win { color: #2d7a2d; }
+        .padlock-result.lose { color: #e74c3c; }
+
         /* ── 문제 ── */
         .problem { margin-bottom: 16px; }
         .problem-label {
@@ -385,12 +441,47 @@
         .example-header {
             background: #2c3e50;
             color: #fff;
-            padding: 7px 14px;
+            padding: 8px 14px;
             font-weight: 700;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .example-content { padding: 12px 16px; }
+        .example-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 1px 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+        .example-title {
+            font-size: 14px;
+            opacity: 0.92;
+        }
+        .example-content {
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e8ecf0;
+        }
         .example-content p { font-size: 14px; margin-bottom: 4px; }
+        .example-solution {
+            padding: 14px 16px;
+            background: #fff;
+        }
+        .solution-label {
+            font-size: 11px;
+            color: #6fa3d4;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .example-solution p {
+            font-size: 14px;
+            margin-bottom: 5px;
+            line-height: 1.7;
+        }
 
         /* ── 풀이 ── */
         .solution {
@@ -929,17 +1020,37 @@
             <h2>중복순열이란 무엇일까?</h2>
         </div>
 
-        <div class="inquiry-box">
-            <h3>탐구 열기</h3>
-            <p>자전거 잠금장치의 비밀번호를 설정하려고 한다. 0부터 9까지의 숫자 중에서 세 자리 비밀번호를 만들 수 있는 경우의 수를 구해 보자.</p>
-            <div class="writing-area" data-h="104"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                        <div class="answer-reveal">
-                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                <div class="answer-content">
-                    <div class="ans-label">정답</div>
-                    각 자리마다 0~9의 10가지 &rarr; \(10 \times 10 \times 10 = \boldsymbol{1000}\)
-                </div>
+        <div class="padlock-game" id="padlockGame">
+            <h3><span class="badge">탐구</span> 자물쇠를 풀어라!</h3>
+            <p class="padlock-desc">0~9로 이루어진 4자리 비밀번호를 5회 안에 맞혀 보세요.</p>
+            <div class="padlock-stats">
+                성공 <b id="plkWin">0</b> / 시도 <b id="plkTotal">0</b>
             </div>
+            <div class="padlock-board" id="plkBoard"></div>
+            <div class="padlock-input" id="plkInput">
+                <div class="padlock-digits" id="plkDigits">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="0">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="1">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="2">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="3">
+                </div>
+                <button class="plk-submit" id="plkSubmit">확인</button>
+            </div>
+            <div class="padlock-keypad" id="plkKeypad">
+                <button class="plk-key" data-key="1">1</button>
+                <button class="plk-key" data-key="2">2</button>
+                <button class="plk-key" data-key="3">3</button>
+                <button class="plk-key" data-key="4">4</button>
+                <button class="plk-key" data-key="5">5</button>
+                <button class="plk-key" data-key="6">6</button>
+                <button class="plk-key" data-key="7">7</button>
+                <button class="plk-key" data-key="8">8</button>
+                <button class="plk-key" data-key="9">9</button>
+                <button class="plk-key" data-key="0">0</button>
+                <button class="plk-key del" data-key="del">&#9003; 삭제</button>
+            </div>
+            <button class="plk-start" id="plkStart">시작</button>
+            <div class="padlock-result" id="plkResult"></div>
         </div>
 
         <div class="concept-box highlight">
@@ -999,11 +1110,9 @@
             </div>
         </div>
         <div class="problem">
-            <div class="problem-number">1</div>
-            <div class="problem-content">
-                <p>다음 중복순열의 수를 구하시오.</p>
+            <div class="problem-label"><span class="p-num">문제 1</span> 다음 중복순열의 수를 구하시오.</div>
 
-                <p style="margin-top:8px;">⑴ \({}_{6}\Pi_{3}\)</p>
+                <div class="sub-problem"><span class="num">⑴</span> \({}_{6}\Pi_{3}\)</div>
                 <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1013,7 +1122,7 @@
                     </div>
                 </div>
 
-                <p style="margin-top:8px;">⑵ \({}_{4}\Pi_{4}\)</p>
+                <div class="sub-problem"><span class="num">⑵</span> \({}_{4}\Pi_{4}\)</div>
                 <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1023,7 +1132,7 @@
                     </div>
                 </div>
 
-                <p style="margin-top:8px;">⑶ \({}_{7}\Pi_{2}\)</p>
+                <div class="sub-problem"><span class="num">⑶</span> \({}_{7}\Pi_{2}\)</div>
                 <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1033,7 +1142,6 @@
                     </div>
                 </div>
 
-            </div>
         </div>
     </div>
 
@@ -1044,9 +1152,7 @@
         </div>
 
         <div class="problem">
-            <div class="problem-number">2</div>
-            <div class="problem-content">
-                <p>바이올린과 피아노 중 하나를 택하여 매일 하나의 악기만 연습하기로 할 때, 7일 동안의 연습 계획을 세우는 경우의 수를 구하시오.</p>
+            <div class="problem-label"><span class="p-num">문제 2</span> 바이올린과 피아노 중 하나를 택하여 매일 하나의 악기만 연습하기로 할 때, 7일 동안의 연습 계획을 세우는 경우의 수를 구하시오.</div>
                 <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1056,7 +1162,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="example-box">
             <div class="example-header">
@@ -1093,11 +1198,9 @@
 
         <hr class="divider">
         <div class="problem">
-            <div class="problem-number">3</div>
-            <div class="problem-content">
-                <p>0부터 9까지의 숫자를 사용하여 네 자리 비밀번호를 만들려고 한다.</p>
+            <div class="problem-label"><span class="p-num">문제 3</span> 0부터 9까지의 숫자를 사용하여 네 자리 비밀번호를 만들려고 한다.</div>
 
-                <p style="margin-top:8px;">⑴ 만들 수 있는 비밀번호의 수를 구하시오.</p>
+                <div class="sub-problem"><span class="num">⑴</span> 만들 수 있는 비밀번호의 수를 구하시오.</div>
                 <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1107,7 +1210,7 @@
                     </div>
                 </div>
 
-                <p style="margin-top:8px;">⑵ 첫째 자리가 홀수인 비밀번호의 수를 구하시오.</p>
+                <div class="sub-problem"><span class="num">⑵</span> 첫째 자리가 홀수인 비밀번호의 수를 구하시오.</div>
                 <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1117,16 +1220,13 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <hr class="divider">
 
         <div class="problem">
-            <div class="problem-number">4</div>
-            <div class="problem-content">
-                <p>5명의 학생이 방송반 또는 댄스반 중 하나에 가입하려고 한다.</p>
+            <div class="problem-label"><span class="p-num">문제 4</span> 5명의 학생이 방송반 또는 댄스반 중 하나에 가입하려고 한다.</div>
 
-                <p style="margin-top:8px;">⑴ 5명이 반에 가입하는 경우의 수를 구하시오.</p>
+                <div class="sub-problem"><span class="num">⑴</span> 5명이 반에 가입하는 경우의 수를 구하시오.</div>
                 <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1136,7 +1236,7 @@
                     </div>
                 </div>
 
-                <p style="margin-top:8px;">⑵ 각 반에 적어도 1명 이상이 가입하는 경우의 수를 구하시오.</p>
+                <div class="sub-problem"><span class="num">⑵</span> 각 반에 적어도 1명 이상이 가입하는 경우의 수를 구하시오.</div>
                 <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
                                 <div class="answer-reveal">
                     <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
@@ -1145,41 +1245,6 @@
                         전체 &minus; (한 반에 몰리는 경우) = \(32 - 2 = \boldsymbol{30}\)
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="section-title">
-            <div class="section-number">3</div>
-            <h2>중복순열 공식 정리</h2>
-        </div>
-        <p style="font-size:13px; color:#888; margin-bottom:10px;">카드를 탭하면 값을 확인할 수 있습니다.</p>
-        <div class="formula-flip-grid">
-            <div class="formula-flip"><div class="ff-inner">
-                <div class="ff-front">\({}_{3}\Pi_{2}\)</div>
-                <div class="ff-back">\(3^{2} = 9\)</div>
-            </div></div>
-            <div class="formula-flip"><div class="ff-inner">
-                <div class="ff-front">\({}_{2}\Pi_{5}\)</div>
-                <div class="ff-back">\(2^{5} = 32\)</div>
-            </div></div>
-            <div class="formula-flip"><div class="ff-inner">
-                <div class="ff-front">\({}_{4}\Pi_{3}\)</div>
-                <div class="ff-back">\(4^{3} = 64\)</div>
-            </div></div>
-            <div class="formula-flip"><div class="ff-inner">
-                <div class="ff-front">\({}_{10}\Pi_{2}\)</div>
-                <div class="ff-back">\(10^{2} = 100\)</div>
-            </div></div>
-            <div class="formula-flip"><div class="ff-inner">
-                <div class="ff-front">\({}_{n}\Pi_{r}\)</div>
-                <div class="ff-back">\(n^{r}\)</div>
-            </div></div>
-            <div class="formula-flip"><div class="ff-inner">
-                <div class="ff-front">\({}_{2}\Pi_{10}\)</div>
-                <div class="ff-back">\(2^{10} = 1024\)</div>
-            </div></div>
         </div>
     </div>
 
@@ -1795,7 +1860,182 @@ document.getElementById('recordsList').addEventListener('click', function(e) {
     }
 });
 
-const simRepPerm = new StepSimulation('simRepPerm');
+var simRepPerm = new StepSimulation('simRepPerm');
+
+// ── PADLOCK 게임 ──
+(function() {
+    var MAX_TRIES = 5;
+    var board = document.getElementById('plkBoard');
+    var input = document.getElementById('plkInput');
+    var keypad = document.getElementById('plkKeypad');
+    var startBtn = document.getElementById('plkStart');
+    var submitBtn = document.getElementById('plkSubmit');
+    var resultEl = document.getElementById('plkResult');
+    var winEl = document.getElementById('plkWin');
+    var totalEl = document.getElementById('plkTotal');
+    if (!board) return;
+
+    var answer = '';
+    var currentRow = 0;
+    var wins = 0;
+    var total = 0;
+    var playing = false;
+    var cells = document.querySelectorAll('.plk-cell');
+
+    // 보드 생성 (5행 × 4칸)
+    for (var r = 0; r < MAX_TRIES; r++) {
+        var row = document.createElement('div');
+        row.className = 'plk-row';
+        for (var c = 0; c < 4; c++) {
+            var tile = document.createElement('div');
+            tile.className = 'plk-tile';
+            tile.dataset.row = r;
+            tile.dataset.col = c;
+            row.appendChild(tile);
+        }
+        board.appendChild(row);
+    }
+
+    // 키패드 이벤트
+    keypad.addEventListener('click', function(e) {
+        var key = e.target.closest('.plk-key');
+        if (!key || !playing) return;
+        var val = key.dataset.key;
+        if (val === 'del') {
+            // 마지막 채워진 셀 비우기
+            for (var i = 3; i >= 0; i--) {
+                if (cells[i].value !== '') { cells[i].value = ''; cells[i].focus(); break; }
+            }
+        } else {
+            // 첫 번째 빈 셀에 입력
+            for (var i = 0; i < 4; i++) {
+                if (cells[i].value === '') {
+                    cells[i].value = val;
+                    if (i < 3) cells[i + 1].focus();
+                    break;
+                }
+            }
+        }
+    });
+
+    // 셀 입력 이벤트 (직접 타이핑 지원)
+    cells.forEach(function(cell, idx) {
+        cell.addEventListener('input', function() {
+            var v = cell.value.replace(/[^0-9]/g, '');
+            cell.value = v.slice(-1);
+            if (v && idx < 3) cells[idx + 1].focus();
+        });
+        cell.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && cell.value === '' && idx > 0) {
+                cells[idx - 1].focus();
+            }
+            if (e.key === 'Enter') doSubmit();
+        });
+    });
+
+    function getGuess() {
+        var g = '';
+        cells.forEach(function(c) { g += c.value; });
+        return g;
+    }
+
+    function evaluate(guess, ans) {
+        var result = ['absent', 'absent', 'absent', 'absent'];
+        var ansArr = ans.split('');
+        var gArr = guess.split('');
+        var used = [false, false, false, false];
+        // 1차: correct
+        for (var i = 0; i < 4; i++) {
+            if (gArr[i] === ansArr[i]) {
+                result[i] = 'correct';
+                used[i] = true;
+                gArr[i] = null;
+            }
+        }
+        // 2차: present
+        for (var i = 0; i < 4; i++) {
+            if (gArr[i] === null) continue;
+            for (var j = 0; j < 4; j++) {
+                if (!used[j] && gArr[i] === ansArr[j]) {
+                    result[i] = 'present';
+                    used[j] = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    function doSubmit() {
+        if (!playing) return;
+        var guess = getGuess();
+        if (guess.length !== 4) return;
+
+        var result = evaluate(guess, answer);
+        var tiles = board.querySelectorAll('.plk-row')[currentRow].querySelectorAll('.plk-tile');
+        for (var i = 0; i < 4; i++) {
+            tiles[i].textContent = guess[i];
+            tiles[i].className = 'plk-tile ' + result[i];
+        }
+
+        // 정답 체크
+        if (guess === answer) {
+            wins++;
+            winEl.textContent = wins;
+            resultEl.textContent = '정답! 비밀번호는 ' + answer + ' 입니다.';
+            resultEl.className = 'padlock-result win';
+            endRound();
+            return;
+        }
+
+        currentRow++;
+        if (currentRow >= MAX_TRIES) {
+            resultEl.textContent = '실패! 정답은 ' + answer + ' 이었습니다.';
+            resultEl.className = 'padlock-result lose';
+            endRound();
+            return;
+        }
+
+        // 다음 시도 준비
+        cells.forEach(function(c) { c.value = ''; });
+        cells[0].focus();
+    }
+
+    function endRound() {
+        playing = false;
+        input.classList.remove('active');
+        keypad.classList.remove('active');
+        startBtn.textContent = '다시 하기';
+        startBtn.classList.add('retry');
+        startBtn.classList.remove('hide');
+    }
+
+    function startGame() {
+        total++;
+        totalEl.textContent = total;
+        answer = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+        currentRow = 0;
+        playing = true;
+
+        // 보드 초기화
+        board.querySelectorAll('.plk-tile').forEach(function(t) {
+            t.textContent = '';
+            t.className = 'plk-tile';
+        });
+
+        cells.forEach(function(c) { c.value = ''; });
+        resultEl.textContent = '';
+        resultEl.className = 'padlock-result';
+
+        input.classList.add('active');
+        keypad.classList.add('active');
+        startBtn.classList.add('hide');
+        cells[0].focus();
+    }
+
+    submitBtn.addEventListener('click', doSubmit);
+    startBtn.addEventListener('click', startGame);
+})();
 
 // ── KaTeX auto-render ──
 if (typeof renderMathInElement === 'function') {
