@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>중복순열</title>
+    <title>같은 것이 있는 순열 — 수업 슬라이드</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
@@ -180,6 +180,63 @@
         .concept-box ul { padding-left: 20px; }
         .concept-box ul li { margin-bottom: 3px; }
 
+        /* ── 격자 경로 시뮬레이션 ── */
+        .grid-path-sim {
+            background: #f0f5fa; border: 1.5px solid #6fa3d4;
+            border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
+        }
+        .grid-path-sim h3 {
+            font-size: 15px; font-weight: 700; color: #2c3e50; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .gps-stage { margin-top: 10px; }
+        .gps-instruction { font-size: 14px; margin-bottom: 10px; }
+        .gps-svg-wrap { display: flex; justify-content: center; margin: 8px 0; }
+        .gps-svg-wrap svg { touch-action: none; }
+        .gps-answer-row {
+            display: flex; align-items: center; gap: 6px;
+            justify-content: center; margin: 12px 0; font-size: 14px;
+        }
+        .gps-answer-row input {
+            width: 50px; height: 36px; border: 2px solid #6fa3d4; border-radius: 6px;
+            text-align: center; font-size: 16px; font-weight: 700; font-family: inherit; outline: none;
+        }
+        .gps-answer-row input:focus { border-color: #2c3e50; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
+        .gps-check {
+            background: #4a90d9; color: #fff; border: none; border-radius: 6px;
+            padding: 6px 14px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+        }
+        .gps-feedback { text-align: center; font-size: 14px; font-weight: 600; min-height: 20px; margin: 6px 0; }
+        .gps-feedback.correct { color: #2d7a2d; }
+        .gps-feedback.wrong { color: #e74c3c; }
+        .gps-next-btn {
+            display: block; margin: 8px auto 0; background: #4a90d9; color: #fff;
+            border: none; border-radius: 8px; padding: 8px 20px; font-size: 14px;
+            font-weight: 600; cursor: pointer; font-family: inherit;
+        }
+        .gps-next-btn:disabled { opacity: 0.4; cursor: default; }
+        .gps-path-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 8px; max-width: 420px; margin: 12px auto;
+        }
+        .gps-mini { text-align: center; }
+        .gps-mini svg { width: 100%; max-width: 120px; }
+        .gps-mini-label { font-size: 12px; color: #555; margin-top: 2px; font-weight: 600; }
+        .gps-decompose {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 12px 0;
+        }
+        .gps-decompose-item { text-align: center; background: #fff; border-radius: 8px; padding: 8px 10px; border: 1px solid #d0d8e0; }
+        .gps-decompose-item .label { font-size: 11px; color: #888; margin-bottom: 4px; }
+        .gps-decompose-item .segs { font-size: 15px; font-weight: 700; }
+        .gps-decompose-item .segs .h-seg { color: #E74C3C; }
+        .gps-decompose-item .segs .v-seg { color: #2980B9; }
+        .gps-insight {
+            background: #fff; border: 2px solid #6fa3d4; border-radius: 10px;
+            padding: 14px 16px; margin-top: 12px; text-align: center;
+        }
+        .gps-insight p { font-size: 14px; line-height: 1.8; margin-bottom: 4px; }
+        .gps-insight .highlight-text { font-size: 16px; font-weight: 700; color: #2c3e50; }
+
         /* ── 공식 ── */
         .formula {
             background: #fff;
@@ -203,62 +260,6 @@
             margin-bottom: 14px;
         }
         .inquiry-box h3 { font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 6px; }
-
-        /* ── PADLOCK 게임 ── */
-        .padlock-game {
-            background: #f0faf0; border: 1.5px solid #8cc68c;
-            border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
-        }
-        .padlock-game h3 {
-            font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 4px;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .padlock-desc { font-size: 13px; color: #555; margin-bottom: 10px; }
-        .padlock-stats { text-align: center; font-size: 13px; color: #666; margin-bottom: 10px; }
-        .padlock-board { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 12px; }
-        .plk-row { display: flex; gap: 6px; }
-        .plk-tile {
-            width: 44px; height: 44px; border: 2px solid #d0d0d0; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: 700; background: #fff; color: #333;
-            transition: all 0.3s;
-        }
-        .plk-tile.correct { background: #6aaa64; border-color: #6aaa64; color: #fff; }
-        .plk-tile.present { background: #c9b458; border-color: #c9b458; color: #fff; }
-        .plk-tile.absent  { background: #787c7e; border-color: #787c7e; color: #fff; }
-        .padlock-input { display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
-        .padlock-input.active { display: flex; }
-        .padlock-digits { display: flex; gap: 6px; }
-        .plk-cell {
-            width: 44px; height: 44px; border: 2px solid #4a90d9; border-radius: 8px;
-            text-align: center; font-size: 22px; font-weight: 700; font-family: inherit; outline: none;
-            -webkit-appearance: none; appearance: none;
-        }
-        .plk-cell:focus { border-color: #2c3e50; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
-        .plk-submit {
-            background: #4a90d9; color: #fff; border: none; border-radius: 8px;
-            padding: 10px 20px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
-        }
-        .plk-submit:disabled { opacity: 0.4; cursor: default; }
-        .padlock-keypad { display: none; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 10px; max-width: 260px; margin-left: auto; margin-right: auto; }
-        .padlock-keypad.active { display: flex; }
-        .plk-key {
-            width: 42px; height: 42px; border: 1.5px solid #ccc; border-radius: 8px;
-            background: #fff; font-size: 18px; font-weight: 600; cursor: pointer; font-family: inherit;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .plk-key:active { background: #e8e8e8; }
-        .plk-key.del { width: 66px; font-size: 13px; font-weight: 700; }
-        .plk-start {
-            display: block; margin: 0 auto; background: #2d7a2d; color: #fff; border: none;
-            border-radius: 8px; padding: 10px 28px; font-size: 15px; font-weight: 700;
-            cursor: pointer; font-family: inherit;
-        }
-        .plk-start.retry { background: #e67e22; }
-        .plk-start.hide { display: none; }
-        .padlock-result { text-align: center; font-size: 14px; font-weight: 600; margin-top: 8px; min-height: 20px; }
-        .padlock-result.win { color: #2d7a2d; }
-        .padlock-result.lose { color: #e74c3c; }
 
         /* ── 문제 ── */
         .problem { margin-bottom: 16px; }
@@ -441,47 +442,12 @@
         .example-header {
             background: #2c3e50;
             color: #fff;
-            padding: 8px 14px;
+            padding: 7px 14px;
             font-weight: 700;
             font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        .example-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 1px 10px;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-        }
-        .example-title {
-            font-size: 14px;
-            opacity: 0.92;
-        }
-        .example-content {
-            padding: 14px 16px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e8ecf0;
-        }
+        .example-content { padding: 12px 16px; }
         .example-content p { font-size: 14px; margin-bottom: 4px; }
-        .example-solution {
-            padding: 14px 16px;
-            background: #fff;
-        }
-        .solution-label {
-            font-size: 11px;
-            color: #6fa3d4;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        .example-solution p {
-            font-size: 14px;
-            margin-bottom: 5px;
-            line-height: 1.7;
-        }
 
         /* ── 풀이 ── */
         .solution {
@@ -974,6 +940,70 @@
             .canvas-toolbar .pen-sizes { gap: 3px; }
             .canvas-toolbar .pen-size { width: 20px; height: 20px; }
         }
+
+/* ═══════════ SLIDE LAYOUT ═══════════ */
+body { font-size: clamp(16px, 1.4vw, 26px); overflow: hidden; height: 100vh; height: 100dvh; background: #f0f2f5; }
+.container { display: none; }
+.slide-deck { width: 100vw; height: 100vh; height: 100dvh; position: relative; }
+.slide {
+    display: none; position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    justify-content: center; align-items: center;
+    padding: clamp(20px, 3vw, 40px) clamp(16px, 4vw, 60px) clamp(60px, 6vw, 80px) clamp(16px, 4vw, 60px);
+}
+.slide.active { display: flex; }
+.slide-content {
+    max-width: clamp(600px, 75vw, 1300px); width: 100%; max-height: 100%;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: clamp(20px, 2.5vw, 42px) clamp(24px, 3vw, 52px);
+}
+.title-slide {
+    text-align: center; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; min-height: 400px;
+}
+.title-unit { background: #2c3e50; color: #fff; padding: 6px 24px; border-radius: 20px; font-weight: 700; font-size: clamp(14px, 1.1vw, 20px); margin-bottom: 20px; }
+.title-main { font-size: clamp(22px, 2.2vw, 40px); font-weight: 800; color: #2c3e50; margin-bottom: 16px; line-height: 1.4; }
+.title-meta span { background: #f0f0f0; padding: 4px 14px; border-radius: 6px; font-size: 14px; color: #555; }
+.title-achievement { margin-top: 24px; background: #eef3f8; border-left: 4px solid #2c3e50; padding: 12px 18px; border-radius: 0 8px 8px 0; font-size: clamp(14px, 1.1vw, 22px); text-align: left; max-width: 600px; }
+.section-header-slide {
+    text-align: center; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; min-height: 300px;
+}
+.section-header-slide .section-number {
+    background: #2c3e50; color: #fff; width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: clamp(20px, 1.6vw, 30px); margin-bottom: 16px;
+}
+.section-header-slide h2 { font-size: clamp(22px, 2vw, 36px); font-weight: 700; color: #2c3e50; }
+.slide-nav {
+    position: fixed; bottom: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(44,62,80,0.9); padding: 8px 20px; border-radius: 30px;
+    z-index: 100; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.nav-btn {
+    background: none; border: none; color: #fff;
+    font-size: 18px; cursor: pointer; padding: 6px 12px; border-radius: 6px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.15); }
+.nav-btn:disabled { opacity: 0.3; }
+.slide-counter { color: #fff; font-size: 14px; font-weight: 600; min-width: 60px; text-align: center; }
+.nav-fs { font-size: 16px; margin-left: 8px; }
+.slide-progress { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(0,0,0,0.05); z-index: 100; }
+.slide-progress-bar { height: 100%; background: #4a90d9; transition: width 0.3s ease; width: 0%; }
+.answer-content.revealed { max-height: 2000px !important; padding: 12px 14px !important; background: #f0f7ff; border: 1.5px solid #b3d4f0; border-radius: 8px; margin-top: 8px; display: block !important; opacity: 1; transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.3s ease; }
+.answer-toggle { display: none !important; }
+.writing-area, .canvas-toolbar { display: none !important; }
+.student-info, .save-actions, .global-answer-btn, .records-overlay { display: none !important; }
+@media (max-width: 768px) {
+    .slide { padding: 20px 16px 70px 16px; }
+    .slide-content { padding: 20px 18px; border-radius: 12px; }
+    body { font-size: 16px; }
+    .title-main { font-size: 22px; }
+}
     </style>
 <!-- KaTeX v0.16.33 (inline with base64 fonts) -->
 <style id="katex-css">
@@ -987,788 +1017,359 @@
 !function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t(require("katex")):"function"==typeof define&&define.amd?define(["katex"],t):"object"==typeof exports?exports.renderMathInElement=t(require("katex")):e.renderMathInElement=t(e.katex)}("undefined"!=typeof self?self:this,function(e){return function(){"use strict";var t={757:function(t){t.exports=e}},n={};function r(e){var o=n[e];if(void 0!==o)return o.exports;var i=n[e]={exports:{}};return t[e](i,i.exports,r),i.exports}r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,{a:t}),t},r.d=function(e,t){for(var n in t)r.o(t,n)&&!r.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)};var o={};r.d(o,{default:function(){return p}});var i=r(757),a=r.n(i);const l=function(e,t,n){let r=n,o=0;const i=e.length;for(;r<t.length;){const n=t[r];if(o<=0&&t.slice(r,r+i)===e)return r;"\\"===n?r++:"{"===n?o++:"}"===n&&o--,r++}return-1},s=/^\\begin{/;var d=function(e,t){let n;const r=[],o=new RegExp("("+t.map(e=>e.left.replace(/[-/\\^$*+?.()|[\]{}]/g,"\\$&")).join("|")+")");for(;n=e.search(o),-1!==n;){n>0&&(r.push({type:"text",data:e.slice(0,n)}),e=e.slice(n));const o=t.findIndex(t=>e.startsWith(t.left));if(n=l(t[o].right,e,t[o].left.length),-1===n)break;const i=e.slice(0,n+t[o].right.length),a=s.test(i)?i:e.slice(t[o].left.length,n);r.push({type:"math",data:a,rawData:i,display:t[o].display}),e=e.slice(n+t[o].right.length)}return""!==e&&r.push({type:"text",data:e}),r};const c=function(e,t){const n=d(e,t.delimiters);if(1===n.length&&"text"===n[0].type)return null;const r=document.createDocumentFragment();for(let e=0;e<n.length;e++)if("text"===n[e].type)r.appendChild(document.createTextNode(n[e].data));else{const o=document.createElement("span");let i=n[e].data;t.displayMode=n[e].display;try{t.preProcess&&(i=t.preProcess(i)),a().render(i,o,t)}catch(o){if(!(o instanceof a().ParseError))throw o;t.errorCallback("KaTeX auto-render: Failed to parse `"+n[e].data+"` with ",o),r.appendChild(document.createTextNode(n[e].rawData));continue}r.appendChild(o)}return r},f=function(e,t){for(let n=0;n<e.childNodes.length;n++){const r=e.childNodes[n];if(3===r.nodeType){let o=r.textContent,i=r.nextSibling,a=0;for(;i&&i.nodeType===Node.TEXT_NODE;)o+=i.textContent,i=i.nextSibling,a++;const l=c(o,t);if(l){for(let e=0;e<a;e++)r.nextSibling.remove();n+=l.childNodes.length-1,e.replaceChild(l,r)}else n+=a}else if(1===r.nodeType){const e=" "+r.className+" ";!t.ignoredTags.has(r.nodeName.toLowerCase())&&t.ignoredClasses.every(t=>!e.includes(" "+t+" "))&&f(r,t)}}};var p=function(e,t){if(!e)throw new Error("No element provided to render");const n={};for(const e in t)t.hasOwnProperty(e)&&(n[e]=t[e]);n.delimiters=n.delimiters||[{left:"$$",right:"$$",display:!0},{left:"\\(",right:"\\)",display:!1},{left:"\\begin{equation}",right:"\\end{equation}",display:!0},{left:"\\begin{align}",right:"\\end{align}",display:!0},{left:"\\begin{alignat}",right:"\\end{alignat}",display:!0},{left:"\\begin{gather}",right:"\\end{gather}",display:!0},{left:"\\begin{CD}",right:"\\end{CD}",display:!0},{left:"\\[",right:"\\]",display:!0}],n.ignoredTags=new Set(n.ignoredTags||["script","noscript","style","textarea","pre","code","option"]),n.ignoredClasses=n.ignoredClasses||[],n.errorCallback=n.errorCallback||console.error,n.macros=n.macros||{},f(e,n)};return o=o.default}()});
 </script>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
-  from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCnNvdo3ozcv3HC1ilMQX_fiwn_fpB5KCM",
-  authDomain: "math-high-cm1.firebaseapp.com",
-  projectId: "math-high-cm1",
-  storageBucket: "math-high-cm1.firebasestorage.app",
-  messagingSenderId: "1097512338605",
-  appId: "1:1097512338605:web:c8572e37781be52e9a7224"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const urlParams = new URLSearchParams(window.location.search);
-const classId = urlParams.get('class') || 'default';
-window._firebase = { auth, db, classId };
-
-function createLoginUI() {
-  var o = document.createElement('div');
-  o.id = 'fb-login-overlay';
-  var h = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99998;display:flex;align-items:center;justify-content:center;">';
-  h += '<div style="background:#fff;border-radius:16px;padding:32px;max-width:360px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2);">';
-  h += '<h2 style="margin-bottom:8px;font-size:20px;color:#2c3e50;">' + String.fromCodePoint(0x1F4DA) + ' \uc218\uc5c5 \ucc38\uc5ec</h2>';
-  h += '<p style="color:#666;font-size:14px;margin-bottom:20px;">\ud559\uc2b5\uc9c0\ub97c \uc0ac\uc6a9\ud558\ub824\uba74 \ub85c\uadf8\uc778\ud558\uc138\uc694.</p>';
-  h += '<button id="fb-google-login" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;background:#fff;cursor:pointer;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;">';
-  h += '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20"> Google\ub85c \ub85c\uadf8\uc778</button>';
-  h += '</div></div>';
-  o.innerHTML = h;
-  document.body.appendChild(o);
-  document.getElementById('fb-google-login').addEventListener('click', async function() {
-    try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
-  });
-}
-
-function setupFocusListener() {
-  var classRef = doc(db, 'classrooms', classId);
-  var banner = null;
-  onSnapshot(classRef, function(snap) {
-    var data = snap.data();
-    if (!data || data.focusSection === undefined) return;
-    var idx = data.focusSection;
-    var cards = document.querySelectorAll('.card');
-    if (idx >= 0 && idx < cards.length) {
-      cards[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (!banner) {
-        banner = document.createElement('div');
-        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:600;z-index:9999;transform:translateY(-100%);transition:transform .3s ease;box-shadow:0 2px 12px rgba(0,0,0,.2);';
-        document.body.appendChild(banner);
-      }
-      var h2 = cards[idx].querySelector('.section-title h2');
-      banner.textContent = String.fromCodePoint(0x1F4CC) + ' \uc120\uc0dd\ub2d8\uc774 "' + (h2 ? h2.textContent : '\uc139\uc158 ' + (idx+1)) + '" \uc73c\ub85c \uc774\ub3d9\uc2dc\ucf30\uc2b5\ub2c8\ub2e4';
-      banner.style.transform = 'translateY(0)';
-      setTimeout(function() { banner.style.transform = 'translateY(-100%)'; }, 4000);
-    }
-  });
-}
-
-async function registerStudent(user) {
-  await setDoc(doc(db, 'classrooms', classId, 'students', user.uid),
-    { name: user.displayName || '\ud559\uc0dd', email: user.email || null, online: true, lastSeen: serverTimestamp() },
-    { merge: true });
-}
-
-function showStatusBadge(user) {
-  var b = document.createElement('div');
-  b.style.cssText = 'position:fixed;top:8px;right:8px;background:#48bb78;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;z-index:9990;box-shadow:0 2px 8px rgba(0,0,0,.15);';
-  b.textContent = String.fromCodePoint(0x1F7E2) + ' ' + (user.displayName || user.email || '\ud559\uc0dd');
-  document.body.appendChild(b);
-}
-
-onAuthStateChanged(auth, async function(user) {
-  var ov = document.getElementById('fb-login-overlay');
-  if (user) {
-    if (ov) ov.remove();
-    await registerStudent(user);
-    showStatusBadge(user);
-    setupFocusListener();
-  } else {
-    if (!ov) createLoginUI();
-  }
-});
-</script>
-
 </head>
 <body>
 
-<div class="container">
+<div class="slide-deck" id="slideDeck">
 
-    <div class="header">
-        <div class="header-unit">Ⅰ. 경우의 수</div>
-        <div class="header-title">
-            <h1>1. 여러 가지 순열 &mdash; 중복순열</h1>
-            <div class="header-info"><span>교과서 11~13쪽</span></div>
+    <!-- Slide 0: Title -->
+    <section class="slide active" data-slide="0">
+        <div class="slide-content title-slide">
+            <div class="title-unit">Ⅰ. 경우의 수</div>
+            <div class="title-main">1. 여러 가지 순열 &mdash; 같은 것이 있는 순열</div>
+            <div class="title-meta"><span>교과서 14~15쪽</span></div>
+            <div class="title-achievement"><strong>성취기준</strong> &nbsp; 여러 가지 순열의 수를 구할 수 있다.</div>
         </div>
-    </div>
+    </section>
 
-    <div class="student-info">
-        <div class="save-actions">
-            <button class="btn-save" id="btnSave">💾 저장</button>
-            <button class="btn-records" id="btnRecords">📋 기록</button>
-        </div>
-        <div class="field"><label>학년 반</label> <input type="text" placeholder="예: 1-3"></div>
-        <div class="field"><label>번호</label> <input type="text" style="width:40px;" placeholder="00"></div>
-        <div class="field"><label>이름</label> <input type="text" placeholder="이름 입력"></div>
-    </div>
-
-    <div class="achievement">
-        <strong>성취기준</strong> &nbsp; 여러 가지 순열의 수를 구할 수 있다.
-    </div>
-
-    <div class="card">
-        <div class="section-title">
+    <!-- Slide 1: Section header -->
+    <section class="slide" data-slide="1">
+        <div class="slide-content section-header-slide">
             <div class="section-number">1</div>
-            <h2>중복순열이란 무엇일까?</h2>
+            <h2>같은 것이 있는 순열의 수는 어떻게 구할까?</h2>
         </div>
+    </section>
 
-        <div class="padlock-game" id="padlockGame">
-            <h3><span class="badge">탐구</span> 자물쇠를 풀어라!</h3>
-            <p class="padlock-desc">0~9로 이루어진 4자리 비밀번호를 5회 안에 맞혀 보세요.</p>
-            <div class="padlock-stats">
-                성공 <b id="plkWin">0</b> / 시도 <b id="plkTotal">0</b>
-            </div>
-            <div class="padlock-board" id="plkBoard"></div>
-            <div class="padlock-input" id="plkInput">
-                <div class="padlock-digits" id="plkDigits">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="0">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="1">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="2">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="3">
+    <!-- Slide 2: GridPathSim -->
+    <section class="slide" data-slide="2">
+        <div class="slide-content">
+        <div class="grid-path-sim" id="gridPathSim">
+            <h3><span class="badge">탐구</span> 격자 위의 최단 경로</h3>
+
+            <!-- 1단계: 경로 체험 + 정답 입력 -->
+            <div class="gps-stage" id="gpsStage1">
+                <p class="gps-instruction"><b>1단계</b> &nbsp; 아래 2&times;2 격자에서 A &rarr; B 최단 경로를 손으로 그려 보고, 총 몇 가지인지 맞혀 보세요.</p>
+                <div class="gps-svg-wrap">
+                    <svg id="gpsSvg1" viewBox="0 0 220 220" width="220" height="220" xmlns="http://www.w3.org/2000/svg" style="background:#fff; border-radius:8px; border:1px solid #d0d8e0;">
+                        <!-- 격자 선 -->
+                        <line x1="30" y1="30" x2="190" y2="30" stroke="#ddd" stroke-width="1"/>
+                        <line x1="30" y1="110" x2="190" y2="110" stroke="#ddd" stroke-width="1"/>
+                        <line x1="30" y1="190" x2="190" y2="190" stroke="#ddd" stroke-width="1"/>
+                        <line x1="30" y1="30" x2="30" y2="190" stroke="#ddd" stroke-width="1"/>
+                        <line x1="110" y1="30" x2="110" y2="190" stroke="#ddd" stroke-width="1"/>
+                        <line x1="190" y1="30" x2="190" y2="190" stroke="#ddd" stroke-width="1"/>
+                        <!-- 교차점 -->
+                        <circle cx="30" cy="30" r="4" fill="#ccc"/><circle cx="110" cy="30" r="4" fill="#ccc"/>
+                        <circle cx="190" cy="30" r="4" fill="#ccc"/><circle cx="30" cy="110" r="4" fill="#ccc"/>
+                        <circle cx="110" cy="110" r="4" fill="#ccc"/><circle cx="190" cy="110" r="4" fill="#ccc"/>
+                        <circle cx="30" cy="190" r="4" fill="#ccc"/><circle cx="110" cy="190" r="4" fill="#ccc"/>
+                        <circle cx="190" cy="190" r="4" fill="#ccc"/>
+                        <!-- A, B 표시 -->
+                        <circle cx="30" cy="190" r="8" fill="#E74C3C"/>
+                        <text x="10" y="212" font-size="14" fill="#E74C3C" font-weight="700" font-family="Pretendard,sans-serif">A</text>
+                        <circle cx="190" cy="30" r="8" fill="#2980B9"/>
+                        <text x="182" y="22" font-size="14" fill="#2980B9" font-weight="700" font-family="Pretendard,sans-serif">B</text>
+                        <!-- 드래그 경로 (JS로 그림) -->
+                        <g id="gpsDrawLayer"></g>
+                    </svg>
                 </div>
-                <button class="plk-submit" id="plkSubmit">확인</button>
-            </div>
-            <div class="padlock-keypad" id="plkKeypad">
-                <button class="plk-key" data-key="1">1</button>
-                <button class="plk-key" data-key="2">2</button>
-                <button class="plk-key" data-key="3">3</button>
-                <button class="plk-key" data-key="4">4</button>
-                <button class="plk-key" data-key="5">5</button>
-                <button class="plk-key" data-key="6">6</button>
-                <button class="plk-key" data-key="7">7</button>
-                <button class="plk-key" data-key="8">8</button>
-                <button class="plk-key" data-key="9">9</button>
-                <button class="plk-key" data-key="0">0</button>
-                <button class="plk-key del" data-key="del">&#9003; 삭제</button>
-            </div>
-            <button class="plk-start" id="plkStart">시작</button>
-            <div class="padlock-result" id="plkResult"></div>
-        </div>
-
-        <div class="concept-box highlight">
-            <h3><span class="badge">개념</span> 중복순열</h3>
-            <p>서로 다른 <b>n</b>개에서 <b>중복을 허용</b>하여 <b>r</b>개를 택하여 일렬로 나열하는 것을 <b>중복순열</b>이라 한다.</p>
-            <p style="margin-top:4px;">기호: \({}_{n}\Pi_{r}\)</p>
-            <div style="text-align:center; margin:12px 0; padding:12px 16px; background:#fff; border:2px solid #d4a853; border-radius:10px; font-size:18px;">
-                \({}_{n}\Pi_{r} = n^{r}\)
-            </div>
-            <div class="tip-box">순열(\({}_{n}\mathrm{P}_{r}\))은 중복 불허, 중복순열(\({}_{n}\Pi_{r}\))은 중복 허용</div>
-        </div>
-        <div class="step-simulation" id="simRepPerm">
-            <h3 style="font-size:14px; color:#2c3e50; margin-bottom:10px;"><span class="badge">비주얼 개념</span> 2개의 문자에서 중복순열</h3>
-
-            <div class="sim-step active" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <p style="margin-top:10px; font-size:13px; color:#555;">2개의 문자 {a, b}에서 중복을 허용하여 3개를 택해 나열하려면?</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <p style="margin-top:8px; font-size:13px; color:#555;"><b>Step 1:</b> 첫 번째 자리 &rarr; a 또는 b, 2가지</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#f0f5fa; border-radius:8px;"><b>2번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 = \) <b style="color:#E74C3C;">4</b>가지</div>
-                <p style="margin-top:8px; font-size:13px; color:#555;"><b>Step 2:</b> 두 번째 자리 &rarr; 첫 번째와 무관하게 a 또는 b, 누적 \(2 \times 2 = 4\)가지</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#f0f5fa; border-radius:8px;"><b>2번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 = \) <b style="color:#E74C3C;">4</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#fff3cd; border-radius:8px;"><b>3번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 \times 2 = \) <b style="color:#E74C3C;">8</b>가지</div>
-                <p style="margin-top:8px; font-size:13px; color:#555;"><b>Step 3:</b> 세 번째 자리 &rarr; 마찬가지로 2가지, 누적 \(2 \times 2 \times 2 = 8\)가지</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#f0f5fa; border-radius:8px;"><b>2번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 = \) <b style="color:#E74C3C;">4</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#fff3cd; border-radius:8px;"><b>3번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 \times 2 = \) <b style="color:#E74C3C;">8</b>가지</div>
-                <div style="margin-top:10px; padding:10px; background:#eafaf1; border:1.5px solid #27ae60; border-radius:8px;">
-                    \(\therefore {}_{2}\Pi_{3} = 2^{3} = \boldsymbol{8}\)<br>
-                    <span style="font-size:13px; color:#555;">aaa, aab, aba, abb, baa, bab, bba, bbb</span>
+                <p style="text-align:center; font-size:12px; color:#888; margin-top:2px;">격자 위를 터치하여 경로를 그려 보세요 (손을 떼면 사라집니다)</p>
+                <div class="gps-answer-row">
+                    <span>최단 경로는 총</span>
+                    <input type="number" id="gpsInput" min="1" max="99" inputmode="numeric">
+                    <span>가지</span>
+                    <button class="gps-check" id="gpsCheck">정답 확인</button>
                 </div>
-                <p style="margin-top:8px; font-size:13px; color:#555;">\({}_{2}\Pi_{3} = 2^{3} = 8\) &mdash; 모든 경우를 나열하면 aaa, aab, aba, abb, baa, bab, bba, bbb</p>
+                <div class="gps-feedback" id="gpsFeedback"></div>
+                <button class="gps-next-btn" id="gpsNextStage" disabled>다음 단계 &rarr;</button>
             </div>
 
+            <!-- 2단계: StepSimulation 스타일 -->
+            <div class="gps-stage" id="gpsStage2" style="display:none;">
+                <p class="gps-instruction"><b>2단계</b> &nbsp; 6가지 최단 경로를 하나씩 살펴봅시다.</p>
+                <div id="gpsSteps">
+                    <!-- Step 0~5: 각 경로 -->
+                    <div class="sim-step active" data-step="0">
+                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 1: <span style="color:#E74C3C;">&rarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#2980B9;">&uarr;</span></div>
+                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 90,160 160,160 160,90 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="sim-step" data-step="1">
+                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 2: <span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span></div>
+                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 90,160 90,90 160,90 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="sim-step" data-step="2">
+                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 3: <span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span></div>
+                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 90,160 90,90 90,20 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="sim-step" data-step="3">
+                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 4: <span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span></div>
+                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 20,90 90,90 160,90 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="sim-step" data-step="4">
+                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 5: <span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span></div>
+                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 20,90 90,90 90,20 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="sim-step" data-step="5">
+                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 6: <span style="color:#2980B9;">&uarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#E74C3C;">&rarr;</span></div>
+                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 20,90 20,20 90,20 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <!-- Step 6: 세그먼트 분해 -->
+                    <div class="sim-step" data-step="6">
+                        <div style="text-align:center; font-size:14px; margin-bottom:8px; font-weight:600; color:#2c3e50;">6가지 경로의 구성 요소</div>
+                        <div class="gps-decompose">
+                            <div class="gps-decompose-item"><div class="label">경로 1</div><div class="segs"><span class="h-seg">&rarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="v-seg">&uarr;</span></div></div>
+                            <div class="gps-decompose-item"><div class="label">경로 2</div><div class="segs"><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span></div></div>
+                            <div class="gps-decompose-item"><div class="label">경로 3</div><div class="segs"><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span></div></div>
+                            <div class="gps-decompose-item"><div class="label">경로 4</div><div class="segs"><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span></div></div>
+                            <div class="gps-decompose-item"><div class="label">경로 5</div><div class="segs"><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span></div></div>
+                            <div class="gps-decompose-item"><div class="label">경로 6</div><div class="segs"><span class="v-seg">&uarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="h-seg">&rarr;</span></div></div>
+                        </div>
+                        <p style="text-align:center; font-size:14px; margin-top:8px;">모든 경로는 <b style="color:#E74C3C;">&rarr; 2개</b>와 <b style="color:#2980B9;">&uarr; 2개</b>로 이루어져 있습니다!</p>
+                    </div>
+                    <!-- Step 7: 사고 유발 -->
+                    <div class="sim-step" data-step="7">
+                        <div class="gps-insight">
+                            <p>2&times;2 격자의 최단 경로는</p>
+                            <p>모두 <b style="color:#E74C3C;">&rarr; 2개</b>와 <b style="color:#2980B9;">&uarr; 2개</b>로 이루어져 있습니다.</p>
+                            <p style="margin-top:10px;" class="highlight-text">"최단 경로의 가짓수 = <span style="color:#E74C3C;">&rarr;</span>, <span style="color:#E74C3C;">&rarr;</span>, <span style="color:#2980B9;">&uarr;</span>, <span style="color:#2980B9;">&uarr;</span> 를 나열하는 경우의 수"</p>
+                            <p style="margin-top:10px; font-size:15px; font-weight:600; color:#6fa3d4;">최단 경로는 모두 무엇으로 이루어져 있나요?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sim-controls">
+                    <button class="sim-btn" data-sim="gpsStepSim" data-dir="prev" disabled>&#9664; 이전</button>
+                    <span class="sim-progress" id="gpsStepSim-progress">1 / 8</span>
+                    <button class="sim-btn" data-sim="gpsStepSim" data-dir="next">다음 &#9654;</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: simSamePerm -->
+    <section class="slide" data-slide="3">
+        <div class="slide-content">
+        <div class="step-simulation" id="simSamePerm">
+            <h3>단계별 탐구 — 같은 것이 있는 순열의 유도</h3>
+            <div class="sim-steps">
+                <div class="sim-step active">
+                    <div class="step-line">5개의 문자 <b>a, a, b, b, b</b>를 일렬로 나열하려면?</div>
+                    <div class="step-line" style="color:#888; font-size:13px;">같은 문자가 있어서 단순히 5!로 구할 수 없다.</div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line highlight">구별하기: \(a_1, a_2, b_1, b_2, b_3\)으로 표시하면</div>
+                    <div class="step-line">5개 모두 다른 문자 &rarr; 전체 나열: \(5! = 120\)가지</div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line">하지만 \(a_1, a_2\)는 같은 a이므로 \(2!\)가지씩 중복</div>
+                    <div class="step-line highlight">또한 \(b_1, b_2, b_3\)은 같은 b이므로 \(3!\)가지씩 중복</div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line">구하는 경우의 수를 \(k\)라 하면</div>
+                    <div class="step-line highlight">\(k \times (2! \times 3!) = 5!\)</div>
+                    <div class="step-line" style="font-size:16px; font-weight:700; color:#2980B9; margin-top:8px;">\(k = \dfrac{5!}{2! \times 3!} = \dfrac{120}{2 \times 6} = 10\)</div>
+                </div>
+            </div>
             <div class="sim-controls">
-                <button class="sim-btn" data-sim="simRepPerm" data-dir="prev" disabled>&#9664; 이전</button>
-                <span class="sim-progress" id="simRepPerm-progress">1 / 5</span>
-                <button class="sim-btn" data-sim="simRepPerm" data-dir="next">다음 &#9654;</button>
+                <button class="sim-btn" data-sim="simSamePerm" data-dir="prev">&#9664; 이전</button>
+                <span class="sim-progress" id="simSamePerm-progress">1 / 4</span>
+                <button class="sim-btn" data-sim="simSamePerm" data-dir="next">다음 &#9654;</button>
             </div>
         </div>
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 1</span> 다음 중복순열의 수를 구하시오.</div>
-
-                <div class="sub-problem"><span class="num">⑴</span> \({}_{6}\Pi_{3}\)</div>
-                <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        \({}_{6}\Pi_{3} = 6^{3} = \boldsymbol{216}\)
-                    </div>
-                </div>
-
-                <div class="sub-problem"><span class="num">⑵</span> \({}_{4}\Pi_{4}\)</div>
-                <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        \({}_{4}\Pi_{4} = 4^{4} = \boldsymbol{256}\)
-                    </div>
-                </div>
-
-                <div class="sub-problem"><span class="num">⑶</span> \({}_{7}\Pi_{2}\)</div>
-                <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        \({}_{7}\Pi_{2} = 7^{2} = \boldsymbol{49}\)
-                    </div>
-                </div>
-
         </div>
-    </div>
+    </section>
 
-    <div class="card">
-        <div class="section-title">
+    <!-- Slide 4: Concept box -->
+    <section class="slide" data-slide="4">
+        <div class="slide-content">
+        <div class="concept-box highlight">
+            <h3><span class="badge">개념</span> 같은 것이 있는 순열의 수</h3>
+            <p>\(n\)개 중에서 같은 것이 각각 \(p\)개, \(q\)개, &hellip;, \(r\)개씩 있을 때, \(n\)개를 모두 일렬로 나열하는 경우의 수:</p>
+            <div class="formula">\(\dfrac{n!}{p!\,q!\,\cdots\,r!}\) &emsp; (단, \(p + q + \cdots + r = n\))</div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: simVisual1122 -->
+    <section class="slide" data-slide="5">
+        <div class="slide-content">
+        <div class="step-simulation" id="simVisual1122">
+            <h3>비주얼 개념 — 1, 1, 2, 2의 나열</h3>
+            <div class="sim-steps">
+                <div class="sim-step active">
+                    <div class="step-line">4개의 숫자 <b>1, 1, 2, 2</b>를 일렬로 나열하는 경우의 수는?</div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line">전체: \(4! = 24\)</div>
+                    <div class="step-line">1이 2개 &rarr; \(2!\)배 중복, &nbsp; 2가 2개 &rarr; \(2!\)배 중복</div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line highlight">\(\dfrac{4!}{2! \times 2!} = \dfrac{24}{4} = 6\)</div>
+                    <div class="step-line" style="margin-top:8px; font-size:14px;">
+                        <b>6가지 나열:</b><br>
+                        <span style="display:inline-block; margin:4px 8px; font-family:monospace; font-size:15px; letter-spacing:2px;">1122 &nbsp; 1212 &nbsp; 1221</span><br>
+                        <span style="display:inline-block; margin:4px 8px; font-family:monospace; font-size:15px; letter-spacing:2px;">2112 &nbsp; 2121 &nbsp; 2211</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sim-controls">
+                <button class="sim-btn" data-sim="simVisual1122" data-dir="prev">&#9664; 이전</button>
+                <span class="sim-progress" id="simVisual1122-progress">1 / 3</span>
+                <button class="sim-btn" data-sim="simVisual1122" data-dir="next">다음 &#9654;</button>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: Section header -->
+    <section class="slide" data-slide="6">
+        <div class="slide-content section-header-slide">
             <div class="section-number">2</div>
-            <h2>중복순열의 활용</h2>
+            <h2>같은 것이 있는 순열의 활용</h2>
         </div>
+    </section>
 
+    <!-- Slide 7: Problem 5 -->
+    <section class="slide" data-slide="7">
+        <div class="slide-content">
         <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 2</span> 바이올린과 피아노 중 하나를 택하여 매일 하나의 악기만 연습하기로 할 때, 7일 동안의 연습 계획을 세우는 경우의 수를 구하시오.</div>
-                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        매일 2가지 중 택 1 &rarr; \({}_{2}\Pi_{7} = 2^{7} = \boldsymbol{128}\)
-                    </div>
+            <div class="problem-label"><span class="p-num">문제 5</span> 다음 문자를 일렬로 나열하는 경우의 수를 구하시오.</div>
+            <div class="sub-problem"><span class="num">⑴</span> b, a, n, a, n, a</div>
+            <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="sub-problem"><span class="num">⑵</span> m, i, s, s, i, s, s, i, p, p, i</div>
+            <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    ⑴ banana: a 3개, n 2개, b 1개 &rarr; \(\dfrac{6!}{3!\,2!\,1!} = \dfrac{720}{12} = \boldsymbol{60}\)<br>
+                    ⑵ mississippi: s 4개, i 4개, p 2개, m 1개 &rarr; \(\dfrac{11!}{4!\,4!\,2!\,1!} = \boldsymbol{34650}\)
                 </div>
             </div>
+        </div>
+        </div>
+    </section>
 
+    <!-- Slide 8: Example + Solution -->
+    <section class="slide" data-slide="8">
+        <div class="slide-content">
         <div class="example-box">
-            <div class="example-header">
-                <span class="example-badge">예제 1</span>
-                <span class="example-title">세 자리 자연수의 개수</span>
-            </div>
+            <div class="example-header">예제 2 &mdash; 최단거리로 가는 경우의 수</div>
             <div class="example-content">
-                <p>4개의 숫자 0, 1, 2, 3에서 중복을 허용하여 만들 수 있는 세 자리 자연수의 개수를 구하시오.</p>
-            </div>
-            <div class="example-solution">
-                <div class="solution-label">풀이</div>
-                <p><b>STEP 1</b> &nbsp; 백의 자리: 0을 제외한 1, 2, 3 &rarr; <b>3</b>가지</p>
-                <p><b>STEP 2</b> &nbsp; 십의 자리, 일의 자리: 각각 0, 1, 2, 3 &rarr; <b>4</b>가지씩</p>
-                <p style="margin-top:6px;">\(\therefore\) \(3 \times 4 \times 4 = \boldsymbol{48}\)</p>
+                <p>오른쪽 그림과 같은 바둑판 모양의 도로에서 A 지점에서 B 지점까지 최단거리로 가는 경우의 수를 구하시오.</p>
+                <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:300px; display:block; margin:12px auto;">
+                    <line x1="30" y1="30" x2="270" y2="30" stroke="#ccc" stroke-width="1"/>
+                    <line x1="30" y1="80" x2="270" y2="80" stroke="#ccc" stroke-width="1"/>
+                    <line x1="30" y1="130" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
+                    <line x1="30" y1="30" x2="30" y2="130" stroke="#ccc" stroke-width="1"/>
+                    <line x1="90" y1="30" x2="90" y2="130" stroke="#ccc" stroke-width="1"/>
+                    <line x1="150" y1="30" x2="150" y2="130" stroke="#ccc" stroke-width="1"/>
+                    <line x1="210" y1="30" x2="210" y2="130" stroke="#ccc" stroke-width="1"/>
+                    <line x1="270" y1="30" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
+                    <circle cx="30" cy="130" r="6" fill="#E74C3C"/>
+                    <text x="20" y="155" font-size="14" fill="#E74C3C" font-weight="700">A</text>
+                    <circle cx="270" cy="30" r="6" fill="#2980B9"/>
+                    <text x="260" y="22" font-size="14" fill="#2980B9" font-weight="700">B</text>
+                </svg>
             </div>
         </div>
 
-        <div class="self-practice">
-            <div class="self-practice-header">
-                <span>📝</span> 스스로 하기
-            </div>
-            <div class="self-practice-content">
-                <p>5개의 숫자 0, 1, 2, 3, 4에서 중복을 허용하여 만들 수 있는 네 자리 자연수의 개수를 구하시오.</p>
-                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        천의 자리: 0 제외 4가지, 백&middot;십&middot;일의 자리: 각 5가지 &rarr; \(4 \times 5 \times 5 \times 5 = \boldsymbol{500}\)
+        <div class="solution">
+            <div class="label">풀이</div>
+            <div class="step">A에서 B까지 최단거리로 가려면</div>
+            <div class="step" style="margin-left:12px;">&rarr; 방향으로 4번, &uarr; 방향으로 2번, 총 <b>6번</b> 이동해야 한다.</div>
+            <div class="step" style="margin-left:12px;">이는 &rarr;, &rarr;, &rarr;, &rarr;, &uarr;, &uarr; 의 6개를 일렬로 나열하는 것과 같다.</div>
+            <div class="step" style="margin-left:12px;">같은 것이 있는 순열이므로:</div>
+            <div class="step" style="margin-left:24px; font-size:16px;">\(\dfrac{6!}{4!\,2!} = \dfrac{720}{24 \times 2} = \boldsymbol{15}\)</div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Slide 9: simGridPath -->
+    <section class="slide" data-slide="9">
+        <div class="slide-content">
+        <div class="step-simulation" id="simGridPath">
+            <h3>단계별 탐구 — 최단경로와 같은 것이 있는 순열</h3>
+            <div class="sim-steps">
+                <div class="sim-step active">
+                    <div class="step-line" style="text-align:center;">
+                        <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:280px; display:inline-block;">
+                            <line x1="30" y1="30" x2="270" y2="30" stroke="#ccc" stroke-width="1"/>
+                            <line x1="30" y1="80" x2="270" y2="80" stroke="#ccc" stroke-width="1"/>
+                            <line x1="30" y1="130" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
+                            <line x1="30" y1="30" x2="30" y2="130" stroke="#ccc" stroke-width="1"/>
+                            <line x1="90" y1="30" x2="90" y2="130" stroke="#ccc" stroke-width="1"/>
+                            <line x1="150" y1="30" x2="150" y2="130" stroke="#ccc" stroke-width="1"/>
+                            <line x1="210" y1="30" x2="210" y2="130" stroke="#ccc" stroke-width="1"/>
+                            <line x1="270" y1="30" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
+                            <circle cx="30" cy="130" r="6" fill="#E74C3C"/>
+                            <text x="20" y="155" font-size="14" fill="#E74C3C" font-weight="700">A</text>
+                            <circle cx="270" cy="30" r="6" fill="#2980B9"/>
+                            <text x="260" y="22" font-size="14" fill="#2980B9" font-weight="700">B</text>
+                        </svg>
                     </div>
+                    <div class="step-line">A(좌하단)에서 B(우상단)까지 격자를 따라 최단거리로 이동</div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line highlight">A &rarr; B: &rarr; 방향 4번, &uarr; 방향 2번 = 총 6번 이동</div>
+                    <div class="step-line">경로 예시: &rarr;&rarr;&uarr;&rarr;&rarr;&uarr;, &uarr;&rarr;&rarr;&rarr;&uarr;&rarr;, &hellip;</div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line">&quot;&rarr;&rarr;&rarr;&rarr;&uarr;&uarr;&quot;를 나열하는 문제</div>
+                    <div class="step-line highlight">&rarr; 4개(같은 것), &uarr; 2개(같은 것) &rarr; <b>같은 것이 있는 순열!</b></div>
+                </div>
+                <div class="sim-step">
+                    <div class="step-line">\(\dfrac{6!}{4!\,\times\,2!} = \dfrac{720}{24 \times 2} = \dfrac{720}{48}\)</div>
+                    <div class="step-line highlight" style="font-size:16px; font-weight:700; color:#27ae60;">\(= 15\)가지</div>
                 </div>
             </div>
+            <div class="sim-controls">
+                <button class="sim-btn" data-sim="simGridPath" data-dir="prev">&#9664; 이전</button>
+                <span class="sim-progress" id="simGridPath-progress">1 / 4</span>
+                <button class="sim-btn" data-sim="simGridPath" data-dir="next">다음 &#9654;</button>
+            </div>
         </div>
+        </div>
+    </section>
 
-        <hr class="divider">
+    <!-- Slide 10: Problem 6 -->
+    <section class="slide" data-slide="10">
+        <div class="slide-content">
         <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 3</span> 0부터 9까지의 숫자를 사용하여 네 자리 비밀번호를 만들려고 한다.</div>
-
-                <div class="sub-problem"><span class="num">⑴</span> 만들 수 있는 비밀번호의 수를 구하시오.</div>
-                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        \({}_{10}\Pi_{4} = 10^{4} = \boldsymbol{10000}\)
-                    </div>
-                </div>
-
-                <div class="sub-problem"><span class="num">⑵</span> 첫째 자리가 홀수인 비밀번호의 수를 구하시오.</div>
-                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        첫째 자리: 1, 3, 5, 7, 9 &rarr; 5가지, 나머지: 각 10가지 &rarr; \(5 \times 10^{3} = \boldsymbol{5000}\)
-                    </div>
+            <div class="problem-label"><span class="p-num">문제 6</span> 오른쪽 그림과 같은 바둑판 모양의 도로에서 최단거리로 가는 경우의 수를 구하시오.</div>
+            <div class="sub-problem"><span class="num">⑴</span> 집에서 도서관까지 가는 경우의 수</div>
+            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="sub-problem"><span class="num">⑵</span> 집에서 편의점을 거쳐 도서관까지 가는 경우의 수</div>
+            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    ⑴ &rarr;5번, &uarr;4번 &rarr; \(\dfrac{9!}{5!\,4!} = \boldsymbol{126}\)<br>
+                    ⑵ 집&rarr;편의점: &rarr;3, &uarr;2 &rarr; \(\dfrac{5!}{3!\,2!} = 10\), &nbsp; 편의점&rarr;도서관: &rarr;2, &uarr;2 &rarr; \(\dfrac{4!}{2!\,2!} = 6\)<br>
+                    &nbsp;&nbsp;&nbsp; 곱의 법칙: \(10 \times 6 = \boldsymbol{60}\)
                 </div>
             </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 4</span> 5명의 학생이 방송반 또는 댄스반 중 하나에 가입하려고 한다.</div>
-
-                <div class="sub-problem"><span class="num">⑴</span> 5명이 반에 가입하는 경우의 수를 구하시오.</div>
-                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        각 학생마다 2가지 선택 &rarr; \({}_{2}\Pi_{5} = 2^{5} = \boldsymbol{32}\)
-                    </div>
-                </div>
-
-                <div class="sub-problem"><span class="num">⑵</span> 각 반에 적어도 1명 이상이 가입하는 경우의 수를 구하시오.</div>
-                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        전체 &minus; (한 반에 몰리는 경우) = \(32 - 2 = \boldsymbol{30}\)
-                    </div>
-                </div>
         </div>
-    </div>
+        </div>
+    </section>
 
-    <div class="footer">확률과 통계 &middot; Ⅰ. 경우의 수 &middot; 1. 여러 가지 순열</div>
 </div>
 
-<button class="global-answer-btn" id="globalAnswerBtn">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    정답 전체 보기
-</button>
-
-<div class="records-overlay" id="recordsOverlay">
-    <div class="records-panel">
-        <div class="records-header">
-            <h3>📋 저장 기록</h3>
-            <button class="close-btn" id="btnCloseRecords">&times;</button>
-        </div>
-        <div class="records-list" id="recordsList"></div>
-    </div>
+<!-- Navigation -->
+<div class="slide-nav">
+    <button class="nav-btn" id="navPrev">&#9664;</button>
+    <span class="slide-counter" id="slideCounter">1 / 11</span>
+    <button class="nav-btn" id="navNext">&#9654;</button>
+    <button class="nav-btn nav-fs" id="navFS" title="전체 화면">&#9974;</button>
 </div>
+
+<!-- Progress bar -->
+<div class="slide-progress">
+    <div class="slide-progress-bar" id="progressBar"></div>
+</div>
+
 <script>
-// ── file:// 프로토콜 감지 (iPad Safari에서 localStorage 차단됨) ──
-if (window.location.protocol === 'file:') {
-    var fileWarning = document.createElement('div');
-    fileWarning.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;margin:8px 0;font-size:14px;color:#856404;line-height:1.5;';
-    fileWarning.innerHTML = '⚠️ <b>오프라인 모드</b>: 현재 파일을 직접 열어 사용 중입니다. 저장/불러오기 기능을 사용하려면 웹 주소(https://)로 접속해 주세요.';
-    var studentInfo = document.querySelector('.student-info');
-    if (studentInfo) studentInfo.after(fileWarning);
-}
-
-// ── 정답 토글 ──
-function toggleAnswer(el) {
-    el.classList.toggle('open');
-    const content = el.nextElementSibling;
-    content.classList.toggle('open');
-}
-
-let allAnswersOpen = false;
-function toggleAllAnswers() {
-    allAnswersOpen = !allAnswersOpen;
-    const btn = document.getElementById('globalAnswerBtn');
-    btn.classList.toggle('active', allAnswersOpen);
-    btn.innerHTML = allAnswersOpen
-        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg> 정답 전체 숨기기'
-        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 정답 전체 보기';
-    document.querySelectorAll('.answer-toggle').forEach(t => {
-        const isOpen = t.classList.contains('open');
-        if (allAnswersOpen && !isOpen) { t.classList.add('open'); t.nextElementSibling.classList.add('open'); }
-        if (!allAnswersOpen && isOpen) { t.classList.remove('open'); t.nextElementSibling.classList.remove('open'); }
-    });
-}
-
-// ── localStorage 저장/불러오기 시스템 ──
-function getStorageKey() {
-    return 'worksheet_PS_2차시_중복순열';
-}
-
-function getAllRecords() {
-    try {
-        const raw = localStorage.getItem(getStorageKey());
-        if (!raw) return [];
-        const data = JSON.parse(raw);
-        return data.records || [];
-    } catch (e) {
-        console.warn('저장 데이터 읽기 오류:', e);
-        return [];
-    }
-}
-
-function saveAllRecords(records) {
-    const data = { version: 1, records: records };
-    try {
-        localStorage.setItem(getStorageKey(), JSON.stringify(data));
-        return true;
-    } catch (e) {
-        if (window.location.protocol === 'file:') {
-            alert('오프라인(file://) 환경에서는 저장이 불가합니다.\n웹 주소(https://)로 접속하면 저장할 수 있습니다.');
-        } else {
-            alert('저장 공간이 부족합니다. 이전 기록을 삭제한 후 다시 시도해 주세요.');
-        }
-        return false;
-    }
-}
-
-function isCanvasBlank(wc) {
-    try {
-        const px = wc.ctx.getImageData(0, 0, wc.canvas.width, wc.canvas.height).data;
-        for (let i = 3; i < px.length; i += 4) {
-            if (px[i] !== 0) return false;
-        }
-        return true;
-    } catch (e) {
-        return true;
-    }
-}
-
-function canvasToJpeg(wc) {
-    // 투명 배경 → 검정 방지: 흰색 배경 합성 후 JPEG 변환
-    const tmp = document.createElement('canvas');
-    tmp.width = wc.canvas.width;
-    tmp.height = wc.canvas.height;
-    const tc = tmp.getContext('2d');
-    tc.fillStyle = '#ffffff';
-    tc.fillRect(0, 0, tmp.width, tmp.height);
-    tc.drawImage(wc.canvas, 0, 0);
-    return tmp.toDataURL('image/jpeg', 0.3);
-}
-
-function captureCurrentState() {
-    const inputs = document.querySelectorAll('.student-info .field input');
-    const studentInfo = {
-        classGroup: inputs[0] ? inputs[0].value : '',
-        number: inputs[1] ? inputs[1].value : '',
-        name: inputs[2] ? inputs[2].value : ''
-    };
-
-    const canvasData = canvases.map(function(wc) {
-        if (isCanvasBlank(wc)) return null;
-        return canvasToJpeg(wc);
-    });
-
-    return {
-        id: String(Date.now()),
-        timestamp: new Date().toISOString(),
-        studentInfo: studentInfo,
-        canvasData: canvasData
-    };
-}
-
-function saveRecord() {
-    var record = captureCurrentState();
-    var records = getAllRecords();
-
-    if (records.length >= 5) {
-        records.sort(function(a, b) { return new Date(a.timestamp) - new Date(b.timestamp); });
-        records = records.slice(records.length - 4);
-    }
-
-    records.push(record);
-    if (saveAllRecords(records)) {
-        showToast('저장되었습니다.');
-    }
-}
-
-function loadRecord(recordId) {
-    var records = getAllRecords();
-    var record = records.find(function(r) { return r.id === recordId; });
-    if (!record) {
-        alert('저장 기록을 찾을 수 없습니다.');
-        return;
-    }
-
-    // 학생 정보 복원
-    var inputs = document.querySelectorAll('.student-info .field input');
-    if (inputs[0]) inputs[0].value = record.studentInfo.classGroup || '';
-    if (inputs[1]) inputs[1].value = record.studentInfo.number || '';
-    if (inputs[2]) inputs[2].value = record.studentInfo.name || '';
-
-    // 캔버스 복원
-    record.canvasData.forEach(function(dataUrl, idx) {
-        if (idx >= canvases.length) return;
-        var wc = canvases[idx];
-
-        wc.ctx.save();
-        wc.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        wc.ctx.clearRect(0, 0, wc.canvas.width, wc.canvas.height);
-
-        if (dataUrl) {
-            var img = new Image();
-            img.onload = function() {
-                wc.ctx.save();
-                wc.ctx.setTransform(1, 0, 0, 1, 0, 0);
-                wc.ctx.drawImage(img, 0, 0);
-                wc.ctx.restore();
-                wc.history = [wc.canvas.toDataURL()];
-                wc.historyIndex = 0;
-            };
-            img.src = dataUrl;
-        } else {
-            wc.history = [wc.canvas.toDataURL()];
-            wc.historyIndex = 0;
-        }
-        wc.ctx.restore();
-    });
-
-    closeRecordsPanel();
-    showToast('불러왔습니다.');
-}
-
-function deleteRecord(recordId) {
-    var records = getAllRecords();
-    records = records.filter(function(r) { return r.id !== recordId; });
-    saveAllRecords(records);
-    renderRecordsPanel();
-}
-
-function formatTimestamp(isoString) {
-    var d = new Date(isoString);
-    var month = d.getMonth() + 1;
-    var day = d.getDate();
-    var hours = String(d.getHours()).padStart(2, '0');
-    var minutes = String(d.getMinutes()).padStart(2, '0');
-    return month + '/' + day + ' ' + hours + ':' + minutes;
-}
-
-function openRecordsPanel() {
-    document.getElementById('recordsOverlay').style.display = 'flex';
-    renderRecordsPanel();
-}
-
-function closeRecordsPanel() {
-    document.getElementById('recordsOverlay').style.display = 'none';
-}
-
-function renderRecordsPanel() {
-    var records = getAllRecords();
-    var listEl = document.getElementById('recordsList');
-
-    if (records.length === 0) {
-        listEl.innerHTML = '<div class="records-empty">저장된 기록이 없습니다.</div>';
-        return;
-    }
-
-    records.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
-
-    listEl.innerHTML = records.map(function(r) {
-        var name = r.studentInfo.name || '이름 없음';
-        var classInfo = r.studentInfo.classGroup || '';
-        var num = r.studentInfo.number || '';
-        var dateStr = formatTimestamp(r.timestamp);
-        var detail = (classInfo ? classInfo + ' ' : '') + (num ? num + '번 ' : '') + name;
-
-        return '<div class="record-item">' +
-            '<div class="record-info">' +
-                '<div class="record-date">' + dateStr + '</div>' +
-                '<div class="record-detail">' + detail + '</div>' +
-            '</div>' +
-            '<div class="record-actions">' +
-                '<button class="record-btn load" data-record-id="' + r.id + '">불러오기</button>' +
-                '<button class="record-btn delete" data-record-id="' + r.id + '">삭제</button>' +
-            '</div>' +
-        '</div>';
-    }).join('');
-}
-
-function showToast(message) {
-    var toast = document.getElementById('saveToast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'saveToast';
-        toast.className = 'save-toast';
-        document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(function() { toast.classList.remove('show'); }, 2000);
-}
-
-// ── 캔버스 필기 시스템 ──
-class WritingCanvas {
-    constructor(container) {
-        this.container = container;
-        this.canvas = container.querySelector('canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.drawing = false;
-        this.tool = 'pen';
-        this.penWidth = 2;
-        this.history = [];
-        this.historyIndex = -1;
-        this.baseHeight = parseInt(container.dataset.h) || 80;
-
-        this.setupCanvas();
-        this.setupToolbar();
-        this.bindEvents();
-    }
-
-    setupCanvas() {
-        const rect = this.container.getBoundingClientRect();
-        const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = this.baseHeight * 2;
-
-        this.canvas.width = w * dpr;
-        this.canvas.height = h * dpr;
-        this.canvas.style.width = w + 'px';
-        this.canvas.style.height = h + 'px';
-        this.ctx.scale(dpr, dpr);
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-        this.saveState();
-    }
-
-    setupToolbar() {
-        const toolbar = this.container.querySelector('.canvas-toolbar');
-        toolbar.innerHTML = `
-            <button class="tool-btn active" data-tool="pen">&#9998; 펜</button>
-            <button class="tool-btn" data-tool="eraser">&#9634; 지우개</button>
-            <div class="pen-sizes">
-                <div class="pen-size" data-size="1"><div class="dot" style="width:3px;height:3px;"></div></div>
-                <div class="pen-size active" data-size="2"><div class="dot" style="width:5px;height:5px;"></div></div>
-                <div class="pen-size" data-size="4"><div class="dot" style="width:8px;height:8px;"></div></div>
-            </div>
-            <div class="spacer"></div>
-            <button class="undo-btn">&#8630;</button>
-            <button class="clear-btn">&#10005;</button>
-        `;
-
-        toolbar.querySelectorAll('.tool-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                toolbar.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.tool = btn.dataset.tool;
-            });
-        });
-
-        toolbar.querySelectorAll('.pen-size').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                toolbar.querySelectorAll('.pen-size').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.penWidth = parseInt(btn.dataset.size);
-            });
-        });
-
-        toolbar.querySelector('.undo-btn').addEventListener('click', (e) => { e.preventDefault(); this.undo(); });
-        toolbar.querySelector('.clear-btn').addEventListener('click', (e) => { e.preventDefault(); this.clear(); });
-
-        // 펼치기/접기 토글 버튼
-        var toggleBtn = document.createElement('button');
-        toggleBtn.className = 'btn-toggle';
-        toggleBtn.type = 'button';
-        toggleBtn.innerHTML = '<span class="toggle-arrow">&#9660;</span><span class="toggle-text"> 펼치기</span>';
-        toolbar.appendChild(toggleBtn);
-        var self = this;
-        toggleBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            self.container.classList.toggle('collapsed');
-            if (self.container.classList.contains('collapsed')) {
-                toggleBtn.innerHTML = '<span class="toggle-arrow">&#9660;</span><span class="toggle-text"> 펼치기</span>';
-            } else {
-                toggleBtn.innerHTML = '<span class="toggle-arrow">&#9650;</span><span class="toggle-text"> 접기</span>';
-            }
-        });
-    }
-
-    bindEvents() {
-        const opts = { passive: false };
-        // Pointer events with passive:false for iOS Safari preventDefault() support
-        this.canvas.addEventListener('pointerdown', (e) => this.startDraw(e), opts);
-        this.canvas.addEventListener('pointermove', (e) => this.draw(e), opts);
-        this.canvas.addEventListener('pointerup', (e) => this.endDraw(e));
-        this.canvas.addEventListener('pointerleave', (e) => this.endDraw(e));
-        this.canvas.addEventListener('pointercancel', (e) => this.endDraw(e));
-        // iOS Safari: 터치 기본 동작(스크롤) 차단
-        this.canvas.addEventListener('touchstart', (e) => { e.preventDefault(); }, opts);
-        this.canvas.addEventListener('touchmove', (e) => { e.preventDefault(); }, opts);
-    }
-
-    getPos(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }
-
-    startDraw(e) {
-        e.preventDefault();
-        this.canvas.setPointerCapture(e.pointerId);
-        this.drawing = true;
-        const pos = this.getPos(e);
-        this.ctx.beginPath();
-        this.ctx.moveTo(pos.x, pos.y);
-
-        if (this.tool === 'eraser') {
-            this.ctx.globalCompositeOperation = 'destination-out';
-            this.ctx.lineWidth = this.penWidth * 10;
-        } else {
-            this.ctx.globalCompositeOperation = 'source-over';
-            this.ctx.strokeStyle = '#1a1a1a';
-            this.ctx.lineWidth = this.penWidth;
-        }
-    }
-
-    draw(e) {
-        if (!this.drawing) return;
-        e.preventDefault();
-        const pos = this.getPos(e);
-        this.ctx.lineTo(pos.x, pos.y);
-        this.ctx.stroke();
-    }
-
-    endDraw(e) {
-        if (!this.drawing) return;
-        this.drawing = false;
-        this.ctx.globalCompositeOperation = 'source-over';
-        this.saveState();
-    }
-
-    saveState() {
-        this.historyIndex++;
-        this.history = this.history.slice(0, this.historyIndex);
-        this.history.push(this.canvas.toDataURL());
-    }
-
-    undo() {
-        if (this.historyIndex > 0) {
-            this.historyIndex--;
-            const img = new Image();
-            img.onload = () => {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.drawImage(img, 0, 0);
-            };
-            img.src = this.history[this.historyIndex];
-        }
-    }
-
-    clear() {
-        const dpr = window.devicePixelRatio || 1;
-        this.ctx.clearRect(0, 0, this.canvas.width / dpr, this.canvas.height / dpr);
-        this.saveState();
-    }
-
-    resize() {
-        const saved = this.canvas.toDataURL();
-        this.setupCanvas();
-        const img = new Image();
-        img.onload = () => { this.ctx.drawImage(img, 0, 0); };
-        img.src = saved;
-    }
-}
-
-// ── 인터랙티브 요소 엔진 ──
-
-// StepSimulation 클래스 — 단계별 수식 전개 시각화
 class StepSimulation {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -1864,55 +1465,280 @@ class AlgebraTiles {
 
 // ★ 인터랙티브 요소 인스턴스는 Phase 3에서 차시별로 생성
 // 예: var simMultiply = new StepSimulation('simMultiply');
-// 예: var tiles = new AlgebraTiles('tilesContainer');
 
-// ── 초기화 ──
-const canvases = [];
-document.querySelectorAll('.writing-area').forEach(area => {
-    canvases.push(new WritingCanvas(area));
-});
-// 초기화 완료 후 모든 작성란 접기 (캔버스는 이미 정상 초기화됨)
-document.querySelectorAll('.writing-area').forEach(area => {
-    area.classList.add('collapsed');
-});
-// 리사이즈 대응
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { canvases.forEach(c => c.resize()); }, 300);
-});
+var simSamePerm = new StepSimulation('simSamePerm');
+var simVisual1122 = new StepSimulation('simVisual1122');
+var simGridPath = new StepSimulation('simGridPath');
 
-// ── iOS 호환 이벤트 위임 ──
-document.addEventListener('click', function(e) {
-    // 정답 토글
-    var toggle = e.target.closest('.answer-toggle');
-    if (toggle) { e.preventDefault(); toggleAnswer(toggle); }
+(function() {
+    var svg1 = document.getElementById('gpsSvg1');
+    var drawLayer = document.getElementById('gpsDrawLayer');
+    var checkBtn = document.getElementById('gpsCheck');
+    var inputEl = document.getElementById('gpsInput');
+    var feedbackEl = document.getElementById('gpsFeedback');
+    var nextBtn = document.getElementById('gpsNextStage');
+    var stage1 = document.getElementById('gpsStage1');
+    var stage2 = document.getElementById('gpsStage2');
+    if (!svg1) return;
 
-    // 플립카드 (큰 카드)
-    var flipSingle = e.target.closest('.flip-card-single');
-    if (flipSingle && !e.target.closest('.flip-back a')) {
-        e.preventDefault();
-        flipSingle.classList.toggle('flipped');
+    // 격자 교차점 좌표 (3×3, 좌하가 A, 우상이 B)
+    var pts = [
+        {x:30,y:190},{x:110,y:190},{x:190,y:190},  // row0 (하단)
+        {x:30,y:110},{x:110,y:110},{x:190,y:110},  // row1
+        {x:30,y:30}, {x:110,y:30}, {x:190,y:30}    // row2 (상단)
+    ];
+
+    // 터치 드래그 경로 그리기
+    var drawing = false;
+    var pathPoints = [];
+    var currentPath = null;
+
+    function nearestPt(cx, cy) {
+        var best = -1, bestD = 999;
+        for (var i = 0; i < pts.length; i++) {
+            var d = Math.abs(pts[i].x - cx) + Math.abs(pts[i].y - cy);
+            if (d < bestD) { bestD = d; best = i; }
+        }
+        return bestD < 50 ? best : -1;
     }
 
-    // 공식 미니 플립카드
-    var formulaFlip = e.target.closest('.formula-flip');
-    if (formulaFlip) {
+    function isAdjacent(a, b) {
+        // a,b are indices in pts. Adjacent = differ by 1 col or 1 row (→ or ↑ only)
+        var ar = Math.floor(a/3), ac = a%3;
+        var br = Math.floor(b/3), bc = b%3;
+        // → : same row, col+1
+        if (ar === br && bc === ac + 1) return true;
+        // ↑ : same col, row+1 (row increases = y decreases)
+        if (ac === bc && br === ar + 1) return true;
+        return false;
+    }
+
+    function updateDrawPath() {
+        if (currentPath) currentPath.remove();
+        if (pathPoints.length < 2) return;
+        var d = 'M' + pts[pathPoints[0]].x + ',' + pts[pathPoints[0]].y;
+        for (var i = 1; i < pathPoints.length; i++) {
+            d += ' L' + pts[pathPoints[i]].x + ',' + pts[pathPoints[i]].y;
+        }
+        currentPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        currentPath.setAttribute('d', d);
+        currentPath.setAttribute('fill', 'none');
+        currentPath.setAttribute('stroke', '#E74C3C');
+        currentPath.setAttribute('stroke-width', '3');
+        currentPath.setAttribute('stroke-linecap', 'round');
+        currentPath.setAttribute('stroke-linejoin', 'round');
+        currentPath.setAttribute('opacity', '0.7');
+        drawLayer.appendChild(currentPath);
+    }
+
+    function getSvgCoords(e) {
+        var rect = svg1.getBoundingClientRect();
+        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        var scaleX = 220 / rect.width;
+        var scaleY = 220 / rect.height;
+        return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+    }
+
+    svg1.addEventListener('pointerdown', function(e) {
         e.preventDefault();
-        formulaFlip.classList.toggle('flipped');
+        var c = getSvgCoords(e);
+        var idx = nearestPt(c.x, c.y);
+        if (idx < 0) return;
+        drawing = true;
+        pathPoints = [idx];
+        updateDrawPath();
+    });
+
+    svg1.addEventListener('pointermove', function(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        var c = getSvgCoords(e);
+        var idx = nearestPt(c.x, c.y);
+        if (idx < 0) return;
+        var last = pathPoints[pathPoints.length - 1];
+        if (idx !== last && isAdjacent(last, idx) && pathPoints.indexOf(idx) === -1) {
+            pathPoints.push(idx);
+            updateDrawPath();
+        }
+    });
+
+    svg1.addEventListener('pointerup', function() {
+        drawing = false;
+        setTimeout(function() {
+            if (currentPath) { currentPath.remove(); currentPath = null; }
+            pathPoints = [];
+        }, 500);
+    });
+
+    svg1.addEventListener('pointerleave', function() {
+        drawing = false;
+        if (currentPath) { currentPath.remove(); currentPath = null; }
+        pathPoints = [];
+    });
+
+    // 정답 확인
+    checkBtn.addEventListener('click', function() {
+        var val = parseInt(inputEl.value);
+        if (val === 6) {
+            feedbackEl.textContent = '정답입니다! 최단 경로는 6가지입니다.';
+            feedbackEl.className = 'gps-feedback correct';
+            nextBtn.disabled = false;
+        } else if (isNaN(val) || val === 0) {
+            feedbackEl.textContent = '숫자를 입력해 주세요.';
+            feedbackEl.className = 'gps-feedback wrong';
+        } else {
+            feedbackEl.textContent = '다시 생각해 보세요.';
+            feedbackEl.className = 'gps-feedback wrong';
+        }
+    });
+
+    inputEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkBtn.click();
+    });
+
+    // 다음 단계
+    nextBtn.addEventListener('click', function() {
+        stage1.style.display = 'none';
+        stage2.style.display = 'block';
+    });
+
+    // 2단계 StepSimulation (gpsSteps 내부 sim-step들)
+    var stepsContainer = document.getElementById('gpsSteps');
+    var steps = stepsContainer.querySelectorAll('.sim-step');
+    var total = steps.length;
+    var current = 0;
+    var progressEl = document.getElementById('gpsStepSim-progress');
+
+    function showGpsStep(n) {
+        if (n < 0 || n >= total) return;
+        steps.forEach(function(s) { s.classList.remove('active'); });
+        steps[n].classList.add('active');
+        current = n;
+        progressEl.textContent = (current + 1) + ' / ' + total;
+        var btns = stage2.querySelectorAll('.sim-btn');
+        btns.forEach(function(btn) {
+            if (btn.dataset.dir === 'prev') btn.disabled = (current === 0);
+            if (btn.dataset.dir === 'next') btn.disabled = (current === total - 1);
+        });
+    }
+
+    // gpsStepSim을 window에 등록하여 기존 이벤트 위임으로 동작
+    window.gpsStepSim = {
+        next: function() { showGpsStep(current + 1); },
+        prev: function() { showGpsStep(current - 1); }
+    };
+
+    showGpsStep(0);
+})();
+
+// ── 슬라이드 네비게이션 ──
+(function() {
+    var deck = document.getElementById('slideDeck');
+    var slides = deck.querySelectorAll('.slide');
+    var total = slides.length;
+    var current = 0;
+    var counter = document.getElementById('slideCounter');
+    var bar = document.getElementById('progressBar');
+    var btnP = document.getElementById('navPrev');
+    var btnN = document.getElementById('navNext');
+
+    function show(i) {
+        if (i < 0 || i >= total) return;
+        slides[current].classList.remove('active');
+        current = i;
+        slides[current].classList.add('active');
+        update();
         if (typeof renderMathInElement === 'function') {
-            renderMathInElement(formulaFlip, {delimiters: [{left: '\\(', right: '\\)', display: false}], throwOnError: false});
+            renderMathInElement(slides[current], {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ], throwOnError: false
+            });
         }
     }
 
-    // 스텝 시뮬레이션 버튼
+    function update() {
+        counter.textContent = (current + 1) + ' / ' + total;
+        bar.style.width = ((current + 1) / total * 100) + '%';
+        btnP.disabled = (current === 0);
+        btnN.disabled = (current === total - 1);
+    }
+
+    function tryNext() {
+        var cs = slides[current];
+        var simEl = cs.querySelector('.step-simulation');
+        if (simEl && window[simEl.id]) {
+            var sim = window[simEl.id];
+            if (sim.current < sim.total - 1) { sim.next(); return; }
+        }
+        var ur = cs.querySelectorAll('.answer-content:not(.revealed)');
+        if (ur.length > 0) {
+            for (var j = 0; j < ur.length; j++) ur[j].classList.add('revealed');
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(cs, {delimiters: [{left: '\\\\(', right: '\\\\)', display: false},{left: '\\\\[', right: '\\\\]', display: true}], throwOnError: false});
+            }
+            return;
+        }
+        show(current + 1);
+    }
+
+    function tryPrev() {
+        var cs = slides[current];
+        var simEl = cs.querySelector('.step-simulation');
+        if (simEl) {
+            var prevBtn = simEl.querySelector('.sim-btn[data-dir="prev"]');
+            if (prevBtn && !prevBtn.disabled) { prevBtn.click(); return; }
+        }
+        show(current - 1);
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown' || e.key === 'Enter') { e.preventDefault(); tryNext(); }
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); tryPrev(); }
+        else if (e.key === 'Home') { e.preventDefault(); show(0); }
+        else if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+        else if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(function(){});
+            else document.exitFullscreen();
+        }
+        else if (e.key === 'Escape') {
+            if (document.fullscreenElement) document.exitFullscreen();
+        }
+    });
+
+    var sx = 0, sy = 0;
+    document.addEventListener('touchstart', function(e) {
+        if (e.target.closest('.padlock-game, .grid-path-sim, .step-simulation')) return;
+        sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+    }, { passive: true });
+    document.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - sx;
+        var dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+            if (dx < 0) tryNext();
+            else tryPrev();
+        }
+    }, { passive: true });
+
+    btnP.addEventListener('click', function() { tryPrev(); });
+    btnN.addEventListener('click', function() { tryNext(); });
+    document.getElementById('navFS').addEventListener('click', function() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(function(){});
+        else document.exitFullscreen();
+    });
+
+    update();
+})();
+
+// ── 이벤트 위임 (슬라이드 버전) ──
+document.addEventListener('click', function(e) {
     var simBtn = e.target.closest('.sim-btn');
     if (simBtn) {
         e.preventDefault();
         var simId = simBtn.dataset.sim;
         var dir = simBtn.dataset.dir;
-        // ★ 차시별 StepSimulation 인스턴스를 여기서 참조
-        // 예: if (simId === 'simMultiply' && typeof simMultiply !== 'undefined') { ... }
         var simInstance = window[simId];
         if (simInstance) {
             if (dir === 'next') simInstance.next();
@@ -1920,213 +1746,7 @@ document.addEventListener('click', function(e) {
         }
     }
 });
-document.getElementById('globalAnswerBtn').addEventListener('click', function(e) {
-    e.preventDefault(); toggleAllAnswers();
-});
 
-// 저장/불러오기 이벤트 바인딩
-document.getElementById('btnSave').addEventListener('click', function(e) {
-    e.preventDefault(); saveRecord();
-});
-document.getElementById('btnRecords').addEventListener('click', function(e) {
-    e.preventDefault(); openRecordsPanel();
-});
-document.getElementById('btnCloseRecords').addEventListener('click', function(e) {
-    e.preventDefault(); closeRecordsPanel();
-});
-document.getElementById('recordsOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeRecordsPanel();
-});
-// 기록 패널 내 불러오기/삭제 버튼 이벤트 위임
-document.getElementById('recordsList').addEventListener('click', function(e) {
-    var btn = e.target.closest('.record-btn');
-    if (!btn) return;
-    var id = btn.dataset.recordId;
-    if (btn.classList.contains('load')) {
-        loadRecord(id);
-    } else if (btn.classList.contains('delete')) {
-        if (confirm('이 기록을 삭제하시겠습니까?')) {
-            deleteRecord(id);
-        }
-    }
-});
-
-var simRepPerm = new StepSimulation('simRepPerm');
-
-// ── PADLOCK 게임 ──
-(function() {
-    var MAX_TRIES = 5;
-    var board = document.getElementById('plkBoard');
-    var input = document.getElementById('plkInput');
-    var keypad = document.getElementById('plkKeypad');
-    var startBtn = document.getElementById('plkStart');
-    var submitBtn = document.getElementById('plkSubmit');
-    var resultEl = document.getElementById('plkResult');
-    var winEl = document.getElementById('plkWin');
-    var totalEl = document.getElementById('plkTotal');
-    if (!board) return;
-
-    var answer = '';
-    var currentRow = 0;
-    var wins = 0;
-    var total = 0;
-    var playing = false;
-    var cells = document.querySelectorAll('.plk-cell');
-
-    // 보드 생성 (5행 × 4칸)
-    for (var r = 0; r < MAX_TRIES; r++) {
-        var row = document.createElement('div');
-        row.className = 'plk-row';
-        for (var c = 0; c < 4; c++) {
-            var tile = document.createElement('div');
-            tile.className = 'plk-tile';
-            tile.dataset.row = r;
-            tile.dataset.col = c;
-            row.appendChild(tile);
-        }
-        board.appendChild(row);
-    }
-
-    // 키패드 이벤트
-    keypad.addEventListener('click', function(e) {
-        var key = e.target.closest('.plk-key');
-        if (!key || !playing) return;
-        var val = key.dataset.key;
-        if (val === 'del') {
-            // 마지막 채워진 셀 비우기
-            for (var i = 3; i >= 0; i--) {
-                if (cells[i].value !== '') { cells[i].value = ''; cells[i].focus(); break; }
-            }
-        } else {
-            // 첫 번째 빈 셀에 입력
-            for (var i = 0; i < 4; i++) {
-                if (cells[i].value === '') {
-                    cells[i].value = val;
-                    if (i < 3) cells[i + 1].focus();
-                    break;
-                }
-            }
-        }
-    });
-
-    // 셀 입력 이벤트 (직접 타이핑 지원)
-    cells.forEach(function(cell, idx) {
-        cell.addEventListener('input', function() {
-            var v = cell.value.replace(/[^0-9]/g, '');
-            cell.value = v.slice(-1);
-            if (v && idx < 3) cells[idx + 1].focus();
-        });
-        cell.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' && cell.value === '' && idx > 0) {
-                cells[idx - 1].focus();
-            }
-            if (e.key === 'Enter') doSubmit();
-        });
-    });
-
-    function getGuess() {
-        var g = '';
-        cells.forEach(function(c) { g += c.value; });
-        return g;
-    }
-
-    function evaluate(guess, ans) {
-        var result = ['absent', 'absent', 'absent', 'absent'];
-        var ansArr = ans.split('');
-        var gArr = guess.split('');
-        var used = [false, false, false, false];
-        // 1차: correct
-        for (var i = 0; i < 4; i++) {
-            if (gArr[i] === ansArr[i]) {
-                result[i] = 'correct';
-                used[i] = true;
-                gArr[i] = null;
-            }
-        }
-        // 2차: present
-        for (var i = 0; i < 4; i++) {
-            if (gArr[i] === null) continue;
-            for (var j = 0; j < 4; j++) {
-                if (!used[j] && gArr[i] === ansArr[j]) {
-                    result[i] = 'present';
-                    used[j] = true;
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-
-    function doSubmit() {
-        if (!playing) return;
-        var guess = getGuess();
-        if (guess.length !== 4) return;
-
-        var result = evaluate(guess, answer);
-        var tiles = board.querySelectorAll('.plk-row')[currentRow].querySelectorAll('.plk-tile');
-        for (var i = 0; i < 4; i++) {
-            tiles[i].textContent = guess[i];
-            tiles[i].className = 'plk-tile ' + result[i];
-        }
-
-        // 정답 체크
-        if (guess === answer) {
-            wins++;
-            winEl.textContent = wins;
-            resultEl.textContent = '정답! 비밀번호는 ' + answer + ' 입니다.';
-            resultEl.className = 'padlock-result win';
-            endRound();
-            return;
-        }
-
-        currentRow++;
-        if (currentRow >= MAX_TRIES) {
-            resultEl.textContent = '실패! 정답은 ' + answer + ' 이었습니다.';
-            resultEl.className = 'padlock-result lose';
-            endRound();
-            return;
-        }
-
-        // 다음 시도 준비
-        cells.forEach(function(c) { c.value = ''; });
-        cells[0].focus();
-    }
-
-    function endRound() {
-        playing = false;
-        input.classList.remove('active');
-        keypad.classList.remove('active');
-        startBtn.textContent = '다시 하기';
-        startBtn.classList.add('retry');
-        startBtn.classList.remove('hide');
-    }
-
-    function startGame() {
-        total++;
-        totalEl.textContent = total;
-        answer = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
-        currentRow = 0;
-        playing = true;
-
-        // 보드 초기화
-        board.querySelectorAll('.plk-tile').forEach(function(t) {
-            t.textContent = '';
-            t.className = 'plk-tile';
-        });
-
-        cells.forEach(function(c) { c.value = ''; });
-        resultEl.textContent = '';
-        resultEl.className = 'padlock-result';
-
-        input.classList.add('active');
-        keypad.classList.add('active');
-        startBtn.classList.add('hide');
-        cells[0].focus();
-    }
-
-    submitBtn.addEventListener('click', doSubmit);
-    startBtn.addEventListener('click', startGame);
-})();
 
 // ── KaTeX auto-render ──
 if (typeof renderMathInElement === 'function') {
@@ -2138,7 +1758,6 @@ if (typeof renderMathInElement === 'function') {
         throwOnError: false
     });
 }
-
 </script>
 
 </body>

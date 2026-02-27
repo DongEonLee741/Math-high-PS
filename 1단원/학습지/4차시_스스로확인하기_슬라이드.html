@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>중복순열</title>
+    <title>스스로 확인하기 — 여러 가지 순열 — 수업 슬라이드</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
@@ -204,62 +204,6 @@
         }
         .inquiry-box h3 { font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 6px; }
 
-        /* ── PADLOCK 게임 ── */
-        .padlock-game {
-            background: #f0faf0; border: 1.5px solid #8cc68c;
-            border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
-        }
-        .padlock-game h3 {
-            font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 4px;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .padlock-desc { font-size: 13px; color: #555; margin-bottom: 10px; }
-        .padlock-stats { text-align: center; font-size: 13px; color: #666; margin-bottom: 10px; }
-        .padlock-board { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 12px; }
-        .plk-row { display: flex; gap: 6px; }
-        .plk-tile {
-            width: 44px; height: 44px; border: 2px solid #d0d0d0; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: 700; background: #fff; color: #333;
-            transition: all 0.3s;
-        }
-        .plk-tile.correct { background: #6aaa64; border-color: #6aaa64; color: #fff; }
-        .plk-tile.present { background: #c9b458; border-color: #c9b458; color: #fff; }
-        .plk-tile.absent  { background: #787c7e; border-color: #787c7e; color: #fff; }
-        .padlock-input { display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
-        .padlock-input.active { display: flex; }
-        .padlock-digits { display: flex; gap: 6px; }
-        .plk-cell {
-            width: 44px; height: 44px; border: 2px solid #4a90d9; border-radius: 8px;
-            text-align: center; font-size: 22px; font-weight: 700; font-family: inherit; outline: none;
-            -webkit-appearance: none; appearance: none;
-        }
-        .plk-cell:focus { border-color: #2c3e50; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
-        .plk-submit {
-            background: #4a90d9; color: #fff; border: none; border-radius: 8px;
-            padding: 10px 20px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
-        }
-        .plk-submit:disabled { opacity: 0.4; cursor: default; }
-        .padlock-keypad { display: none; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 10px; max-width: 260px; margin-left: auto; margin-right: auto; }
-        .padlock-keypad.active { display: flex; }
-        .plk-key {
-            width: 42px; height: 42px; border: 1.5px solid #ccc; border-radius: 8px;
-            background: #fff; font-size: 18px; font-weight: 600; cursor: pointer; font-family: inherit;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .plk-key:active { background: #e8e8e8; }
-        .plk-key.del { width: 66px; font-size: 13px; font-weight: 700; }
-        .plk-start {
-            display: block; margin: 0 auto; background: #2d7a2d; color: #fff; border: none;
-            border-radius: 8px; padding: 10px 28px; font-size: 15px; font-weight: 700;
-            cursor: pointer; font-family: inherit;
-        }
-        .plk-start.retry { background: #e67e22; }
-        .plk-start.hide { display: none; }
-        .padlock-result { text-align: center; font-size: 14px; font-weight: 600; margin-top: 8px; min-height: 20px; }
-        .padlock-result.win { color: #2d7a2d; }
-        .padlock-result.lose { color: #e74c3c; }
-
         /* ── 문제 ── */
         .problem { margin-bottom: 16px; }
         .problem-label {
@@ -441,47 +385,12 @@
         .example-header {
             background: #2c3e50;
             color: #fff;
-            padding: 8px 14px;
+            padding: 7px 14px;
             font-weight: 700;
             font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        .example-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 1px 10px;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-        }
-        .example-title {
-            font-size: 14px;
-            opacity: 0.92;
-        }
-        .example-content {
-            padding: 14px 16px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e8ecf0;
-        }
+        .example-content { padding: 12px 16px; }
         .example-content p { font-size: 14px; margin-bottom: 4px; }
-        .example-solution {
-            padding: 14px 16px;
-            background: #fff;
-        }
-        .solution-label {
-            font-size: 11px;
-            color: #6fa3d4;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        .example-solution p {
-            font-size: 14px;
-            margin-bottom: 5px;
-            line-height: 1.7;
-        }
 
         /* ── 풀이 ── */
         .solution {
@@ -974,6 +883,70 @@
             .canvas-toolbar .pen-sizes { gap: 3px; }
             .canvas-toolbar .pen-size { width: 20px; height: 20px; }
         }
+
+/* ═══════════ SLIDE LAYOUT ═══════════ */
+body { font-size: clamp(16px, 1.4vw, 26px); overflow: hidden; height: 100vh; height: 100dvh; background: #f0f2f5; }
+.container { display: none; }
+.slide-deck { width: 100vw; height: 100vh; height: 100dvh; position: relative; }
+.slide {
+    display: none; position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    justify-content: center; align-items: center;
+    padding: clamp(20px, 3vw, 40px) clamp(16px, 4vw, 60px) clamp(60px, 6vw, 80px) clamp(16px, 4vw, 60px);
+}
+.slide.active { display: flex; }
+.slide-content {
+    max-width: clamp(600px, 75vw, 1300px); width: 100%; max-height: 100%;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: clamp(20px, 2.5vw, 42px) clamp(24px, 3vw, 52px);
+}
+.title-slide {
+    text-align: center; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; min-height: 400px;
+}
+.title-unit { background: #2c3e50; color: #fff; padding: 6px 24px; border-radius: 20px; font-weight: 700; font-size: clamp(14px, 1.1vw, 20px); margin-bottom: 20px; }
+.title-main { font-size: clamp(22px, 2.2vw, 40px); font-weight: 800; color: #2c3e50; margin-bottom: 16px; line-height: 1.4; }
+.title-meta span { background: #f0f0f0; padding: 4px 14px; border-radius: 6px; font-size: 14px; color: #555; }
+.title-achievement { margin-top: 24px; background: #eef3f8; border-left: 4px solid #2c3e50; padding: 12px 18px; border-radius: 0 8px 8px 0; font-size: clamp(14px, 1.1vw, 22px); text-align: left; max-width: 600px; }
+.section-header-slide {
+    text-align: center; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; min-height: 300px;
+}
+.section-header-slide .section-number {
+    background: #2c3e50; color: #fff; width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: clamp(20px, 1.6vw, 30px); margin-bottom: 16px;
+}
+.section-header-slide h2 { font-size: clamp(22px, 2vw, 36px); font-weight: 700; color: #2c3e50; }
+.slide-nav {
+    position: fixed; bottom: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(44,62,80,0.9); padding: 8px 20px; border-radius: 30px;
+    z-index: 100; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.nav-btn {
+    background: none; border: none; color: #fff;
+    font-size: 18px; cursor: pointer; padding: 6px 12px; border-radius: 6px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.15); }
+.nav-btn:disabled { opacity: 0.3; }
+.slide-counter { color: #fff; font-size: 14px; font-weight: 600; min-width: 60px; text-align: center; }
+.nav-fs { font-size: 16px; margin-left: 8px; }
+.slide-progress { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(0,0,0,0.05); z-index: 100; }
+.slide-progress-bar { height: 100%; background: #4a90d9; transition: width 0.3s ease; width: 0%; }
+.answer-content.revealed { max-height: 2000px !important; padding: 12px 14px !important; background: #f0f7ff; border: 1.5px solid #b3d4f0; border-radius: 8px; margin-top: 8px; display: block !important; opacity: 1; transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.3s ease; }
+.answer-toggle { display: none !important; }
+.writing-area, .canvas-toolbar { display: none !important; }
+.student-info, .save-actions, .global-answer-btn, .records-overlay { display: none !important; }
+@media (max-width: 768px) {
+    .slide { padding: 20px 16px 70px 16px; }
+    .slide-content { padding: 20px 18px; border-radius: 12px; }
+    body { font-size: 16px; }
+    .title-main { font-size: 22px; }
+}
     </style>
 <!-- KaTeX v0.16.33 (inline with base64 fonts) -->
 <style id="katex-css">
@@ -987,1145 +960,294 @@
 !function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t(require("katex")):"function"==typeof define&&define.amd?define(["katex"],t):"object"==typeof exports?exports.renderMathInElement=t(require("katex")):e.renderMathInElement=t(e.katex)}("undefined"!=typeof self?self:this,function(e){return function(){"use strict";var t={757:function(t){t.exports=e}},n={};function r(e){var o=n[e];if(void 0!==o)return o.exports;var i=n[e]={exports:{}};return t[e](i,i.exports,r),i.exports}r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,{a:t}),t},r.d=function(e,t){for(var n in t)r.o(t,n)&&!r.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)};var o={};r.d(o,{default:function(){return p}});var i=r(757),a=r.n(i);const l=function(e,t,n){let r=n,o=0;const i=e.length;for(;r<t.length;){const n=t[r];if(o<=0&&t.slice(r,r+i)===e)return r;"\\"===n?r++:"{"===n?o++:"}"===n&&o--,r++}return-1},s=/^\\begin{/;var d=function(e,t){let n;const r=[],o=new RegExp("("+t.map(e=>e.left.replace(/[-/\\^$*+?.()|[\]{}]/g,"\\$&")).join("|")+")");for(;n=e.search(o),-1!==n;){n>0&&(r.push({type:"text",data:e.slice(0,n)}),e=e.slice(n));const o=t.findIndex(t=>e.startsWith(t.left));if(n=l(t[o].right,e,t[o].left.length),-1===n)break;const i=e.slice(0,n+t[o].right.length),a=s.test(i)?i:e.slice(t[o].left.length,n);r.push({type:"math",data:a,rawData:i,display:t[o].display}),e=e.slice(n+t[o].right.length)}return""!==e&&r.push({type:"text",data:e}),r};const c=function(e,t){const n=d(e,t.delimiters);if(1===n.length&&"text"===n[0].type)return null;const r=document.createDocumentFragment();for(let e=0;e<n.length;e++)if("text"===n[e].type)r.appendChild(document.createTextNode(n[e].data));else{const o=document.createElement("span");let i=n[e].data;t.displayMode=n[e].display;try{t.preProcess&&(i=t.preProcess(i)),a().render(i,o,t)}catch(o){if(!(o instanceof a().ParseError))throw o;t.errorCallback("KaTeX auto-render: Failed to parse `"+n[e].data+"` with ",o),r.appendChild(document.createTextNode(n[e].rawData));continue}r.appendChild(o)}return r},f=function(e,t){for(let n=0;n<e.childNodes.length;n++){const r=e.childNodes[n];if(3===r.nodeType){let o=r.textContent,i=r.nextSibling,a=0;for(;i&&i.nodeType===Node.TEXT_NODE;)o+=i.textContent,i=i.nextSibling,a++;const l=c(o,t);if(l){for(let e=0;e<a;e++)r.nextSibling.remove();n+=l.childNodes.length-1,e.replaceChild(l,r)}else n+=a}else if(1===r.nodeType){const e=" "+r.className+" ";!t.ignoredTags.has(r.nodeName.toLowerCase())&&t.ignoredClasses.every(t=>!e.includes(" "+t+" "))&&f(r,t)}}};var p=function(e,t){if(!e)throw new Error("No element provided to render");const n={};for(const e in t)t.hasOwnProperty(e)&&(n[e]=t[e]);n.delimiters=n.delimiters||[{left:"$$",right:"$$",display:!0},{left:"\\(",right:"\\)",display:!1},{left:"\\begin{equation}",right:"\\end{equation}",display:!0},{left:"\\begin{align}",right:"\\end{align}",display:!0},{left:"\\begin{alignat}",right:"\\end{alignat}",display:!0},{left:"\\begin{gather}",right:"\\end{gather}",display:!0},{left:"\\begin{CD}",right:"\\end{CD}",display:!0},{left:"\\[",right:"\\]",display:!0}],n.ignoredTags=new Set(n.ignoredTags||["script","noscript","style","textarea","pre","code","option"]),n.ignoredClasses=n.ignoredClasses||[],n.errorCallback=n.errorCallback||console.error,n.macros=n.macros||{},f(e,n)};return o=o.default}()});
 </script>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
-  from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCnNvdo3ozcv3HC1ilMQX_fiwn_fpB5KCM",
-  authDomain: "math-high-cm1.firebaseapp.com",
-  projectId: "math-high-cm1",
-  storageBucket: "math-high-cm1.firebasestorage.app",
-  messagingSenderId: "1097512338605",
-  appId: "1:1097512338605:web:c8572e37781be52e9a7224"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const urlParams = new URLSearchParams(window.location.search);
-const classId = urlParams.get('class') || 'default';
-window._firebase = { auth, db, classId };
-
-function createLoginUI() {
-  var o = document.createElement('div');
-  o.id = 'fb-login-overlay';
-  var h = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99998;display:flex;align-items:center;justify-content:center;">';
-  h += '<div style="background:#fff;border-radius:16px;padding:32px;max-width:360px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2);">';
-  h += '<h2 style="margin-bottom:8px;font-size:20px;color:#2c3e50;">' + String.fromCodePoint(0x1F4DA) + ' \uc218\uc5c5 \ucc38\uc5ec</h2>';
-  h += '<p style="color:#666;font-size:14px;margin-bottom:20px;">\ud559\uc2b5\uc9c0\ub97c \uc0ac\uc6a9\ud558\ub824\uba74 \ub85c\uadf8\uc778\ud558\uc138\uc694.</p>';
-  h += '<button id="fb-google-login" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;background:#fff;cursor:pointer;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;">';
-  h += '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20"> Google\ub85c \ub85c\uadf8\uc778</button>';
-  h += '</div></div>';
-  o.innerHTML = h;
-  document.body.appendChild(o);
-  document.getElementById('fb-google-login').addEventListener('click', async function() {
-    try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
-  });
-}
-
-function setupFocusListener() {
-  var classRef = doc(db, 'classrooms', classId);
-  var banner = null;
-  onSnapshot(classRef, function(snap) {
-    var data = snap.data();
-    if (!data || data.focusSection === undefined) return;
-    var idx = data.focusSection;
-    var cards = document.querySelectorAll('.card');
-    if (idx >= 0 && idx < cards.length) {
-      cards[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      if (!banner) {
-        banner = document.createElement('div');
-        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:600;z-index:9999;transform:translateY(-100%);transition:transform .3s ease;box-shadow:0 2px 12px rgba(0,0,0,.2);';
-        document.body.appendChild(banner);
-      }
-      var h2 = cards[idx].querySelector('.section-title h2');
-      banner.textContent = String.fromCodePoint(0x1F4CC) + ' \uc120\uc0dd\ub2d8\uc774 "' + (h2 ? h2.textContent : '\uc139\uc158 ' + (idx+1)) + '" \uc73c\ub85c \uc774\ub3d9\uc2dc\ucf30\uc2b5\ub2c8\ub2e4';
-      banner.style.transform = 'translateY(0)';
-      setTimeout(function() { banner.style.transform = 'translateY(-100%)'; }, 4000);
-    }
-  });
-}
-
-async function registerStudent(user) {
-  await setDoc(doc(db, 'classrooms', classId, 'students', user.uid),
-    { name: user.displayName || '\ud559\uc0dd', email: user.email || null, online: true, lastSeen: serverTimestamp() },
-    { merge: true });
-}
-
-function showStatusBadge(user) {
-  var b = document.createElement('div');
-  b.style.cssText = 'position:fixed;top:8px;right:8px;background:#48bb78;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;z-index:9990;box-shadow:0 2px 8px rgba(0,0,0,.15);';
-  b.textContent = String.fromCodePoint(0x1F7E2) + ' ' + (user.displayName || user.email || '\ud559\uc0dd');
-  document.body.appendChild(b);
-}
-
-onAuthStateChanged(auth, async function(user) {
-  var ov = document.getElementById('fb-login-overlay');
-  if (user) {
-    if (ov) ov.remove();
-    await registerStudent(user);
-    showStatusBadge(user);
-    setupFocusListener();
-  } else {
-    if (!ov) createLoginUI();
-  }
-});
-</script>
-
 </head>
 <body>
 
-<div class="container">
+<div class="slide-deck" id="slideDeck">
 
-    <div class="header">
-        <div class="header-unit">Ⅰ. 경우의 수</div>
-        <div class="header-title">
-            <h1>1. 여러 가지 순열 &mdash; 중복순열</h1>
-            <div class="header-info"><span>교과서 11~13쪽</span></div>
+    <!-- Slide 0: 타이틀 -->
+    <section class="slide active" data-slide="0">
+        <div class="slide-content title-slide">
+            <div class="title-unit">Ⅰ. 경우의 수</div>
+            <div class="title-main">1. 여러 가지 순열 &mdash; 스스로 확인하기</div>
+            <div class="title-meta"><span>교과서 16쪽</span></div>
+            <div class="title-achievement"><strong>성취기준</strong> &nbsp; 중복순열, 같은 것이 있는 순열을 이해하고, 그 순열의 수를 구할 수 있다.</div>
         </div>
-    </div>
+    </section>
 
-    <div class="student-info">
-        <div class="save-actions">
-            <button class="btn-save" id="btnSave">💾 저장</button>
-            <button class="btn-records" id="btnRecords">📋 기록</button>
-        </div>
-        <div class="field"><label>학년 반</label> <input type="text" placeholder="예: 1-3"></div>
-        <div class="field"><label>번호</label> <input type="text" style="width:40px;" placeholder="00"></div>
-        <div class="field"><label>이름</label> <input type="text" placeholder="이름 입력"></div>
-    </div>
-
-    <div class="achievement">
-        <strong>성취기준</strong> &nbsp; 여러 가지 순열의 수를 구할 수 있다.
-    </div>
-
-    <div class="card">
-        <div class="section-title">
+    <!-- Slide 1: 섹션 헤더 1 -->
+    <section class="slide" data-slide="1">
+        <div class="slide-content section-header-slide">
             <div class="section-number">1</div>
-            <h2>중복순열이란 무엇일까?</h2>
+            <h2>스스로 확인하기</h2>
         </div>
+    </section>
 
-        <div class="padlock-game" id="padlockGame">
-            <h3><span class="badge">탐구</span> 자물쇠를 풀어라!</h3>
-            <p class="padlock-desc">0~9로 이루어진 4자리 비밀번호를 5회 안에 맞혀 보세요.</p>
-            <div class="padlock-stats">
-                성공 <b id="plkWin">0</b> / 시도 <b id="plkTotal">0</b>
-            </div>
-            <div class="padlock-board" id="plkBoard"></div>
-            <div class="padlock-input" id="plkInput">
-                <div class="padlock-digits" id="plkDigits">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="0">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="1">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="2">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" class="plk-cell" data-idx="3">
-                </div>
-                <button class="plk-submit" id="plkSubmit">확인</button>
-            </div>
-            <div class="padlock-keypad" id="plkKeypad">
-                <button class="plk-key" data-key="1">1</button>
-                <button class="plk-key" data-key="2">2</button>
-                <button class="plk-key" data-key="3">3</button>
-                <button class="plk-key" data-key="4">4</button>
-                <button class="plk-key" data-key="5">5</button>
-                <button class="plk-key" data-key="6">6</button>
-                <button class="plk-key" data-key="7">7</button>
-                <button class="plk-key" data-key="8">8</button>
-                <button class="plk-key" data-key="9">9</button>
-                <button class="plk-key" data-key="0">0</button>
-                <button class="plk-key del" data-key="del">&#9003; 삭제</button>
-            </div>
-            <button class="plk-start" id="plkStart">시작</button>
-            <div class="padlock-result" id="plkResult"></div>
-        </div>
-
-        <div class="concept-box highlight">
-            <h3><span class="badge">개념</span> 중복순열</h3>
-            <p>서로 다른 <b>n</b>개에서 <b>중복을 허용</b>하여 <b>r</b>개를 택하여 일렬로 나열하는 것을 <b>중복순열</b>이라 한다.</p>
-            <p style="margin-top:4px;">기호: \({}_{n}\Pi_{r}\)</p>
-            <div style="text-align:center; margin:12px 0; padding:12px 16px; background:#fff; border:2px solid #d4a853; border-radius:10px; font-size:18px;">
-                \({}_{n}\Pi_{r} = n^{r}\)
-            </div>
-            <div class="tip-box">순열(\({}_{n}\mathrm{P}_{r}\))은 중복 불허, 중복순열(\({}_{n}\Pi_{r}\))은 중복 허용</div>
-        </div>
-        <div class="step-simulation" id="simRepPerm">
-            <h3 style="font-size:14px; color:#2c3e50; margin-bottom:10px;"><span class="badge">비주얼 개념</span> 2개의 문자에서 중복순열</h3>
-
-            <div class="sim-step active" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <p style="margin-top:10px; font-size:13px; color:#555;">2개의 문자 {a, b}에서 중복을 허용하여 3개를 택해 나열하려면?</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <p style="margin-top:8px; font-size:13px; color:#555;"><b>Step 1:</b> 첫 번째 자리 &rarr; a 또는 b, 2가지</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#f0f5fa; border-radius:8px;"><b>2번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 = \) <b style="color:#E74C3C;">4</b>가지</div>
-                <p style="margin-top:8px; font-size:13px; color:#555;"><b>Step 2:</b> 두 번째 자리 &rarr; 첫 번째와 무관하게 a 또는 b, 누적 \(2 \times 2 = 4\)가지</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#f0f5fa; border-radius:8px;"><b>2번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 = \) <b style="color:#E74C3C;">4</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#fff3cd; border-radius:8px;"><b>3번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 \times 2 = \) <b style="color:#E74C3C;">8</b>가지</div>
-                <p style="margin-top:8px; font-size:13px; color:#555;"><b>Step 3:</b> 세 번째 자리 &rarr; 마찬가지로 2가지, 누적 \(2 \times 2 \times 2 = 8\)가지</p>
-            </div>
-
-            <div class="sim-step" style="text-align:center; font-size:14px; line-height:2; padding:10px;">
-                <div style="font-weight:700; color:#2c3e50;">문자 집합: {a, b} &rarr; 3개를 택하는 중복순열 \({}_{2}\Pi_{3}\)</div>
-                <div style="margin-top:8px; padding:8px; background:#f0faf0; border-radius:8px;"><b>1번째 자리:</b> a 또는 b &rarr; <b style="color:#E74C3C;">2</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#f0f5fa; border-radius:8px;"><b>2번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 = \) <b style="color:#E74C3C;">4</b>가지</div>
-                <div style="margin-top:8px; padding:8px; background:#fff3cd; border-radius:8px;"><b>3번째 자리:</b> 각각에 대해 a 또는 b &rarr; \(2 \times 2 \times 2 = \) <b style="color:#E74C3C;">8</b>가지</div>
-                <div style="margin-top:10px; padding:10px; background:#eafaf1; border:1.5px solid #27ae60; border-radius:8px;">
-                    \(\therefore {}_{2}\Pi_{3} = 2^{3} = \boldsymbol{8}\)<br>
-                    <span style="font-size:13px; color:#555;">aaa, aab, aba, abb, baa, bab, bba, bbb</span>
-                </div>
-                <p style="margin-top:8px; font-size:13px; color:#555;">\({}_{2}\Pi_{3} = 2^{3} = 8\) &mdash; 모든 경우를 나열하면 aaa, aab, aba, abb, baa, bab, bba, bbb</p>
-            </div>
-
-            <div class="sim-controls">
-                <button class="sim-btn" data-sim="simRepPerm" data-dir="prev" disabled>&#9664; 이전</button>
-                <span class="sim-progress" id="simRepPerm-progress">1 / 5</span>
-                <button class="sim-btn" data-sim="simRepPerm" data-dir="next">다음 &#9654;</button>
+    <!-- Slide 2: concept-box (도입) -->
+    <section class="slide" data-slide="2">
+        <div class="slide-content">
+            <div class="concept-box">
+                <p>다음 문제를 풀어 이 단원에서 배운 내용을 확인해 보자.</p>
             </div>
         </div>
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 1</span> 다음 중복순열의 수를 구하시오.</div>
+    </section>
 
-                <div class="sub-problem"><span class="num">⑴</span> \({}_{6}\Pi_{3}\)</div>
-                <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+    <!-- Slide 3: 문제 1 -->
+    <section class="slide" data-slide="3">
+        <div class="slide-content">
+            <div class="problem">
+                <div class="problem-label"><span class="p-num">문제 1</span> 3개의 숫자 0, 1, 2에서 중복을 허용하여 만들 수 있는 네 자리 자연수의 개수를 구하시오.</div>
+                <div class="sub-problem"><span class="num">⑱</span> 네 자리 자연수의 개수</div>
+                <div class="sub-problem"><span class="num">⑲</span> 네 자리 짝수의 개수</div>
+                <div class="answer-reveal">
                     <div class="answer-content">
                         <div class="ans-label">정답</div>
-                        \({}_{6}\Pi_{3} = 6^{3} = \boldsymbol{216}\)
+                        ⑱ 천의 자리에는 0이 올 수 없으므로 1, 2 중 하나(2가지), 나머지 세 자리에는 0, 1, 2 중 중복을 허용하여 선택하므로<br>
+                        \(2 \times 3^3 = 2 \times 27 = \boldsymbol{54}\)<br><br>
+                        ⑲ (짝수) = (일의 자리가 0인 경우) + (일의 자리가 2인 경우)<br>
+                        &bull; 일의 자리가 0인 경우: 천의 자리 2가지, 백&middot;십의 자리 각 3가지 &rarr; \(2 \times 3^2 = 18\)<br>
+                        &bull; 일의 자리가 2인 경우: 천의 자리 2가지, 백&middot;십의 자리 각 3가지 &rarr; \(2 \times 3^2 = 18\)<br>
+                        \(18 + 18 = \boldsymbol{36}\)
                     </div>
                 </div>
-
-                <div class="sub-problem"><span class="num">⑵</span> \({}_{4}\Pi_{4}\)</div>
-                <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        \({}_{4}\Pi_{4} = 4^{4} = \boldsymbol{256}\)
-                    </div>
-                </div>
-
-                <div class="sub-problem"><span class="num">⑶</span> \({}_{7}\Pi_{2}\)</div>
-                <div class="writing-area" data-h="91"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        \({}_{7}\Pi_{2} = 7^{2} = \boldsymbol{49}\)
-                    </div>
-                </div>
-
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div class="card">
-        <div class="section-title">
+    <!-- Slide 4: 문제 2 -->
+    <section class="slide" data-slide="4">
+        <div class="slide-content">
+            <div class="problem">
+                <div class="problem-label"><span class="p-num">문제 2</span> 6명의 학생이 코미디, 액션, 스포츠 영화 중 하나를 선택하여 관람할 때, 영화를 선택하는 경우의 수를 구하시오.</div>
+                <div class="answer-reveal">
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        6명 각각이 3개의 장르 중 하나를 선택하므로 중복순열<br>
+                        \({}_{3}\Pi_{6} = 3^6 = \boldsymbol{729}\)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: 문제 3 -->
+    <section class="slide" data-slide="5">
+        <div class="slide-content">
+            <div class="problem">
+                <div class="problem-label"><span class="p-num">문제 3</span> success의 7개의 문자를 모두 일렬로 나열할 때, 양 끝에 u와 e가 오는 경우의 수를 구하시오.</div>
+                <div class="answer-reveal">
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        success의 문자 구성: s(3개), u(1개), c(2개), e(1개) — 총 7개<br><br>
+                        양 끝에 u, e를 배치하는 경우: 2가지 (u□□□□□e 또는 e□□□□□u)<br>
+                        가운데 5자리에 s, s, s, c, c를 나열하는 경우: 같은 것이 있는 순열<br>
+                        \[\frac{5!}{3! \times 2!} = \frac{120}{6 \times 2} = 10\]
+                        \(2 \times 10 = \boldsymbol{20}\)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: 문제 4 (with tip-box) -->
+    <section class="slide" data-slide="6">
+        <div class="slide-content">
+            <div class="problem">
+                <div class="problem-label"><span class="p-num">문제 4</span> 다음 그림과 같이 A 지점에서 B 지점까지 최단 거리로 가는 경우의 수를 구하시오. (단, P, Q 지점을 반드시 지난다.)</div>
+                <div class="tip-box">
+                    <strong>참고</strong> &nbsp; 격자 경로에서 A&rarr;P&rarr;Q&rarr;B로 나누어 각 구간의 최단 경로 수를 곱합니다.
+                </div>
+                <div class="answer-reveal">
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        A&rarr;P, P&rarr;Q, Q&rarr;B 각 구간의 최단 경로 수를 구하여 곱한다.<br>
+                        &bull; A&rarr;P: \(\dfrac{3!}{2! \times 1!} = 3\)<br>
+                        &bull; P&rarr;Q: \(\dfrac{2!}{1! \times 1!} = 2\)<br>
+                        &bull; Q&rarr;B: \(\dfrac{2!}{1! \times 1!} = 2\)<br>
+                        \(3 \times 2 \times 2 = \boldsymbol{12}\)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: 문제 5 -->
+    <section class="slide" data-slide="7">
+        <div class="slide-content">
+            <div class="problem">
+                <div class="problem-label"><span class="p-num">문제 5</span> \(X = \{1, 2, 3\}\)에서 \(Y = \{a, b, c, d\}\)로의 함수 중 다음을 구하시오.</div>
+                <div class="sub-problem"><span class="num">⑱</span> 함수의 개수</div>
+                <div class="sub-problem"><span class="num">⑲</span> 일대일함수의 개수</div>
+                <div class="answer-reveal">
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        ⑱ X의 각 원소가 Y의 4개 원소 중 하나에 대응하므로 중복순열<br>
+                        \({}_{4}\Pi_{3} = 4^3 = \boldsymbol{64}\)<br><br>
+                        ⑲ 일대일함수: X의 각 원소가 Y의 서로 다른 원소에 대응<br>
+                        \({}_{4}P_{3} = 4 \times 3 \times 2 = \boldsymbol{24}\)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: 섹션 헤더 2 -->
+    <section class="slide" data-slide="8">
+        <div class="slide-content section-header-slide">
             <div class="section-number">2</div>
-            <h2>중복순열의 활용</h2>
+            <h2>수학으로 생각 넓히기</h2>
         </div>
+    </section>
 
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 2</span> 바이올린과 피아노 중 하나를 택하여 매일 하나의 악기만 연습하기로 할 때, 7일 동안의 연습 계획을 세우는 경우의 수를 구하시오.</div>
-                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        매일 2가지 중 택 1 &rarr; \({}_{2}\Pi_{7} = 2^{7} = \boldsymbol{128}\)
-                    </div>
-                </div>
-            </div>
-
-        <div class="example-box">
-            <div class="example-header">
-                <span class="example-badge">예제 1</span>
-                <span class="example-title">세 자리 자연수의 개수</span>
-            </div>
-            <div class="example-content">
-                <p>4개의 숫자 0, 1, 2, 3에서 중복을 허용하여 만들 수 있는 세 자리 자연수의 개수를 구하시오.</p>
-            </div>
-            <div class="example-solution">
-                <div class="solution-label">풀이</div>
-                <p><b>STEP 1</b> &nbsp; 백의 자리: 0을 제외한 1, 2, 3 &rarr; <b>3</b>가지</p>
-                <p><b>STEP 2</b> &nbsp; 십의 자리, 일의 자리: 각각 0, 1, 2, 3 &rarr; <b>4</b>가지씩</p>
-                <p style="margin-top:6px;">\(\therefore\) \(3 \times 4 \times 4 = \boldsymbol{48}\)</p>
+    <!-- Slide 9: concept-box.blue -->
+    <section class="slide" data-slide="9">
+        <div class="slide-content">
+            <div class="concept-box blue">
+                <p><strong>문제 상황</strong></p>
+                <p>서로 다른 공 4개를 상자 A, B, C에 넣는 경우의 수를 구하려고 한다. 예나와 수호의 풀이를 살펴보자.</p>
+                <hr style="border:none;border-top:1px dashed #90caf9;margin:12px 0;">
+                <p><strong>예나의 풀이</strong></p>
+                <p>각 공이 3개의 상자 중 하나를 선택하므로 중복순열로 생각하면<br>
+                \({}_{3}\Pi_{4} = 3^{4} = 81\)</p>
+                <hr style="border:none;border-top:1px dashed #90caf9;margin:12px 0;">
+                <p><strong>수호의 풀이</strong></p>
+                <p>각 상자가 4개의 공 중 하나를 선택하므로 중복순열로 생각하면<br>
+                \({}_{4}\Pi_{3} = 4^{3} = 64\)</p>
             </div>
         </div>
+    </section>
 
-        <div class="self-practice">
-            <div class="self-practice-header">
-                <span>📝</span> 스스로 하기
-            </div>
-            <div class="self-practice-content">
-                <p>5개의 숫자 0, 1, 2, 3, 4에서 중복을 허용하여 만들 수 있는 네 자리 자연수의 개수를 구하시오.</p>
-                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+    <!-- Slide 10: 문제 6 -->
+    <section class="slide" data-slide="10">
+        <div class="slide-content">
+            <div class="problem">
+                <div class="problem-label"><span class="p-num">문제 6</span> 예나와 수호 중 누구의 풀이가 옳은지 판단하고, 그 이유를 설명하시오.</div>
+                <div class="answer-reveal">
                     <div class="answer-content">
                         <div class="ans-label">정답</div>
-                        천의 자리: 0 제외 4가지, 백&middot;십&middot;일의 자리: 각 5가지 &rarr; \(4 \times 5 \times 5 \times 5 = \boldsymbol{500}\)
+                        <strong>예나</strong>의 풀이가 옳다.<br><br>
+                        <strong>이유:</strong> 서로 다른 공 4개를 상자에 넣을 때, 각 공(4개)이 3개의 상자 중 하나를 선택하는 것이므로 중복순열 \({}_{3}\Pi_{4} = 3^{4} = 81\)이 맞다.<br><br>
+                        수호의 풀이는 각 상자가 공을 하나 선택하는 모델인데, 여러 공이 같은 상자에 들어갈 수 있으므로 이 모델은 부적절하다.<br><br>
+                        \({}_{3}\Pi_{4} = 3^{4} = \boldsymbol{81}\)
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <hr class="divider">
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 3</span> 0부터 9까지의 숫자를 사용하여 네 자리 비밀번호를 만들려고 한다.</div>
-
-                <div class="sub-problem"><span class="num">⑴</span> 만들 수 있는 비밀번호의 수를 구하시오.</div>
-                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        \({}_{10}\Pi_{4} = 10^{4} = \boldsymbol{10000}\)
-                    </div>
-                </div>
-
-                <div class="sub-problem"><span class="num">⑵</span> 첫째 자리가 홀수인 비밀번호의 수를 구하시오.</div>
-                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        첫째 자리: 1, 3, 5, 7, 9 &rarr; 5가지, 나머지: 각 10가지 &rarr; \(5 \times 10^{3} = \boldsymbol{5000}\)
-                    </div>
-                </div>
-            </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 4</span> 5명의 학생이 방송반 또는 댄스반 중 하나에 가입하려고 한다.</div>
-
-                <div class="sub-problem"><span class="num">⑴</span> 5명이 반에 가입하는 경우의 수를 구하시오.</div>
-                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        각 학생마다 2가지 선택 &rarr; \({}_{2}\Pi_{5} = 2^{5} = \boldsymbol{32}\)
-                    </div>
-                </div>
-
-                <div class="sub-problem"><span class="num">⑵</span> 각 반에 적어도 1명 이상이 가입하는 경우의 수를 구하시오.</div>
-                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
-                                <div class="answer-reveal">
-                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                    <div class="answer-content">
-                        <div class="ans-label">정답</div>
-                        전체 &minus; (한 반에 몰리는 경우) = \(32 - 2 = \boldsymbol{30}\)
-                    </div>
-                </div>
-        </div>
-    </div>
-
-    <div class="footer">확률과 통계 &middot; Ⅰ. 경우의 수 &middot; 1. 여러 가지 순열</div>
 </div>
 
-<button class="global-answer-btn" id="globalAnswerBtn">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    정답 전체 보기
-</button>
-
-<div class="records-overlay" id="recordsOverlay">
-    <div class="records-panel">
-        <div class="records-header">
-            <h3>📋 저장 기록</h3>
-            <button class="close-btn" id="btnCloseRecords">&times;</button>
-        </div>
-        <div class="records-list" id="recordsList"></div>
-    </div>
+<!-- 네비게이션 -->
+<div class="slide-nav">
+    <button class="nav-btn" id="navPrev">&#9664;</button>
+    <span class="slide-counter" id="slideCounter">1 / 11</span>
+    <button class="nav-btn" id="navNext">&#9654;</button>
+    <button class="nav-btn nav-fs" id="navFS" title="전체 화면">&#9974;</button>
 </div>
+
+<!-- 프로그레스 바 -->
+<div class="slide-progress">
+    <div class="slide-progress-bar" id="progressBar"></div>
+</div>
+
 <script>
-// ── file:// 프로토콜 감지 (iPad Safari에서 localStorage 차단됨) ──
-if (window.location.protocol === 'file:') {
-    var fileWarning = document.createElement('div');
-    fileWarning.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;margin:8px 0;font-size:14px;color:#856404;line-height:1.5;';
-    fileWarning.innerHTML = '⚠️ <b>오프라인 모드</b>: 현재 파일을 직접 열어 사용 중입니다. 저장/불러오기 기능을 사용하려면 웹 주소(https://)로 접속해 주세요.';
-    var studentInfo = document.querySelector('.student-info');
-    if (studentInfo) studentInfo.after(fileWarning);
-}
-
-// ── 정답 토글 ──
-function toggleAnswer(el) {
-    el.classList.toggle('open');
-    const content = el.nextElementSibling;
-    content.classList.toggle('open');
-}
-
-let allAnswersOpen = false;
-function toggleAllAnswers() {
-    allAnswersOpen = !allAnswersOpen;
-    const btn = document.getElementById('globalAnswerBtn');
-    btn.classList.toggle('active', allAnswersOpen);
-    btn.innerHTML = allAnswersOpen
-        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg> 정답 전체 숨기기'
-        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 정답 전체 보기';
-    document.querySelectorAll('.answer-toggle').forEach(t => {
-        const isOpen = t.classList.contains('open');
-        if (allAnswersOpen && !isOpen) { t.classList.add('open'); t.nextElementSibling.classList.add('open'); }
-        if (!allAnswersOpen && isOpen) { t.classList.remove('open'); t.nextElementSibling.classList.remove('open'); }
-    });
-}
-
-// ── localStorage 저장/불러오기 시스템 ──
-function getStorageKey() {
-    return 'worksheet_PS_2차시_중복순열';
-}
-
-function getAllRecords() {
-    try {
-        const raw = localStorage.getItem(getStorageKey());
-        if (!raw) return [];
-        const data = JSON.parse(raw);
-        return data.records || [];
-    } catch (e) {
-        console.warn('저장 데이터 읽기 오류:', e);
-        return [];
-    }
-}
-
-function saveAllRecords(records) {
-    const data = { version: 1, records: records };
-    try {
-        localStorage.setItem(getStorageKey(), JSON.stringify(data));
-        return true;
-    } catch (e) {
-        if (window.location.protocol === 'file:') {
-            alert('오프라인(file://) 환경에서는 저장이 불가합니다.\n웹 주소(https://)로 접속하면 저장할 수 있습니다.');
-        } else {
-            alert('저장 공간이 부족합니다. 이전 기록을 삭제한 후 다시 시도해 주세요.');
-        }
-        return false;
-    }
-}
-
-function isCanvasBlank(wc) {
-    try {
-        const px = wc.ctx.getImageData(0, 0, wc.canvas.width, wc.canvas.height).data;
-        for (let i = 3; i < px.length; i += 4) {
-            if (px[i] !== 0) return false;
-        }
-        return true;
-    } catch (e) {
-        return true;
-    }
-}
-
-function canvasToJpeg(wc) {
-    // 투명 배경 → 검정 방지: 흰색 배경 합성 후 JPEG 변환
-    const tmp = document.createElement('canvas');
-    tmp.width = wc.canvas.width;
-    tmp.height = wc.canvas.height;
-    const tc = tmp.getContext('2d');
-    tc.fillStyle = '#ffffff';
-    tc.fillRect(0, 0, tmp.width, tmp.height);
-    tc.drawImage(wc.canvas, 0, 0);
-    return tmp.toDataURL('image/jpeg', 0.3);
-}
-
-function captureCurrentState() {
-    const inputs = document.querySelectorAll('.student-info .field input');
-    const studentInfo = {
-        classGroup: inputs[0] ? inputs[0].value : '',
-        number: inputs[1] ? inputs[1].value : '',
-        name: inputs[2] ? inputs[2].value : ''
-    };
-
-    const canvasData = canvases.map(function(wc) {
-        if (isCanvasBlank(wc)) return null;
-        return canvasToJpeg(wc);
-    });
-
-    return {
-        id: String(Date.now()),
-        timestamp: new Date().toISOString(),
-        studentInfo: studentInfo,
-        canvasData: canvasData
-    };
-}
-
-function saveRecord() {
-    var record = captureCurrentState();
-    var records = getAllRecords();
-
-    if (records.length >= 5) {
-        records.sort(function(a, b) { return new Date(a.timestamp) - new Date(b.timestamp); });
-        records = records.slice(records.length - 4);
-    }
-
-    records.push(record);
-    if (saveAllRecords(records)) {
-        showToast('저장되었습니다.');
-    }
-}
-
-function loadRecord(recordId) {
-    var records = getAllRecords();
-    var record = records.find(function(r) { return r.id === recordId; });
-    if (!record) {
-        alert('저장 기록을 찾을 수 없습니다.');
-        return;
-    }
-
-    // 학생 정보 복원
-    var inputs = document.querySelectorAll('.student-info .field input');
-    if (inputs[0]) inputs[0].value = record.studentInfo.classGroup || '';
-    if (inputs[1]) inputs[1].value = record.studentInfo.number || '';
-    if (inputs[2]) inputs[2].value = record.studentInfo.name || '';
-
-    // 캔버스 복원
-    record.canvasData.forEach(function(dataUrl, idx) {
-        if (idx >= canvases.length) return;
-        var wc = canvases[idx];
-
-        wc.ctx.save();
-        wc.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        wc.ctx.clearRect(0, 0, wc.canvas.width, wc.canvas.height);
-
-        if (dataUrl) {
-            var img = new Image();
-            img.onload = function() {
-                wc.ctx.save();
-                wc.ctx.setTransform(1, 0, 0, 1, 0, 0);
-                wc.ctx.drawImage(img, 0, 0);
-                wc.ctx.restore();
-                wc.history = [wc.canvas.toDataURL()];
-                wc.historyIndex = 0;
-            };
-            img.src = dataUrl;
-        } else {
-            wc.history = [wc.canvas.toDataURL()];
-            wc.historyIndex = 0;
-        }
-        wc.ctx.restore();
-    });
-
-    closeRecordsPanel();
-    showToast('불러왔습니다.');
-}
-
-function deleteRecord(recordId) {
-    var records = getAllRecords();
-    records = records.filter(function(r) { return r.id !== recordId; });
-    saveAllRecords(records);
-    renderRecordsPanel();
-}
-
-function formatTimestamp(isoString) {
-    var d = new Date(isoString);
-    var month = d.getMonth() + 1;
-    var day = d.getDate();
-    var hours = String(d.getHours()).padStart(2, '0');
-    var minutes = String(d.getMinutes()).padStart(2, '0');
-    return month + '/' + day + ' ' + hours + ':' + minutes;
-}
-
-function openRecordsPanel() {
-    document.getElementById('recordsOverlay').style.display = 'flex';
-    renderRecordsPanel();
-}
-
-function closeRecordsPanel() {
-    document.getElementById('recordsOverlay').style.display = 'none';
-}
-
-function renderRecordsPanel() {
-    var records = getAllRecords();
-    var listEl = document.getElementById('recordsList');
-
-    if (records.length === 0) {
-        listEl.innerHTML = '<div class="records-empty">저장된 기록이 없습니다.</div>';
-        return;
-    }
-
-    records.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
-
-    listEl.innerHTML = records.map(function(r) {
-        var name = r.studentInfo.name || '이름 없음';
-        var classInfo = r.studentInfo.classGroup || '';
-        var num = r.studentInfo.number || '';
-        var dateStr = formatTimestamp(r.timestamp);
-        var detail = (classInfo ? classInfo + ' ' : '') + (num ? num + '번 ' : '') + name;
-
-        return '<div class="record-item">' +
-            '<div class="record-info">' +
-                '<div class="record-date">' + dateStr + '</div>' +
-                '<div class="record-detail">' + detail + '</div>' +
-            '</div>' +
-            '<div class="record-actions">' +
-                '<button class="record-btn load" data-record-id="' + r.id + '">불러오기</button>' +
-                '<button class="record-btn delete" data-record-id="' + r.id + '">삭제</button>' +
-            '</div>' +
-        '</div>';
-    }).join('');
-}
-
-function showToast(message) {
-    var toast = document.getElementById('saveToast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'saveToast';
-        toast.className = 'save-toast';
-        document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(function() { toast.classList.remove('show'); }, 2000);
-}
-
-// ── 캔버스 필기 시스템 ──
-class WritingCanvas {
-    constructor(container) {
-        this.container = container;
-        this.canvas = container.querySelector('canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.drawing = false;
-        this.tool = 'pen';
-        this.penWidth = 2;
-        this.history = [];
-        this.historyIndex = -1;
-        this.baseHeight = parseInt(container.dataset.h) || 80;
-
-        this.setupCanvas();
-        this.setupToolbar();
-        this.bindEvents();
-    }
-
-    setupCanvas() {
-        const rect = this.container.getBoundingClientRect();
-        const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = this.baseHeight * 2;
-
-        this.canvas.width = w * dpr;
-        this.canvas.height = h * dpr;
-        this.canvas.style.width = w + 'px';
-        this.canvas.style.height = h + 'px';
-        this.ctx.scale(dpr, dpr);
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-        this.saveState();
-    }
-
-    setupToolbar() {
-        const toolbar = this.container.querySelector('.canvas-toolbar');
-        toolbar.innerHTML = `
-            <button class="tool-btn active" data-tool="pen">&#9998; 펜</button>
-            <button class="tool-btn" data-tool="eraser">&#9634; 지우개</button>
-            <div class="pen-sizes">
-                <div class="pen-size" data-size="1"><div class="dot" style="width:3px;height:3px;"></div></div>
-                <div class="pen-size active" data-size="2"><div class="dot" style="width:5px;height:5px;"></div></div>
-                <div class="pen-size" data-size="4"><div class="dot" style="width:8px;height:8px;"></div></div>
-            </div>
-            <div class="spacer"></div>
-            <button class="undo-btn">&#8630;</button>
-            <button class="clear-btn">&#10005;</button>
-        `;
-
-        toolbar.querySelectorAll('.tool-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                toolbar.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.tool = btn.dataset.tool;
-            });
-        });
-
-        toolbar.querySelectorAll('.pen-size').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                toolbar.querySelectorAll('.pen-size').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.penWidth = parseInt(btn.dataset.size);
-            });
-        });
-
-        toolbar.querySelector('.undo-btn').addEventListener('click', (e) => { e.preventDefault(); this.undo(); });
-        toolbar.querySelector('.clear-btn').addEventListener('click', (e) => { e.preventDefault(); this.clear(); });
-
-        // 펼치기/접기 토글 버튼
-        var toggleBtn = document.createElement('button');
-        toggleBtn.className = 'btn-toggle';
-        toggleBtn.type = 'button';
-        toggleBtn.innerHTML = '<span class="toggle-arrow">&#9660;</span><span class="toggle-text"> 펼치기</span>';
-        toolbar.appendChild(toggleBtn);
-        var self = this;
-        toggleBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            self.container.classList.toggle('collapsed');
-            if (self.container.classList.contains('collapsed')) {
-                toggleBtn.innerHTML = '<span class="toggle-arrow">&#9660;</span><span class="toggle-text"> 펼치기</span>';
-            } else {
-                toggleBtn.innerHTML = '<span class="toggle-arrow">&#9650;</span><span class="toggle-text"> 접기</span>';
-            }
-        });
-    }
-
-    bindEvents() {
-        const opts = { passive: false };
-        // Pointer events with passive:false for iOS Safari preventDefault() support
-        this.canvas.addEventListener('pointerdown', (e) => this.startDraw(e), opts);
-        this.canvas.addEventListener('pointermove', (e) => this.draw(e), opts);
-        this.canvas.addEventListener('pointerup', (e) => this.endDraw(e));
-        this.canvas.addEventListener('pointerleave', (e) => this.endDraw(e));
-        this.canvas.addEventListener('pointercancel', (e) => this.endDraw(e));
-        // iOS Safari: 터치 기본 동작(스크롤) 차단
-        this.canvas.addEventListener('touchstart', (e) => { e.preventDefault(); }, opts);
-        this.canvas.addEventListener('touchmove', (e) => { e.preventDefault(); }, opts);
-    }
-
-    getPos(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }
-
-    startDraw(e) {
-        e.preventDefault();
-        this.canvas.setPointerCapture(e.pointerId);
-        this.drawing = true;
-        const pos = this.getPos(e);
-        this.ctx.beginPath();
-        this.ctx.moveTo(pos.x, pos.y);
-
-        if (this.tool === 'eraser') {
-            this.ctx.globalCompositeOperation = 'destination-out';
-            this.ctx.lineWidth = this.penWidth * 10;
-        } else {
-            this.ctx.globalCompositeOperation = 'source-over';
-            this.ctx.strokeStyle = '#1a1a1a';
-            this.ctx.lineWidth = this.penWidth;
-        }
-    }
-
-    draw(e) {
-        if (!this.drawing) return;
-        e.preventDefault();
-        const pos = this.getPos(e);
-        this.ctx.lineTo(pos.x, pos.y);
-        this.ctx.stroke();
-    }
-
-    endDraw(e) {
-        if (!this.drawing) return;
-        this.drawing = false;
-        this.ctx.globalCompositeOperation = 'source-over';
-        this.saveState();
-    }
-
-    saveState() {
-        this.historyIndex++;
-        this.history = this.history.slice(0, this.historyIndex);
-        this.history.push(this.canvas.toDataURL());
-    }
-
-    undo() {
-        if (this.historyIndex > 0) {
-            this.historyIndex--;
-            const img = new Image();
-            img.onload = () => {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.drawImage(img, 0, 0);
-            };
-            img.src = this.history[this.historyIndex];
-        }
-    }
-
-    clear() {
-        const dpr = window.devicePixelRatio || 1;
-        this.ctx.clearRect(0, 0, this.canvas.width / dpr, this.canvas.height / dpr);
-        this.saveState();
-    }
-
-    resize() {
-        const saved = this.canvas.toDataURL();
-        this.setupCanvas();
-        const img = new Image();
-        img.onload = () => { this.ctx.drawImage(img, 0, 0); };
-        img.src = saved;
-    }
-}
-
-// ── 인터랙티브 요소 엔진 ──
-
-// StepSimulation 클래스 — 단계별 수식 전개 시각화
-class StepSimulation {
-    constructor(containerId) {
-        this.container = document.getElementById(containerId);
-        if (!this.container) return;
-        this.steps = this.container.querySelectorAll('.sim-step');
-        this.total = this.steps.length;
-        this.current = 0;
-        this.progressEl = document.getElementById(containerId + '-progress');
-        this.updateUI();
-    }
-    showStep(n) {
-        if (n < 0 || n >= this.total) return;
-        this.steps.forEach(s => s.classList.remove('active'));
-        this.steps[n].classList.add('active');
-        this.current = n;
-        this.updateUI();
-        if (typeof renderMathInElement === 'function') {
-            renderMathInElement(this.steps[n], {delimiters: [{left: '\\(', right: '\\)', display: false}], throwOnError: false});
-        }
-    }
-    next() { this.showStep(this.current + 1); }
-    prev() { this.showStep(this.current - 1); }
-    updateUI() {
-        if (this.progressEl) this.progressEl.textContent = (this.current + 1) + ' / ' + this.total;
-        const btns = this.container.querySelectorAll('.sim-btn');
-        btns.forEach(btn => {
-            if (btn.dataset.dir === 'prev') btn.disabled = (this.current === 0);
-            if (btn.dataset.dir === 'next') btn.disabled = (this.current === this.total - 1);
-        });
-    }
-}
-
-// AlgebraTiles 클래스 — SVG 터치 인터랙티브 타일
-class AlgebraTiles {
-    constructor(containerId) {
-        this.container = document.getElementById(containerId);
-        if (!this.container) return;
-        this.resultEl = document.getElementById('tilesResult');
-        this.tiles = this.container.querySelectorAll('.tile-rect');
-        this.activeGroup = null;
-        // ★ groupInfo는 차시별로 교체
-        this.groupInfo = {
-            'a2': { label: 'a² (1개)', formula: '\\(a \\times a = a^2\\)' },
-            'b2': { label: 'b² (1개)', formula: '\\(b \\times b = b^2\\)' },
-            'c2': { label: 'c² (1개)', formula: '\\(c \\times c = c^2\\)' },
-            'ab': { label: 'ab (2개)', formula: '\\(a \\times b + b \\times a = 2ab\\)' },
-            'bc': { label: 'bc (2개)', formula: '\\(b \\times c + c \\times b = 2bc\\)' },
-            'ac': { label: 'ac (2개)', formula: '\\(a \\times c + c \\times a = 2ca\\)' }
-        };
-        this.bindEvents();
-    }
-    bindEvents() {
-        var self = this;
-        var opts = { passive: false };
-        this.tiles.forEach(function(tile) {
-            tile.addEventListener('pointerdown', function(e) {
-                e.preventDefault();
-                self.handleTap(tile.dataset.group);
-            }, opts);
-            tile.addEventListener('click', function(e) {
-                e.preventDefault();
-                self.handleTap(tile.dataset.group);
-            });
-            tile.addEventListener('touchstart', function(e) { e.preventDefault(); }, opts);
-        });
-    }
-    handleTap(group) {
-        if (this.activeGroup === group) {
-            this.activeGroup = null;
-            this.tiles.forEach(function(t) { t.classList.remove('dim', 'glow'); });
-            if (this.resultEl) this.resultEl.innerHTML = '';
-            return;
-        }
-        this.activeGroup = group;
-        this.tiles.forEach(function(t) {
-            if (t.dataset.group === group) {
-                t.classList.remove('dim');
-                t.classList.add('glow');
-            } else {
-                t.classList.remove('glow');
-                t.classList.add('dim');
-            }
-        });
-        var info = this.groupInfo[group];
-        if (this.resultEl && info) {
-            this.resultEl.innerHTML = info.label + ' &rarr; ' + info.formula;
-            if (typeof renderMathInElement === 'function') {
-                renderMathInElement(this.resultEl, {delimiters: [{left: '\\(', right: '\\)', display: false}], throwOnError: false});
-            }
-        }
-    }
-}
-
-// ★ 인터랙티브 요소 인스턴스는 Phase 3에서 차시별로 생성
-// 예: var simMultiply = new StepSimulation('simMultiply');
-// 예: var tiles = new AlgebraTiles('tilesContainer');
-
-// ── 초기화 ──
-const canvases = [];
-document.querySelectorAll('.writing-area').forEach(area => {
-    canvases.push(new WritingCanvas(area));
-});
-// 초기화 완료 후 모든 작성란 접기 (캔버스는 이미 정상 초기화됨)
-document.querySelectorAll('.writing-area').forEach(area => {
-    area.classList.add('collapsed');
-});
-// 리사이즈 대응
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { canvases.forEach(c => c.resize()); }, 300);
-});
-
-// ── iOS 호환 이벤트 위임 ──
-document.addEventListener('click', function(e) {
-    // 정답 토글
-    var toggle = e.target.closest('.answer-toggle');
-    if (toggle) { e.preventDefault(); toggleAnswer(toggle); }
-
-    // 플립카드 (큰 카드)
-    var flipSingle = e.target.closest('.flip-card-single');
-    if (flipSingle && !e.target.closest('.flip-back a')) {
-        e.preventDefault();
-        flipSingle.classList.toggle('flipped');
-    }
-
-    // 공식 미니 플립카드
-    var formulaFlip = e.target.closest('.formula-flip');
-    if (formulaFlip) {
-        e.preventDefault();
-        formulaFlip.classList.toggle('flipped');
-        if (typeof renderMathInElement === 'function') {
-            renderMathInElement(formulaFlip, {delimiters: [{left: '\\(', right: '\\)', display: false}], throwOnError: false});
-        }
-    }
-
-    // 스텝 시뮬레이션 버튼
-    var simBtn = e.target.closest('.sim-btn');
-    if (simBtn) {
-        e.preventDefault();
-        var simId = simBtn.dataset.sim;
-        var dir = simBtn.dataset.dir;
-        // ★ 차시별 StepSimulation 인스턴스를 여기서 참조
-        // 예: if (simId === 'simMultiply' && typeof simMultiply !== 'undefined') { ... }
-        var simInstance = window[simId];
-        if (simInstance) {
-            if (dir === 'next') simInstance.next();
-            else if (dir === 'prev') simInstance.prev();
-        }
-    }
-});
-document.getElementById('globalAnswerBtn').addEventListener('click', function(e) {
-    e.preventDefault(); toggleAllAnswers();
-});
-
-// 저장/불러오기 이벤트 바인딩
-document.getElementById('btnSave').addEventListener('click', function(e) {
-    e.preventDefault(); saveRecord();
-});
-document.getElementById('btnRecords').addEventListener('click', function(e) {
-    e.preventDefault(); openRecordsPanel();
-});
-document.getElementById('btnCloseRecords').addEventListener('click', function(e) {
-    e.preventDefault(); closeRecordsPanel();
-});
-document.getElementById('recordsOverlay').addEventListener('click', function(e) {
-    if (e.target === this) closeRecordsPanel();
-});
-// 기록 패널 내 불러오기/삭제 버튼 이벤트 위임
-document.getElementById('recordsList').addEventListener('click', function(e) {
-    var btn = e.target.closest('.record-btn');
-    if (!btn) return;
-    var id = btn.dataset.recordId;
-    if (btn.classList.contains('load')) {
-        loadRecord(id);
-    } else if (btn.classList.contains('delete')) {
-        if (confirm('이 기록을 삭제하시겠습니까?')) {
-            deleteRecord(id);
-        }
-    }
-});
-
-var simRepPerm = new StepSimulation('simRepPerm');
-
-// ── PADLOCK 게임 ──
+// ── 슬라이드 네비게이션 ──
 (function() {
-    var MAX_TRIES = 5;
-    var board = document.getElementById('plkBoard');
-    var input = document.getElementById('plkInput');
-    var keypad = document.getElementById('plkKeypad');
-    var startBtn = document.getElementById('plkStart');
-    var submitBtn = document.getElementById('plkSubmit');
-    var resultEl = document.getElementById('plkResult');
-    var winEl = document.getElementById('plkWin');
-    var totalEl = document.getElementById('plkTotal');
-    if (!board) return;
+    var deck = document.getElementById('slideDeck');
+    var slides = deck.querySelectorAll('.slide');
+    var total = slides.length;
+    var current = 0;
+    var counter = document.getElementById('slideCounter');
+    var bar = document.getElementById('progressBar');
+    var btnP = document.getElementById('navPrev');
+    var btnN = document.getElementById('navNext');
 
-    var answer = '';
-    var currentRow = 0;
-    var wins = 0;
-    var total = 0;
-    var playing = false;
-    var cells = document.querySelectorAll('.plk-cell');
-
-    // 보드 생성 (5행 × 4칸)
-    for (var r = 0; r < MAX_TRIES; r++) {
-        var row = document.createElement('div');
-        row.className = 'plk-row';
-        for (var c = 0; c < 4; c++) {
-            var tile = document.createElement('div');
-            tile.className = 'plk-tile';
-            tile.dataset.row = r;
-            tile.dataset.col = c;
-            row.appendChild(tile);
+    function show(i) {
+        if (i < 0 || i >= total) return;
+        slides[current].classList.remove('active');
+        current = i;
+        slides[current].classList.add('active');
+        update();
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(slides[current], {
+                delimiters: [
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ], throwOnError: false
+            });
         }
-        board.appendChild(row);
     }
 
-    // 키패드 이벤트
-    keypad.addEventListener('click', function(e) {
-        var key = e.target.closest('.plk-key');
-        if (!key || !playing) return;
-        var val = key.dataset.key;
-        if (val === 'del') {
-            // 마지막 채워진 셀 비우기
-            for (var i = 3; i >= 0; i--) {
-                if (cells[i].value !== '') { cells[i].value = ''; cells[i].focus(); break; }
+    function update() {
+        counter.textContent = (current + 1) + ' / ' + total;
+        bar.style.width = ((current + 1) / total * 100) + '%';
+        btnP.disabled = (current === 0);
+        btnN.disabled = (current === total - 1);
+    }
+
+    function tryNext() {
+        var cs = slides[current];
+        var simEl = cs.querySelector('.step-simulation');
+        if (simEl && window[simEl.id]) {
+            var sim = window[simEl.id];
+            if (sim.current < sim.total - 1) { sim.next(); return; }
+        }
+        var ur = cs.querySelectorAll('.answer-content:not(.revealed)');
+        if (ur.length > 0) {
+            for (var j = 0; j < ur.length; j++) ur[j].classList.add('revealed');
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(cs, {delimiters: [{left: '\\\\(', right: '\\\\)', display: false},{left: '\\\\[', right: '\\\\]', display: true}], throwOnError: false});
             }
-        } else {
-            // 첫 번째 빈 셀에 입력
-            for (var i = 0; i < 4; i++) {
-                if (cells[i].value === '') {
-                    cells[i].value = val;
-                    if (i < 3) cells[i + 1].focus();
-                    break;
-                }
-            }
+            return;
+        }
+        show(current + 1);
+    }
+
+    function tryPrev() {
+        var cs = slides[current];
+        var simEl = cs.querySelector('.step-simulation');
+        if (simEl) {
+            var prevBtn = simEl.querySelector('.sim-btn[data-dir="prev"]');
+            if (prevBtn && !prevBtn.disabled) { prevBtn.click(); return; }
+        }
+        show(current - 1);
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown' || e.key === 'Enter') { e.preventDefault(); tryNext(); }
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); tryPrev(); }
+        else if (e.key === 'Home') { e.preventDefault(); show(0); }
+        else if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+        else if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(function(){});
+            else document.exitFullscreen();
+        }
+        else if (e.key === 'Escape') {
+            if (document.fullscreenElement) document.exitFullscreen();
         }
     });
 
-    // 셀 입력 이벤트 (직접 타이핑 지원)
-    cells.forEach(function(cell, idx) {
-        cell.addEventListener('input', function() {
-            var v = cell.value.replace(/[^0-9]/g, '');
-            cell.value = v.slice(-1);
-            if (v && idx < 3) cells[idx + 1].focus();
-        });
-        cell.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' && cell.value === '' && idx > 0) {
-                cells[idx - 1].focus();
-            }
-            if (e.key === 'Enter') doSubmit();
-        });
+    var sx = 0, sy = 0;
+    document.addEventListener('touchstart', function(e) {
+        sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+    }, { passive: true });
+    document.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - sx;
+        var dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+            if (dx < 0) tryNext();
+            else tryPrev();
+        }
+    }, { passive: true });
+
+    btnP.addEventListener('click', function() { tryPrev(); });
+    btnN.addEventListener('click', function() { tryNext(); });
+    document.getElementById('navFS').addEventListener('click', function() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(function(){});
+        else document.exitFullscreen();
     });
 
-    function getGuess() {
-        var g = '';
-        cells.forEach(function(c) { g += c.value; });
-        return g;
-    }
-
-    function evaluate(guess, ans) {
-        var result = ['absent', 'absent', 'absent', 'absent'];
-        var ansArr = ans.split('');
-        var gArr = guess.split('');
-        var used = [false, false, false, false];
-        // 1차: correct
-        for (var i = 0; i < 4; i++) {
-            if (gArr[i] === ansArr[i]) {
-                result[i] = 'correct';
-                used[i] = true;
-                gArr[i] = null;
-            }
-        }
-        // 2차: present
-        for (var i = 0; i < 4; i++) {
-            if (gArr[i] === null) continue;
-            for (var j = 0; j < 4; j++) {
-                if (!used[j] && gArr[i] === ansArr[j]) {
-                    result[i] = 'present';
-                    used[j] = true;
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-
-    function doSubmit() {
-        if (!playing) return;
-        var guess = getGuess();
-        if (guess.length !== 4) return;
-
-        var result = evaluate(guess, answer);
-        var tiles = board.querySelectorAll('.plk-row')[currentRow].querySelectorAll('.plk-tile');
-        for (var i = 0; i < 4; i++) {
-            tiles[i].textContent = guess[i];
-            tiles[i].className = 'plk-tile ' + result[i];
-        }
-
-        // 정답 체크
-        if (guess === answer) {
-            wins++;
-            winEl.textContent = wins;
-            resultEl.textContent = '정답! 비밀번호는 ' + answer + ' 입니다.';
-            resultEl.className = 'padlock-result win';
-            endRound();
-            return;
-        }
-
-        currentRow++;
-        if (currentRow >= MAX_TRIES) {
-            resultEl.textContent = '실패! 정답은 ' + answer + ' 이었습니다.';
-            resultEl.className = 'padlock-result lose';
-            endRound();
-            return;
-        }
-
-        // 다음 시도 준비
-        cells.forEach(function(c) { c.value = ''; });
-        cells[0].focus();
-    }
-
-    function endRound() {
-        playing = false;
-        input.classList.remove('active');
-        keypad.classList.remove('active');
-        startBtn.textContent = '다시 하기';
-        startBtn.classList.add('retry');
-        startBtn.classList.remove('hide');
-    }
-
-    function startGame() {
-        total++;
-        totalEl.textContent = total;
-        answer = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
-        currentRow = 0;
-        playing = true;
-
-        // 보드 초기화
-        board.querySelectorAll('.plk-tile').forEach(function(t) {
-            t.textContent = '';
-            t.className = 'plk-tile';
-        });
-
-        cells.forEach(function(c) { c.value = ''; });
-        resultEl.textContent = '';
-        resultEl.className = 'padlock-result';
-
-        input.classList.add('active');
-        keypad.classList.add('active');
-        startBtn.classList.add('hide');
-        cells[0].focus();
-    }
-
-    submitBtn.addEventListener('click', doSubmit);
-    startBtn.addEventListener('click', startGame);
+    update();
 })();
 
 // ── KaTeX auto-render ──
@@ -2138,7 +1260,6 @@ if (typeof renderMathInElement === 'function') {
         throwOnError: false
     });
 }
-
 </script>
 
 </body>
