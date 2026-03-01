@@ -267,21 +267,38 @@
             color: #2c3e50;
             font-size: 15px;
             margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            line-height: 1.7;
         }
         .problem-label .p-num {
+            display: inline-block;
             background: #e8e8e8;
             padding: 2px 12px;
             border-radius: 6px;
             font-size: 13px;
+            margin-right: 6px;
+            vertical-align: middle;
         }
         .sub-problem {
             margin: 8px 0 8px 8px;
             font-size: 15px;
         }
         .sub-problem .num { font-weight: 600; margin-right: 4px; }
+
+        /* ── 객관식 선지 ── */
+        .choices {
+            display: flex; flex-wrap: wrap; gap: 4px 0;
+            margin: 10px 0 6px 8px; font-size: 15px;
+        }
+        .choices span {
+            display: inline-block; min-width: 20%; box-sizing: border-box; padding: 2px 4px;
+        }
+
+        /* ── 조건 박스 ── */
+        .cond-box {
+            margin: 10px 0; padding: 10px 14px;
+            border: 1.5px solid #c8d6e5; border-radius: 8px;
+            background: #f8fafc; font-size: 14px; line-height: 1.7;
+        }
 
         /* ── 캔버스 필기 영역 ── */
         .writing-area {
@@ -1356,6 +1373,106 @@ const classId = urlParams.get('class') || 'default';
                     <div class="answer-content">
                         <div class="ans-label">정답</div>
                         전체 &minus; (한 반에 몰리는 경우) = \(32 - 2 = \boldsymbol{30}\)
+                    </div>
+                </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 5</span> 4개의 문자 \(a, b, c, d\)에서 중복을 허락하여 5개를 택해 일렬로 나열할 때, 양 끝에 서로 다른 문자가 오는 경우의 수는?</div>
+            <div class="choices">
+                <span>① 756</span><span>② 768</span><span>③ 780</span><span>④ 792</span><span>⑤ 804</span>
+            </div>
+                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
+                                <div class="answer-reveal">
+                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        ② 768<br>
+                        전체 &minus; 양 끝 같은 문자 = \(4^{5} - 4 \times 4^{3} = 1024 - 256 = \boldsymbol{768}\)
+                    </div>
+                </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 6</span> 집합 \(X = \{a, b, c, d, e\}\)에서 집합 \(Y = \{1, 2, 3\}\)으로의 함수 \(f\) 중에서 \(f(a) + f(b) \neq 4\)인 함수의 개수는?</div>
+            <div class="choices">
+                <span>① 150</span><span>② 156</span><span>③ 162</span><span>④ 168</span><span>⑤ 174</span>
+            </div>
+                <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
+                                <div class="answer-reveal">
+                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        ③ 162<br>
+                        전체 &minus; \(f(a)+f(b)=4\)인 경우 = \(3^{5} - 3 \times 3^{3} = 243 - 81 = \boldsymbol{162}\)<br>
+                        <span style="font-size:13px; color:#666;">\(f(a)+f(b)=4\): \((1,3),(2,2),(3,1)\) 3가지, 나머지 3명 &rarr; \(3^{3}=27\)</span>
+                    </div>
+                </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 7</span> \({}_{2n}\Pi_{3} = 64\)를 만족시키는 자연수 \(n\)의 값을 구하시오.</div>
+                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
+                                <div class="answer-reveal">
+                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        \({}_{2n}\Pi_{3} = (2n)^{3} = 64 = 4^{3}\)<br>
+                        \(2n = 4\) &rarr; \(\boldsymbol{n = 2}\)
+                    </div>
+                </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 8</span> 전체집합 \(U = \{1, 2, 3, 4, 5, 6\}\)의 두 부분집합 \(A, B\)가 다음 조건을 만족시킨다.</div>
+            <div class="cond-box">
+                (가) \(A \cap B = \varnothing\)<br>
+                (나) \(n(A \cup B) = 5\)
+            </div>
+            <div style="margin: 8px 0 4px 0; font-size: 15px;">두 집합 \(A, B\)의 모든 순서쌍 \((A, B)\)의 개수는?</div>
+            <div class="choices">
+                <span>① 180</span><span>② 186</span><span>③ 192</span><span>④ 198</span><span>⑤ 204</span>
+            </div>
+                <div class="writing-area" data-h="150"><canvas></canvas><div class="canvas-toolbar"></div></div>
+                                <div class="answer-reveal">
+                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        ③ 192<br>
+                        \(A \cup B\)에 포함되지 않는 원소 1개 선택: \({}_{6}\mathrm{C}_{1} = 6\)가지<br>
+                        나머지 5개 원소를 \(A\) 또는 \(B\)에 배정: \(2^{5} = 32\)가지<br>
+                        &there4; \(6 \times 32 = \boldsymbol{192}\)
+                    </div>
+                </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 9</span> 집합 \(X = \{1, 2, 3, 4, 5\}\)에 대하여 다음 조건을 만족시키는 \(X\)에서 \(X\)로의 함수 \(f\)의 개수는?</div>
+            <div class="cond-box">
+                집합 \(X\)의 서로 다른 두 원소 \(a, b\)에 대하여 \(a = b + 3\)이면 \(f(a) = f(b)\)이다.
+            </div>
+            <div class="choices">
+                <span>① 25</span><span>② 50</span><span>③ 75</span><span>④ 100</span><span>⑤ 125</span>
+            </div>
+                <div class="writing-area" data-h="150"><canvas></canvas><div class="canvas-toolbar"></div></div>
+                                <div class="answer-reveal">
+                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        ⑤ 125<br>
+                        조건에서: \(f(4) = f(1)\), \(f(5) = f(2)\)<br>
+                        독립 변수: \(f(1), f(2), f(3)\) 각 5가지<br>
+                        &there4; \(5 \times 5 \times 5 = 5^{3} = \boldsymbol{125}\)
                     </div>
                 </div>
         </div>

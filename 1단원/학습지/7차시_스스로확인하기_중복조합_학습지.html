@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>같은 것이 있는 순열</title>
+    <title>스스로 확인하기 - 중복조합</title>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
@@ -180,63 +180,6 @@
         .concept-box ul { padding-left: 20px; }
         .concept-box ul li { margin-bottom: 3px; }
 
-        /* ── 격자 경로 시뮬레이션 ── */
-        .grid-path-sim {
-            background: #f0f5fa; border: 1.5px solid #6fa3d4;
-            border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
-        }
-        .grid-path-sim h3 {
-            font-size: 15px; font-weight: 700; color: #2c3e50; margin-bottom: 6px;
-            display: flex; align-items: center; gap: 6px;
-        }
-        .gps-stage { margin-top: 10px; }
-        .gps-instruction { font-size: 14px; margin-bottom: 10px; }
-        .gps-svg-wrap { display: flex; justify-content: center; margin: 8px 0; }
-        .gps-svg-wrap svg { touch-action: none; }
-        .gps-answer-row {
-            display: flex; align-items: center; gap: 6px;
-            justify-content: center; margin: 12px 0; font-size: 14px;
-        }
-        .gps-answer-row input {
-            width: 50px; height: 36px; border: 2px solid #6fa3d4; border-radius: 6px;
-            text-align: center; font-size: 16px; font-weight: 700; font-family: inherit; outline: none;
-        }
-        .gps-answer-row input:focus { border-color: #2c3e50; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
-        .gps-check {
-            background: #4a90d9; color: #fff; border: none; border-radius: 6px;
-            padding: 6px 14px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
-        }
-        .gps-feedback { text-align: center; font-size: 14px; font-weight: 600; min-height: 20px; margin: 6px 0; }
-        .gps-feedback.correct { color: #2d7a2d; }
-        .gps-feedback.wrong { color: #e74c3c; }
-        .gps-next-btn {
-            display: block; margin: 8px auto 0; background: #4a90d9; color: #fff;
-            border: none; border-radius: 8px; padding: 8px 20px; font-size: 14px;
-            font-weight: 600; cursor: pointer; font-family: inherit;
-        }
-        .gps-next-btn:disabled { opacity: 0.4; cursor: default; }
-        .gps-path-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 8px; max-width: 420px; margin: 12px auto;
-        }
-        .gps-mini { text-align: center; }
-        .gps-mini svg { width: 100%; max-width: 120px; }
-        .gps-mini-label { font-size: 12px; color: #555; margin-top: 2px; font-weight: 600; }
-        .gps-decompose {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 12px 0;
-        }
-        .gps-decompose-item { text-align: center; background: #fff; border-radius: 8px; padding: 8px 10px; border: 1px solid #d0d8e0; }
-        .gps-decompose-item .label { font-size: 11px; color: #888; margin-bottom: 4px; }
-        .gps-decompose-item .segs { font-size: 15px; font-weight: 700; }
-        .gps-decompose-item .segs .h-seg { color: #E74C3C; }
-        .gps-decompose-item .segs .v-seg { color: #2980B9; }
-        .gps-insight {
-            background: #fff; border: 2px solid #6fa3d4; border-radius: 10px;
-            padding: 14px 16px; margin-top: 12px; text-align: center;
-        }
-        .gps-insight p { font-size: 14px; line-height: 1.8; margin-bottom: 4px; }
-        .gps-insight .highlight-text { font-size: 16px; font-weight: 700; color: #2c3e50; }
-
         /* ── 공식 ── */
         .formula {
             background: #fff;
@@ -261,25 +204,93 @@
         }
         .inquiry-box h3 { font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 6px; }
 
+        /* ── PADLOCK 게임 ── */
+        .padlock-game {
+            background: #f0faf0; border: 1.5px solid #8cc68c;
+            border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
+        }
+        .padlock-game h3 {
+            font-size: 15px; font-weight: 700; color: #2d7a2d; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .padlock-desc { font-size: 13px; color: #555; margin-bottom: 10px; }
+        .padlock-stats { text-align: center; font-size: 13px; color: #666; margin-bottom: 10px; }
+        .padlock-board { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 12px; }
+        .plk-row { display: flex; gap: 6px; }
+        .plk-tile {
+            width: 44px; height: 44px; border: 2px solid #d0d0d0; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 700; background: #fff; color: #333;
+            transition: all 0.3s;
+        }
+        .plk-tile.correct { background: #6aaa64; border-color: #6aaa64; color: #fff; }
+        .plk-tile.present { background: #c9b458; border-color: #c9b458; color: #fff; }
+        .plk-tile.absent  { background: #787c7e; border-color: #787c7e; color: #fff; }
+        .padlock-input { display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+        .padlock-input.active { display: flex; }
+        .padlock-digits { display: flex; gap: 6px; }
+        .plk-cell {
+            width: 44px; height: 44px; border: 2px solid #4a90d9; border-radius: 8px;
+            text-align: center; font-size: 22px; font-weight: 700; font-family: inherit; outline: none;
+            -webkit-appearance: none; appearance: none;
+        }
+        .plk-cell:focus { border-color: #2c3e50; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
+        .plk-submit {
+            background: #4a90d9; color: #fff; border: none; border-radius: 8px;
+            padding: 10px 20px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+        }
+        .plk-submit:disabled { opacity: 0.4; cursor: default; }
+        .padlock-keypad { display: none; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 10px; max-width: 260px; margin-left: auto; margin-right: auto; }
+        .padlock-keypad.active { display: flex; }
+        .plk-key {
+            width: 42px; height: 42px; border: 1.5px solid #ccc; border-radius: 8px;
+            background: #fff; font-size: 18px; font-weight: 600; cursor: pointer; font-family: inherit;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .plk-key:active { background: #e8e8e8; }
+        .plk-key.del { width: 66px; font-size: 13px; font-weight: 700; }
+        .plk-start {
+            display: block; margin: 0 auto; background: #2d7a2d; color: #fff; border: none;
+            border-radius: 8px; padding: 10px 28px; font-size: 15px; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+        }
+        .plk-start.retry { background: #e67e22; }
+        .plk-start.hide { display: none; }
+        .padlock-result { text-align: center; font-size: 14px; font-weight: 600; margin-top: 8px; min-height: 20px; }
+        .padlock-result.win { color: #2d7a2d; }
+        .padlock-result.lose { color: #e74c3c; }
+
         /* ── 문제 ── */
-        .problem { margin-bottom: 16px; }
+        .problem { margin-bottom: 18px; }
         .problem-label {
-            font-weight: 700;
-            color: #2c3e50;
-            font-size: 15px;
-            margin-bottom: 6px;
-            display: block;
-            line-height: 1.7;
+            margin-bottom: 8px;
         }
         .problem-label .p-num {
             display: inline-block;
-            background: #e8e8e8;
-            padding: 2px 12px;
+            background: #4a5568;
+            color: #fff;
+            padding: 2px 14px;
             border-radius: 6px;
             font-size: 13px;
-            margin-right: 6px;
+            font-weight: 700;
+            margin-right: 4px;
             vertical-align: middle;
         }
+        .problem-text {
+            display: block;
+            margin-top: 6px;
+            padding-left: 4px;
+            font-size: 15px;
+            line-height: 1.65;
+            color: #2c3e50;
+        }
+        .sub-problem {
+            margin: 10px 0 10px 8px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .sub-problem .num { font-weight: 600; margin-right: 4px; }
+
         .choices {
             display: flex;
             flex-wrap: wrap;
@@ -300,11 +311,6 @@
             font-size: 14px;
             line-height: 1.8;
         }
-        .sub-problem {
-            margin: 8px 0 8px 8px;
-            font-size: 15px;
-        }
-        .sub-problem .num { font-weight: 600; margin-right: 4px; }
 
         /* ── 캔버스 필기 영역 ── */
         .writing-area {
@@ -464,12 +470,47 @@
         .example-header {
             background: #2c3e50;
             color: #fff;
-            padding: 7px 14px;
+            padding: 8px 14px;
             font-weight: 700;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .example-content { padding: 12px 16px; }
+        .example-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 1px 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+        .example-title {
+            font-size: 14px;
+            opacity: 0.92;
+        }
+        .example-content {
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e8ecf0;
+        }
         .example-content p { font-size: 14px; margin-bottom: 4px; }
+        .example-solution {
+            padding: 14px 16px;
+            background: #fff;
+        }
+        .solution-label {
+            font-size: 11px;
+            color: #6fa3d4;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .example-solution p {
+            font-size: 14px;
+            margin-bottom: 5px;
+            line-height: 1.7;
+        }
 
         /* ── 풀이 ── */
         .solution {
@@ -962,6 +1003,59 @@
             .canvas-toolbar .pen-sizes { gap: 3px; }
             .canvas-toolbar .pen-size { width: 20px; height: 20px; }
         }
+
+        /* ── Interactive Simulations ── */
+        .sim-activity {
+            background: #f7f9fc; border: 2px solid #a8c4e0; border-radius: 14px;
+            padding: 16px; margin: 16px 0; -webkit-user-select: none; user-select: none;
+        }
+        .sim-activity h3 { font-size: 14px; font-weight: 700; color: #2c5282; margin-bottom: 12px; }
+        .sim-activity h3 .badge { background: #4299e1; }
+        .sim-activity .sim-body { display: flex; flex-direction: column; gap: 12px; }
+        .sim-activity .sim-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .sim-activity .sim-result {
+            text-align: center; padding: 10px; background: #fff; border: 1.5px solid #d0dce8;
+            border-radius: 10px; font-size: 14px; min-height: 20px; transition: background 0.3s;
+        }
+        .sim-activity .sim-action-btn {
+            background: #4299e1; color: #fff; border: none; padding: 8px 16px; border-radius: 8px;
+            font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; min-width: 44px;
+            touch-action: manipulation;
+        }
+        .sim-activity .sim-action-btn:active { background: #2b6cb0; }
+        .sim-activity .sim-action-btn.secondary { background: #e2e8f0; color: #4a5568; }
+        .sim-activity .sim-action-btn.secondary:active { background: #cbd5e0; }
+
+        /* S5: 함수 대응도 (화살표 드래그) */
+        .fn-map { display: flex; justify-content: center; align-items: flex-start; gap: 0; position: relative; user-select: none; -webkit-user-select: none; }
+        .fn-col { display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 2; }
+        .fn-col-label { font-size: 13px; font-weight: 700; color: #4a5568; margin-bottom: 2px; }
+        .fn-node {
+            width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid #4299e1; background: #EBF8FF;
+            display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700;
+            color: #2B6CB0; cursor: pointer; touch-action: none; transition: all 0.15s; position: relative;
+        }
+        .fn-node:active { transform: scale(0.9); }
+        .fn-node.y-node { border-color: #38A169; background: #F0FFF4; color: #276749; }
+        .fn-node.connected { box-shadow: 0 0 0 3px rgba(66,153,225,0.3); }
+        .fn-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .fn-svg line { stroke: #4299e1; stroke-width: 2.5; stroke-linecap: round; }
+        .fn-svg line.dragging { stroke: #a0aec0; stroke-dasharray: 6 4; }
+        .fn-arrow-head { fill: #4299e1; }
+
+        /* S6: 과녁 그림 (정적) */
+        .target-fig {
+            position: relative; width: 180px; height: 180px; margin: 8px auto;
+            border-radius: 50%; overflow: hidden;
+        }
+        .target-fig-ring {
+            position: absolute; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
+        }
+        .target-fig-ring.r3 { width: 180px; height: 180px; top: 0; left: 0; background: #C6F6D5; border: 2px solid #38A169; color: #276749; }
+        .target-fig-ring.r4 { width: 116px; height: 116px; top: 32px; left: 32px; background: #FEFCBF; border: 2px solid #D69E2E; color: #744210; }
+        .target-fig-ring.r5 { width: 52px; height: 52px; top: 64px; left: 64px; background: #FED7D7; border: 2px solid #E53E3E; color: #9B2C2C; z-index: 2; }
     </style>
 <!-- KaTeX v0.16.33 (inline with base64 fonts) -->
 <style id="katex-css">
@@ -1096,10 +1190,8 @@ const classId = urlParams.get('class') || 'default';
     <div class="header">
         <div class="header-unit">Ⅰ. 경우의 수</div>
         <div class="header-title">
-            <h1>1. 여러 가지 순열 &mdash; 같은 것이 있는 순열</h1>
-            <div class="header-info">
-                <span>교과서 14~15쪽</span>
-            </div>
+            <h1>스스로 확인하기 &mdash; 중복조합</h1>
+            <div class="header-info"><span>교과서 22쪽</span></div>
         </div>
     </div>
 
@@ -1114,173 +1206,134 @@ const classId = urlParams.get('class') || 'default';
     </div>
 
     <div class="achievement">
-        <strong>성취기준</strong> &nbsp; 여러 가지 순열의 수를 구할 수 있다.
+        <strong>성취기준</strong> &nbsp; [12확통01-02] 중복조합을 이해하고, 중복조합의 수를 구하는 방법을 설명할 수 있다.
     </div>
 
     <div class="card">
         <div class="section-title">
             <div class="section-number">1</div>
-            <h2>같은 것이 있는 순열의 수는 어떻게 구할까?</h2>
+            <h2>스스로 확인하기</h2>
         </div>
 
-        <div class="grid-path-sim" id="gridPathSim">
-            <h3><span class="badge">탐구</span> 격자 위의 최단 경로</h3>
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 1</span><span class="problem-text">다음을 만족시키는 자연수 \(n\)의 값을 구하시오.</span></div>
 
-            <!-- 1단계: 경로 체험 + 정답 입력 -->
-            <div class="gps-stage" id="gpsStage1">
-                <p class="gps-instruction"><b>1단계</b> &nbsp; 아래 2&times;2 격자에서 A &rarr; B 최단 경로를 손으로 그려 보고, 총 몇 가지인지 맞혀 보세요.</p>
-                <div class="gps-svg-wrap">
-                    <svg id="gpsSvg1" viewBox="0 0 220 220" width="220" height="220" xmlns="http://www.w3.org/2000/svg" style="background:#fff; border-radius:8px; border:1px solid #d0d8e0;">
-                        <!-- 격자 선 -->
-                        <line x1="30" y1="30" x2="190" y2="30" stroke="#ddd" stroke-width="1"/>
-                        <line x1="30" y1="110" x2="190" y2="110" stroke="#ddd" stroke-width="1"/>
-                        <line x1="30" y1="190" x2="190" y2="190" stroke="#ddd" stroke-width="1"/>
-                        <line x1="30" y1="30" x2="30" y2="190" stroke="#ddd" stroke-width="1"/>
-                        <line x1="110" y1="30" x2="110" y2="190" stroke="#ddd" stroke-width="1"/>
-                        <line x1="190" y1="30" x2="190" y2="190" stroke="#ddd" stroke-width="1"/>
-                        <!-- 교차점 -->
-                        <circle cx="30" cy="30" r="4" fill="#ccc"/><circle cx="110" cy="30" r="4" fill="#ccc"/>
-                        <circle cx="190" cy="30" r="4" fill="#ccc"/><circle cx="30" cy="110" r="4" fill="#ccc"/>
-                        <circle cx="110" cy="110" r="4" fill="#ccc"/><circle cx="190" cy="110" r="4" fill="#ccc"/>
-                        <circle cx="30" cy="190" r="4" fill="#ccc"/><circle cx="110" cy="190" r="4" fill="#ccc"/>
-                        <circle cx="190" cy="190" r="4" fill="#ccc"/>
-                        <!-- A, B 표시 -->
-                        <circle cx="30" cy="190" r="8" fill="#E74C3C"/>
-                        <text x="10" y="212" font-size="14" fill="#E74C3C" font-weight="700" font-family="Pretendard,sans-serif">A</text>
-                        <circle cx="190" cy="30" r="8" fill="#2980B9"/>
-                        <text x="182" y="22" font-size="14" fill="#2980B9" font-weight="700" font-family="Pretendard,sans-serif">B</text>
-                        <!-- 드래그 경로 (JS로 그림) -->
-                        <g id="gpsDrawLayer"></g>
-                    </svg>
+                <div class="sub-problem"><span class="num">⑴</span> \({}_{4}\mathrm{H}_{2} = {}_{n}\mathrm{C}_{2}\)</div>
+                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
+                <div class="answer-reveal">
+                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        \({}_{4}\mathrm{H}_{2} = {}_{5}\mathrm{C}_{2} = 10\)이므로 \({}_{n}\mathrm{C}_{2} = 10\), \(\dfrac{n(n-1)}{2} = 10\), \(n^{2} - n - 20 = 0\), \((n-5)(n+4) = 0\)<br>
+                        \(n \geq 2\)이므로 \(n = \boldsymbol{5}\)
+                    </div>
                 </div>
-                <p style="text-align:center; font-size:12px; color:#888; margin-top:2px;">격자 위를 터치하여 경로를 그려 보세요 (손을 떼면 사라집니다)</p>
-                <div class="gps-answer-row">
-                    <span>최단 경로는 총</span>
-                    <input type="number" id="gpsInput" min="1" max="99" inputmode="numeric">
-                    <span>가지</span>
-                    <button class="gps-check" id="gpsCheck">정답 확인</button>
-                </div>
-                <div class="gps-feedback" id="gpsFeedback"></div>
-                <button class="gps-next-btn" id="gpsNextStage" disabled>다음 단계 &rarr;</button>
-            </div>
 
-            <!-- 2단계: StepSimulation 스타일 -->
-            <div class="gps-stage" id="gpsStage2" style="display:none;">
-                <p class="gps-instruction"><b>2단계</b> &nbsp; 6가지 최단 경로를 하나씩 살펴봅시다.</p>
-                <div id="gpsSteps">
-                    <!-- Step 0~5: 각 경로 -->
-                    <div class="sim-step active" data-step="0">
-                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 1: <span style="color:#E74C3C;">&rarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#2980B9;">&uarr;</span></div>
-                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 90,160 160,160 160,90 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    </div>
-                    <div class="sim-step" data-step="1">
-                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 2: <span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span></div>
-                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 90,160 90,90 160,90 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    </div>
-                    <div class="sim-step" data-step="2">
-                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 3: <span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span></div>
-                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 90,160 90,90 90,20 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    </div>
-                    <div class="sim-step" data-step="3">
-                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 4: <span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span></div>
-                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 20,90 90,90 160,90 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    </div>
-                    <div class="sim-step" data-step="4">
-                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 5: <span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span></div>
-                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 20,90 90,90 90,20 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    </div>
-                    <div class="sim-step" data-step="5">
-                        <div style="text-align:center; font-size:14px; margin-bottom:6px; font-weight:600; color:#2c3e50;">경로 6: <span style="color:#2980B9;">&uarr;</span><span style="color:#2980B9;">&uarr;</span><span style="color:#E74C3C;">&rarr;</span><span style="color:#E74C3C;">&rarr;</span></div>
-                        <div class="gps-svg-wrap"><svg viewBox="0 0 180 180" width="180" height="180" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="20" x2="160" y2="20" stroke="#ddd" stroke-width="1"/><line x1="20" y1="90" x2="160" y2="90" stroke="#ddd" stroke-width="1"/><line x1="20" y1="160" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><line x1="20" y1="20" x2="20" y2="160" stroke="#ddd" stroke-width="1"/><line x1="90" y1="20" x2="90" y2="160" stroke="#ddd" stroke-width="1"/><line x1="160" y1="20" x2="160" y2="160" stroke="#ddd" stroke-width="1"/><circle cx="20" cy="160" r="6" fill="#E74C3C"/><text x="6" y="178" font-size="11" fill="#E74C3C" font-weight="700">A</text><circle cx="160" cy="20" r="6" fill="#2980B9"/><text x="152" y="15" font-size="11" fill="#2980B9" font-weight="700">B</text><polyline points="20,160 20,90 20,20 90,20 160,20" fill="none" stroke="#E74C3C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                    </div>
-                    <!-- Step 6: 세그먼트 분해 -->
-                    <div class="sim-step" data-step="6">
-                        <div style="text-align:center; font-size:14px; margin-bottom:8px; font-weight:600; color:#2c3e50;">6가지 경로의 구성 요소</div>
-                        <div class="gps-decompose">
-                            <div class="gps-decompose-item"><div class="label">경로 1</div><div class="segs"><span class="h-seg">&rarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="v-seg">&uarr;</span></div></div>
-                            <div class="gps-decompose-item"><div class="label">경로 2</div><div class="segs"><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span></div></div>
-                            <div class="gps-decompose-item"><div class="label">경로 3</div><div class="segs"><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span></div></div>
-                            <div class="gps-decompose-item"><div class="label">경로 4</div><div class="segs"><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span></div></div>
-                            <div class="gps-decompose-item"><div class="label">경로 5</div><div class="segs"><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span></div></div>
-                            <div class="gps-decompose-item"><div class="label">경로 6</div><div class="segs"><span class="v-seg">&uarr;</span><span class="v-seg">&uarr;</span><span class="h-seg">&rarr;</span><span class="h-seg">&rarr;</span></div></div>
-                        </div>
-                        <p style="text-align:center; font-size:14px; margin-top:8px;">모든 경로는 <b style="color:#E74C3C;">&rarr; 2개</b>와 <b style="color:#2980B9;">&uarr; 2개</b>로 이루어져 있습니다!</p>
-                    </div>
-                    <!-- Step 7: 사고 유발 -->
-                    <div class="sim-step" data-step="7">
-                        <div class="gps-insight">
-                            <p>2&times;2 격자의 최단 경로는</p>
-                            <p>모두 <b style="color:#E74C3C;">&rarr; 2개</b>와 <b style="color:#2980B9;">&uarr; 2개</b>로 이루어져 있습니다.</p>
-                            <p style="margin-top:10px;" class="highlight-text">"최단 경로의 가짓수 = <span style="color:#E74C3C;">&rarr;</span>, <span style="color:#E74C3C;">&rarr;</span>, <span style="color:#2980B9;">&uarr;</span>, <span style="color:#2980B9;">&uarr;</span> 를 나열하는 경우의 수"</p>
-                            <p style="margin-top:10px; font-size:15px; font-weight:600; color:#6fa3d4;">최단 경로는 모두 무엇으로 이루어져 있나요?</p>
-                        </div>
+                <div class="sub-problem"><span class="num">⑵</span> \({}_{5}\mathrm{H}_{8} = {}_{n}\mathrm{C}_{4}\)</div>
+                <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
+                <div class="answer-reveal">
+                    <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                    <div class="answer-content">
+                        <div class="ans-label">정답</div>
+                        \({}_{5}\mathrm{H}_{8} = {}_{12}\mathrm{C}_{8} = {}_{12}\mathrm{C}_{4} = 495\)이므로 \({}_{n}\mathrm{C}_{4} = 495\)<br>
+                        \(n = \boldsymbol{12}\)
                     </div>
                 </div>
-                <div class="sim-controls">
-                    <button class="sim-btn" data-sim="gpsStepSim" data-dir="prev" disabled>&#9664; 이전</button>
-                    <span class="sim-progress" id="gpsStepSim-progress">1 / 8</span>
-                    <button class="sim-btn" data-sim="gpsStepSim" data-dir="next">다음 &#9654;</button>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 2</span><span class="problem-text">같은 종류의 사탕 10개를 서로 다른 상자 3개에 넣으려고 한다. 빈 상자가 없도록 사탕을 모두 나누어 넣는 경우의 수를 구하시오.</span></div>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    빈 상자 없이 &rarr; 각 상자에 1개씩 미리 배분, 나머지 7개를 3개 상자에 분배<br>
+                    \({}_{3}\mathrm{H}_{7} = {}_{9}\mathrm{C}_{7} = {}_{9}\mathrm{C}_{2} = \dfrac{9 \times 8}{2} = \boldsymbol{36}\)
                 </div>
             </div>
         </div>
 
-        <div class="step-simulation" id="simSamePerm">
-            <h3>단계별 탐구 — 같은 것이 있는 순열의 유도</h3>
-            <div class="sim-steps">
-                <div class="sim-step active">
-                    <div class="step-line">5개의 문자 <b>a, a, b, b, b</b>를 일렬로 나열하려면?</div>
-                    <div class="step-line" style="color:#888; font-size:13px;">같은 문자가 있어서 단순히 5!로 구할 수 없다.</div>
-                </div>
-                <div class="sim-step">
-                    <div class="step-line highlight">구별하기: \(a_1, a_2, b_1, b_2, b_3\)으로 표시하면</div>
-                    <div class="step-line">5개 모두 다른 문자 &rarr; 전체 나열: \(5! = 120\)가지</div>
-                </div>
-                <div class="sim-step">
-                    <div class="step-line">하지만 \(a_1, a_2\)는 같은 a이므로 \(2!\)가지씩 중복</div>
-                    <div class="step-line highlight">또한 \(b_1, b_2, b_3\)은 같은 b이므로 \(3!\)가지씩 중복</div>
-                </div>
-                <div class="sim-step">
-                    <div class="step-line">구하는 경우의 수를 \(k\)라 하면</div>
-                    <div class="step-line highlight">\(k \times (2! \times 3!) = 5!\)</div>
-                    <div class="step-line" style="font-size:16px; font-weight:700; color:#2980B9; margin-top:8px;">\(k = \dfrac{5!}{2! \times 3!} = \dfrac{120}{2 \times 6} = 10\)</div>
-                </div>
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 3</span><span class="problem-text">두 집합 \(X = \{1, 2, 3, 4, 5\}\), \(Y = \{1, 2, 3, 4\}\)에 대하여 함수 \(f : X \to Y\)가 다음 조건을 만족시킬 때, 함수 \(f\)의 개수를 구하시오.</span></div>
+            <div class="concept-box blue" style="margin:10px 0;">
+                <h3 style="font-size:13px;"><span class="badge">조건</span></h3>
+                <p>집합 \(X\)의 임의의 두 원소 \(x_{1},\; x_{2}\)에 대하여</p>
+                <p style="text-align:center; font-weight:600; margin-top:4px;">\(x_{1} < x_{2}\)이면 \(f(x_{1}) \leq f(x_{2})\)</p>
             </div>
-            <div class="sim-controls">
-                <button class="sim-btn" data-sim="simSamePerm" data-dir="prev">&#9664; 이전</button>
-                <span class="sim-progress" id="simSamePerm-progress">1 / 4</span>
-                <button class="sim-btn" data-sim="simSamePerm" data-dir="next">다음 &#9654;</button>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \(f(x_{1}) \leq f(x_{2})\)이므로 증가하는(비감소) 함수<br>
+                    \(Y = \{1, 2, 3, 4\}\)에서 중복을 허용하여 5개를 택하는 중복조합<br>
+                    \({}_{4}\mathrm{H}_{5} = {}_{8}\mathrm{C}_{5} = {}_{8}\mathrm{C}_{3} = \dfrac{8 \times 7 \times 6}{3!} = \boldsymbol{56}\)
+                </div>
             </div>
         </div>
 
-        <div class="concept-box highlight">
-            <h3><span class="badge">개념</span> 같은 것이 있는 순열의 수</h3>
-            <p>\(n\)개 중에서 같은 것이 각각 \(p\)개, \(q\)개, &hellip;, \(r\)개씩 있을 때, \(n\)개를 모두 일렬로 나열하는 경우의 수:</p>
-            <div class="formula">\(\dfrac{n!}{p!\,q!\,\cdots\,r!}\) &emsp; (단, \(p + q + \cdots + r = n\))</div>
-        </div>
-
-        <div class="step-simulation" id="simVisual1122">
-            <h3>비주얼 개념 — 1, 1, 2, 2의 나열</h3>
-            <div class="sim-steps">
-                <div class="sim-step active">
-                    <div class="step-line">4개의 숫자 <b>1, 1, 2, 2</b>를 일렬로 나열하는 경우의 수는?</div>
+        <div class="sim-activity" id="simFunction">
+            <h3><span class="badge">체험</span> 증가함수 대응 만들기</h3>
+            <div class="sim-body">
+                <p style="font-size:13px; color:#555;">\(X\)의 원소에서 \(Y\)의 원소로 드래그하여 대응시켜 보세요.</p>
+                <div class="fn-map" id="fnMap">
+                    <svg class="fn-svg" id="fnSvg"></svg>
                 </div>
-                <div class="sim-step">
-                    <div class="step-line">전체: \(4! = 24\)</div>
-                    <div class="step-line">1이 2개 &rarr; \(2!\)배 중복, &nbsp; 2가 2개 &rarr; \(2!\)배 중복</div>
-                </div>
-                <div class="sim-step">
-                    <div class="step-line highlight">\(\dfrac{4!}{2! \times 2!} = \dfrac{24}{4} = 6\)</div>
-                    <div class="step-line" style="margin-top:8px; font-size:14px;">
-                        <b>6가지 나열:</b><br>
-                        <span style="display:inline-block; margin:4px 8px; font-family:monospace; font-size:15px; letter-spacing:2px;">1122 &nbsp; 1212 &nbsp; 1221</span><br>
-                        <span style="display:inline-block; margin:4px 8px; font-family:monospace; font-size:15px; letter-spacing:2px;">2112 &nbsp; 2121 &nbsp; 2211</span>
-                    </div>
+                <div class="sim-row">
+                    <button class="sim-action-btn secondary" data-sim-action="fn-undo">↩ 되돌리기</button>
+                    <button class="sim-action-btn secondary" data-sim-action="fn-reset">초기화</button>
                 </div>
             </div>
-            <div class="sim-controls">
-                <button class="sim-btn" data-sim="simVisual1122" data-dir="prev">&#9664; 이전</button>
-                <span class="sim-progress" id="simVisual1122-progress">1 / 3</span>
-                <button class="sim-btn" data-sim="simVisual1122" data-dir="next">다음 &#9654;</button>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 4</span><span class="problem-text">오른쪽 그림과 같이 점수가 표시된 과녁에 화살을 5발 쏘아 점수를 얻는 경기를 하려고 한다. 화살 5발을 모두 과녁에 맞혔을 때 점수의 합계가 22점 이하가 되는 경우의 수를 구하시오. (단, 화살이 과녁의 경계에 맞는 경우는 없다.)</span></div>
+            <div class="target-fig">
+                <div class="target-fig-ring r3"><span style="position:absolute; top:6px; left:6px; font-size:12px;">3점</span></div>
+                <div class="target-fig-ring r4"><span style="position:absolute; top:4px; left:36px; font-size:12px;">4점</span></div>
+                <div class="target-fig-ring r5">5점</div>
+            </div>
+            <div class="writing-area" data-h="180"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    <p>5발 모두 맞힘 &rarr; 각 화살은 3, 4, 5점 중 하나</p>
+                    <p>3점에 \(x\)발, 4점에 \(y\)발, 5점에 \(z\)발 &rarr; \(x+y+z=5\)</p>
+                    <p>총점 = \(3x+4y+5z = 15+y+2z \leq 22\) &rarr; \(y+2z \leq 7\)</p>
+                    <table style="font-size:13px; border-collapse:collapse; margin:6px auto; text-align:center;">
+                        <tr style="background:#f0f0f0;"><td style="padding:4px 10px; border:1px solid #ccc;"><b>\(z\)</b></td><td style="padding:4px 10px; border:1px solid #ccc;"><b>\(y\)의 범위</b></td><td style="padding:4px 10px; border:1px solid #ccc;"><b>경우의 수</b></td></tr>
+                        <tr><td style="padding:4px 10px; border:1px solid #ccc;">0</td><td style="padding:4px 10px; border:1px solid #ccc;">\(0 \leq y \leq 5\)</td><td style="padding:4px 10px; border:1px solid #ccc;">6</td></tr>
+                        <tr><td style="padding:4px 10px; border:1px solid #ccc;">1</td><td style="padding:4px 10px; border:1px solid #ccc;">\(0 \leq y \leq 4\)</td><td style="padding:4px 10px; border:1px solid #ccc;">5</td></tr>
+                        <tr><td style="padding:4px 10px; border:1px solid #ccc;">2</td><td style="padding:4px 10px; border:1px solid #ccc;">\(0 \leq y \leq 3\)</td><td style="padding:4px 10px; border:1px solid #ccc;">4</td></tr>
+                        <tr><td style="padding:4px 10px; border:1px solid #ccc;">3</td><td style="padding:4px 10px; border:1px solid #ccc;">\(0 \leq y \leq 1\)</td><td style="padding:4px 10px; border:1px solid #ccc;">2</td></tr>
+                    </table>
+                    <p>\(\therefore\; 6+5+4+2 = \boldsymbol{17}\)</p>
+                </div>
+            </div>
+        </div>
+
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 5</span><span class="problem-text">평면 위에 평행한 두 직선 \(l\), \(m\)이 있다. 직선 \(l\) 위에 서로 다른 세 점 A, B, C가 있고, 직선 \(m\) 위에 서로 다른 4개의 점이 있다. 세 점 A, B, C를 각각 직선 \(m\) 위의 한 점과 선분으로 연결할 때, 직선 \(m\) 위가 아닌 곳에서 두 선분이 만나지 않도록 하는 모든 경우의 수를 구하시오.</span></div>
+            <div class="writing-area" data-h="160"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    <p>직선 \(m\) 위의 4개의 점을 P, Q, R, S라 하면</p>
+                    <p>4개의 점에서 중복을 허용하여 3개를 택한 뒤 순서대로 A, B, C와 연결</p>
+                    <p>\(\therefore\; {}_{4}\mathrm{H}_{3} = {}_{6}\mathrm{C}_{3} = \dfrac{6 \times 5 \times 4}{3!} = \boldsymbol{20}\)</p>
+                </div>
             </div>
         </div>
     </div>
@@ -1288,281 +1341,188 @@ const classId = urlParams.get('class') || 'default';
     <div class="card">
         <div class="section-title">
             <div class="section-number">2</div>
-            <h2>같은 것이 있는 순열의 활용</h2>
+            <h2>수학으로 생각 넓히기</h2>
         </div>
 
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 5</span> 다음 문자를 일렬로 나열하는 경우의 수를 구하시오.</div>
-            <div class="sub-problem"><span class="num">⑴</span> b, a, n, a, n, a</div>
-            <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="sub-problem"><span class="num">⑵</span> m, i, s, s, i, s, s, i, p, p, i</div>
-            <div class="writing-area" data-h="130"><canvas></canvas><div class="canvas-toolbar"></div></div>
+        <div class="inquiry-box">
+            <h3><span class="badge" style="background:#16a085;">탐구</span> 체험 학습 장소 선택</h3>
+            <p style="margin-top:6px;">10명의 학생이 A, B, C 세 곳에서 한 곳으로 체험 학습을 가기로 하고, 각자 가고 싶은 곳을 선택하려고 한다.</p>
+
+            <div class="sub-problem" style="margin-top:12px;"><span class="num">⑴</span> 모든 학생이 A, B, C 중 한 곳만 선택했을 때, 나올 수 있는 경우의 수를 구하시오.</div>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
             <div class="answer-reveal">
                 <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
                 <div class="answer-content">
                     <div class="ans-label">정답</div>
-                    ⑴ banana: a 3개, n 2개, b 1개 &rarr; \(\dfrac{6!}{3!\,2!\,1!} = \dfrac{720}{12} = \boldsymbol{60}\)<br>
-                    ⑵ mississippi: s 4개, i 4개, p 2개, m 1개 &rarr; \(\dfrac{11!}{4!\,4!\,2!\,1!} = \boldsymbol{34650}\)
+                    <p>A, B, C를 선택한 학생 수를 각각 \(x, y, z\)라 하면 \(x+y+z=10\)</p>
+                    <p>\({}_{3}\mathrm{H}_{10} = {}_{12}\mathrm{C}_{10} = {}_{12}\mathrm{C}_{2} = \dfrac{12 \times 11}{2} = \boldsymbol{66}\)</p>
                 </div>
             </div>
-        </div>
 
-        <div class="example-box">
-            <div class="example-header">예제 2 &mdash; 최단거리로 가는 경우의 수</div>
-            <div class="example-content">
-                <p>오른쪽 그림과 같은 바둑판 모양의 도로에서 A 지점에서 B 지점까지 최단거리로 가는 경우의 수를 구하시오.</p>
-                <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:300px; display:block; margin:12px auto;">
-                    <line x1="30" y1="30" x2="270" y2="30" stroke="#ccc" stroke-width="1"/>
-                    <line x1="30" y1="80" x2="270" y2="80" stroke="#ccc" stroke-width="1"/>
-                    <line x1="30" y1="130" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
-                    <line x1="30" y1="30" x2="30" y2="130" stroke="#ccc" stroke-width="1"/>
-                    <line x1="90" y1="30" x2="90" y2="130" stroke="#ccc" stroke-width="1"/>
-                    <line x1="150" y1="30" x2="150" y2="130" stroke="#ccc" stroke-width="1"/>
-                    <line x1="210" y1="30" x2="210" y2="130" stroke="#ccc" stroke-width="1"/>
-                    <line x1="270" y1="30" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
-                    <circle cx="30" cy="130" r="6" fill="#E74C3C"/>
-                    <text x="20" y="155" font-size="14" fill="#E74C3C" font-weight="700">A</text>
-                    <circle cx="270" cy="30" r="6" fill="#2980B9"/>
-                    <text x="260" y="22" font-size="14" fill="#2980B9" font-weight="700">B</text>
-                </svg>
-            </div>
-        </div>
-
-        <div class="solution">
-            <div class="label">풀이</div>
-            <div class="step">A에서 B까지 최단거리로 가려면</div>
-            <div class="step" style="margin-left:12px;">&rarr; 방향으로 4번, &uarr; 방향으로 2번, 총 <b>6번</b> 이동해야 한다.</div>
-            <div class="step" style="margin-left:12px;">이는 &rarr;, &rarr;, &rarr;, &rarr;, &uarr;, &uarr; 의 6개를 일렬로 나열하는 것과 같다.</div>
-            <div class="step" style="margin-left:12px;">같은 것이 있는 순열이므로:</div>
-            <div class="step" style="margin-left:24px; font-size:16px;">\(\dfrac{6!}{4!\,2!} = \dfrac{720}{24 \times 2} = \boldsymbol{15}\)</div>
-        </div>
-
-        <div class="step-simulation" id="simGridPath">
-            <h3>단계별 탐구 — 최단경로와 같은 것이 있는 순열</h3>
-            <div class="sim-steps">
-                <div class="sim-step active">
-                    <div class="step-line" style="text-align:center;">
-                        <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:280px; display:inline-block;">
-                            <line x1="30" y1="30" x2="270" y2="30" stroke="#ccc" stroke-width="1"/>
-                            <line x1="30" y1="80" x2="270" y2="80" stroke="#ccc" stroke-width="1"/>
-                            <line x1="30" y1="130" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
-                            <line x1="30" y1="30" x2="30" y2="130" stroke="#ccc" stroke-width="1"/>
-                            <line x1="90" y1="30" x2="90" y2="130" stroke="#ccc" stroke-width="1"/>
-                            <line x1="150" y1="30" x2="150" y2="130" stroke="#ccc" stroke-width="1"/>
-                            <line x1="210" y1="30" x2="210" y2="130" stroke="#ccc" stroke-width="1"/>
-                            <line x1="270" y1="30" x2="270" y2="130" stroke="#ccc" stroke-width="1"/>
-                            <circle cx="30" cy="130" r="6" fill="#E74C3C"/>
-                            <text x="20" y="155" font-size="14" fill="#E74C3C" font-weight="700">A</text>
-                            <circle cx="270" cy="30" r="6" fill="#2980B9"/>
-                            <text x="260" y="22" font-size="14" fill="#2980B9" font-weight="700">B</text>
-                        </svg>
-                    </div>
-                    <div class="step-line">A(좌하단)에서 B(우상단)까지 격자를 따라 최단거리로 이동</div>
-                </div>
-                <div class="sim-step">
-                    <div class="step-line highlight">A &rarr; B: &rarr; 방향 4번, &uarr; 방향 2번 = 총 6번 이동</div>
-                    <div class="step-line">경로 예시: &rarr;&rarr;&uarr;&rarr;&rarr;&uarr;, &uarr;&rarr;&rarr;&rarr;&uarr;&rarr;, &hellip;</div>
-                </div>
-                <div class="sim-step">
-                    <div class="step-line">&quot;&rarr;&rarr;&rarr;&rarr;&uarr;&uarr;&quot;를 나열하는 문제</div>
-                    <div class="step-line highlight">&rarr; 4개(같은 것), &uarr; 2개(같은 것) &rarr; <b>같은 것이 있는 순열!</b></div>
-                </div>
-                <div class="sim-step">
-                    <div class="step-line">\(\dfrac{6!}{4!\,\times\,2!} = \dfrac{720}{24 \times 2} = \dfrac{720}{48}\)</div>
-                    <div class="step-line highlight" style="font-size:16px; font-weight:700; color:#27ae60;">\(= 15\)가지</div>
-                </div>
-            </div>
-            <div class="sim-controls">
-                <button class="sim-btn" data-sim="simGridPath" data-dir="prev">&#9664; 이전</button>
-                <span class="sim-progress" id="simGridPath-progress">1 / 4</span>
-                <button class="sim-btn" data-sim="simGridPath" data-dir="next">다음 &#9654;</button>
-            </div>
-        </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 6</span> 오른쪽 그림과 같은 바둑판 모양의 도로에서 최단거리로 가는 경우의 수를 구하시오.</div>
-            <div class="sub-problem"><span class="num">⑴</span> 집에서 도서관까지 가는 경우의 수</div>
-            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="sub-problem"><span class="num">⑵</span> 집에서 편의점을 거쳐 도서관까지 가는 경우의 수</div>
-            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="sub-problem"><span class="num">⑵</span> 모든 학생이 A, B, C 중 서로 다른 두 곳을 선택했을 때, 나올 수 있는 경우의 수를 구하시오.</div>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
             <div class="answer-reveal">
                 <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
                 <div class="answer-content">
                     <div class="ans-label">정답</div>
-                    ⑴ &rarr;5번, &uarr;4번 &rarr; \(\dfrac{9!}{5!\,4!} = \boldsymbol{126}\)<br>
-                    ⑵ 집&rarr;편의점: &rarr;3, &uarr;2 &rarr; \(\dfrac{5!}{3!\,2!} = 10\), &nbsp; 편의점&rarr;도서관: &rarr;2, &uarr;2 &rarr; \(\dfrac{4!}{2!\,2!} = 6\)<br>
-                    &nbsp;&nbsp;&nbsp; 곱의 법칙: \(10 \times 6 = \boldsymbol{60}\)
-                </div>
-            </div>
-        </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 7</span> 집합 \(X=\{1,\,2,\,4,\,8\}\)에서 \(X\)로의 함수 \(f\) 중에서 \(f(1) \times f(2) \times f(4) \times f(8) = 8\)을 만족시키는 함수의 개수는?</div>
-            <div class="choices">
-                <span>&nbsp;① 12</span>
-                <span>&nbsp;② 14</span>
-                <span>&nbsp;③ 16</span>
-                <span>&nbsp;④ 18</span>
-                <span>&nbsp;⑤ 20</span>
-            </div>
-            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="answer-reveal">
-                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                <div class="answer-content">
-                    <div class="ans-label">정답</div>
-                    \(\boldsymbol{⑤ \;20}\)<br>
-                    \(X\)의 원소를 \(2\)의 거듭제곱으로 나타내면 \(X=\{2^0,\,2^1,\,2^2,\,2^3\}\)<br>
-                    \(f(1) \cdot f(2) \cdot f(4) \cdot f(8) = 8 = 2^3\)이므로 각 함숫값의 지수를 \(a,\,b,\,c,\,d\)라 하면<br>
-                    \(a+b+c+d=3\) &ensp;(\(a,b,c,d \in \{0,1,2,3\}\))<br>
-                    &there4; \(\mathrm{H}(4,\,3)=\dbinom{6}{3}=\boldsymbol{20}\)
-                </div>
-            </div>
-        </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 8</span> 그림과 같은 바둑판 모양의 도로망에서 A지점에서 출발하여 B지점까지 최단 거리로 가는 경우의 수는?</div>
-            <div style="text-align:center; margin:10px 0;">
-                <svg width="240" height="185" viewBox="0 0 240 185" style="display:inline-block;">
-                    <!-- Step 1 (bottom): cols 0-2, rows 0-1 -->
-                    <line x1="25" y1="155" x2="115" y2="155" stroke="#555" stroke-width="1.5"/>
-                    <line x1="25" y1="115" x2="115" y2="115" stroke="#555" stroke-width="1.5"/>
-                    <line x1="25" y1="115" x2="25" y2="155" stroke="#555" stroke-width="1.5"/>
-                    <line x1="70" y1="115" x2="70" y2="155" stroke="#555" stroke-width="1.5"/>
-                    <line x1="115" y1="115" x2="115" y2="155" stroke="#555" stroke-width="1.5"/>
-                    <!-- Step 2 (middle): cols 1-3, rows 1-2 -->
-                    <line x1="70" y1="115" x2="160" y2="115" stroke="#555" stroke-width="1.5"/>
-                    <line x1="70" y1="75" x2="160" y2="75" stroke="#555" stroke-width="1.5"/>
-                    <line x1="70" y1="75" x2="70" y2="115" stroke="#555" stroke-width="1.5"/>
-                    <line x1="115" y1="75" x2="115" y2="115" stroke="#555" stroke-width="1.5"/>
-                    <line x1="160" y1="75" x2="160" y2="115" stroke="#555" stroke-width="1.5"/>
-                    <!-- Step 3 (top): cols 2-4, rows 2-3 -->
-                    <line x1="115" y1="75" x2="205" y2="75" stroke="#555" stroke-width="1.5"/>
-                    <line x1="115" y1="35" x2="205" y2="35" stroke="#555" stroke-width="1.5"/>
-                    <line x1="115" y1="35" x2="115" y2="75" stroke="#555" stroke-width="1.5"/>
-                    <line x1="160" y1="35" x2="160" y2="75" stroke="#555" stroke-width="1.5"/>
-                    <line x1="205" y1="35" x2="205" y2="75" stroke="#555" stroke-width="1.5"/>
-                    <!-- dots -->
-                    <g fill="#444">
-                        <circle cx="25" cy="155" r="3"/><circle cx="70" cy="155" r="3"/><circle cx="115" cy="155" r="3"/>
-                        <circle cx="25" cy="115" r="3"/><circle cx="70" cy="115" r="3"/><circle cx="115" cy="115" r="3"/><circle cx="160" cy="115" r="3"/>
-                        <circle cx="70" cy="75" r="3"/><circle cx="115" cy="75" r="3"/><circle cx="160" cy="75" r="3"/><circle cx="205" cy="75" r="3"/>
-                        <circle cx="115" cy="35" r="3"/><circle cx="160" cy="35" r="3"/><circle cx="205" cy="35" r="3"/>
-                    </g>
-                    <!-- labels -->
-                    <text x="15" y="172" font-size="14" font-weight="700" fill="#e53e3e" text-anchor="middle">A</text>
-                    <text x="215" y="28" font-size="14" font-weight="700" fill="#3182ce" text-anchor="middle">B</text>
-                </svg>
-            </div>
-            <div class="choices">
-                <span>&nbsp;① 18</span>
-                <span>&nbsp;② 21</span>
-                <span>&nbsp;③ 24</span>
-                <span>&nbsp;④ 27</span>
-                <span>&nbsp;⑤ 30</span>
-            </div>
-            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="answer-reveal">
-                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                <div class="answer-content">
-                    <div class="ans-label">정답</div>
-                    \(\boldsymbol{② \;21}\)<br>
-                    계단형 격자의 각 꼭짓점에 경로 수를 적어 가면:<br>
-                    <span style="font-size:13px; font-family:monospace; line-height:1.8; white-space:pre;">            5 &mdash; 13 &mdash; <b>21</b>(B)
-            |&ensp;&ensp;&ensp; |&ensp;&ensp;&ensp; |
-      2 &mdash;  5 &mdash;  8 &mdash;  8
-      |&ensp;&ensp;&ensp; |&ensp;&ensp;&ensp; |
-1 &mdash; 2 &mdash;  3 &mdash;  3
-|&ensp;&ensp;&ensp; |&ensp;&ensp;&ensp; |
-1 &mdash; 1 &mdash;  1(A)</span><br>
-                    &there4; \(\boldsymbol{21}\)
-                </div>
-            </div>
-        </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 9</span> 빨간 공 3개, 노란 공 2개, 흰 공 1개를 일렬로 나열할 때, 양 끝에 놓인 공의 색이 같도록 나열하는 경우의 수는? (단, 같은 색의 공끼리는 서로 구별하지 않는다.)</div>
-            <div class="choices">
-                <span>&nbsp;① 12</span>
-                <span>&nbsp;② 14</span>
-                <span>&nbsp;③ 16</span>
-                <span>&nbsp;④ 18</span>
-                <span>&nbsp;⑤ 20</span>
-            </div>
-            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="answer-reveal">
-                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                <div class="answer-content">
-                    <div class="ans-label">정답</div>
-                    \(\boldsymbol{③ \;16}\)<br>
-                    (i) 양 끝이 빨간 공: 나머지 빨1, 노2, 흰1 배열 &rarr; \(\dfrac{4!}{1!\,2!\,1!} = 12\)<br>
-                    (ii) 양 끝이 노란 공: 나머지 빨3, 흰1 배열 &rarr; \(\dfrac{4!}{3!\,1!} = 4\)<br>
-                    &there4; \(12 + 4 = \boldsymbol{16}\)
-                </div>
-            </div>
-        </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 10</span> 숫자 1, 2, 3, 4, 5, 5, 5가 하나씩 적힌 7장의 카드를 일렬로 나열할 때, 1이 적힌 카드와 2가 적힌 카드가 3이 적힌 카드보다 모두 왼쪽에 있도록 나열하는 경우의 수는? (단, 같은 숫자가 적힌 카드끼리는 서로 구별하지 않는다.)</div>
-            <div class="choices">
-                <span>&nbsp;① 220</span>
-                <span>&nbsp;② 240</span>
-                <span>&nbsp;③ 260</span>
-                <span>&nbsp;④ 280</span>
-                <span>&nbsp;⑤ 300</span>
-            </div>
-            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="answer-reveal">
-                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                <div class="answer-content">
-                    <div class="ans-label">정답</div>
-                    \(\boldsymbol{④ \;280}\)<br>
-                    전체 배열: \(\dfrac{7!}{3!} = 840\)<br>
-                    1, 2, 3의 순서: \(3! = 6\)가지 중 1&lt;3이고 2&lt;3인 경우는 (1,2,3), (2,1,3)의 2가지<br>
-                    &there4; \(840 \times \dfrac{2}{6} = \boldsymbol{280}\)
-                </div>
-            </div>
-        </div>
-
-        <hr class="divider">
-
-        <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 11</span> 좌표평면 위의 원점에 점 P가 있다. 한 개의 동전을 던져 다음 규칙에 따라 점 P를 이동시킨다.</div>
-            <div class="cond-box">
-                (가) 앞면이 나오면 \(x\)축의 양의 방향으로 1만큼 이동한다.<br>
-                (나) 뒷면이 나오면 \(y\)축의 양의 방향으로 2만큼 이동한다.
-            </div>
-            <div class="problem-label" style="margin-top:4px;">이 규칙으로 점 P를 7번 이동시킬 때, 원점에 있는 점 P가 점 \((3,\,8)\)로 이동하게 되는 경우의 수는?</div>
-            <div class="choices">
-                <span>&nbsp;① 35</span>
-                <span>&nbsp;② 40</span>
-                <span>&nbsp;③ 45</span>
-                <span>&nbsp;④ 50</span>
-                <span>&nbsp;⑤ 55</span>
-            </div>
-            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="answer-reveal">
-                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                <div class="answer-content">
-                    <div class="ans-label">정답</div>
-                    \(\boldsymbol{① \;35}\)<br>
-                    \(x\)좌표 3 &rarr; 앞면 3번, &ensp;\(y\)좌표 8 &rarr; 뒷면 4번 \((2 \times 4 = 8)\)<br>
-                    \(3 + 4 = 7\) (전체 횟수와 일치) &ensp; &there4; \(\dbinom{7}{3} = \boldsymbol{35}\)
+                    <p>두 곳 선택: {A, B}, {B, C}, {A, C} → 3가지 조합</p>
+                    <p>각 조합을 선택한 학생 수를 \(a, b, c\)라 하면 \(a+b+c=10\)</p>
+                    <p>\({}_{3}\mathrm{H}_{10} = {}_{12}\mathrm{C}_{10} = {}_{12}\mathrm{C}_{2} = \dfrac{12 \times 11}{2} = \boldsymbol{66}\)</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="footer">확률과 통계 &middot; Ⅰ. 경우의 수 &middot; 1. 여러 가지 순열</div>
+    <!-- ── Level 1 기초 연습 ── -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">3</div>
+            <h2>Level 1 기초 연습</h2>
+        </div>
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 1</span><span class="problem-text">자연수 \(n\)에 대하여 \({}_{3}\mathrm{H}_{n} = 45\)일 때, \({}_{n}\mathrm{H}_{3}\)의 값은?</span></div>
+            <div class="choices">
+                <span>&nbsp;① 100</span>
+                <span>&nbsp;② 105</span>
+                <span>&nbsp;③ 110</span>
+                <span>&nbsp;④ 115</span>
+                <span>&nbsp;⑤ 120</span>
+            </div>
+            <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    <p>\({}_{3}\mathrm{H}_{n} = {}_{n+2}\mathrm{C}_{2} = \dfrac{(n+2)(n+1)}{2} = 45\)</p>
+                    <p>\((n+2)(n+1) = 90\) &ensp;&rarr;&ensp; \(n^{2}+3n-88=0\) &ensp;&rarr;&ensp; \((n+11)(n-8)=0\)</p>
+                    <p>\(n=8\) (자연수)</p>
+                    <p>\(\therefore\; {}_{8}\mathrm{H}_{3} = {}_{10}\mathrm{C}_{3} = \dfrac{10 \times 9 \times 8}{3!} = \boldsymbol{⑤ \; 120}\)</p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 2</span><span class="problem-text">빨간색 카드 3장과 노란색 카드 4장을 네 학생 A, B, C, D에게 남김없이 나누어 줄 때, 학생 A가 받는 카드의 개수가 1이 되도록 나누어 주는 경우의 수는? (단, 카드를 받지 못하는 학생이 있을 수 있고, 같은 색의 카드끼리는 서로 구별하지 않는다.)</span></div>
+            <div class="choices">
+                <span>&nbsp;① 160</span>
+                <span>&nbsp;② 170</span>
+                <span>&nbsp;③ 180</span>
+                <span>&nbsp;④ 190</span>
+                <span>&nbsp;⑤ 200</span>
+            </div>
+            <div class="writing-area" data-h="160"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    <p>A가 빨간 1장을 받는 경우:</p>
+                    <p>&ensp;나머지 빨간 2장, 노란 4장 &rarr; B, C, D 배분</p>
+                    <p>&ensp;\({}_{3}\mathrm{H}_{2} \times {}_{3}\mathrm{H}_{4} = {}_{4}\mathrm{C}_{2} \times {}_{6}\mathrm{C}_{4} = 6 \times 15 = 90\)</p>
+                    <p>A가 노란 1장을 받는 경우:</p>
+                    <p>&ensp;나머지 빨간 3장, 노란 3장 &rarr; B, C, D 배분</p>
+                    <p>&ensp;\({}_{3}\mathrm{H}_{3} \times {}_{3}\mathrm{H}_{3} = {}_{5}\mathrm{C}_{3} \times {}_{5}\mathrm{C}_{3} = 10 \times 10 = 100\)</p>
+                    <p>\(\therefore\; 90 + 100 = \boldsymbol{④ \; 190}\)</p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 3</span><span class="problem-text">숫자 1, 2, 3, 4, 5가 하나씩 적힌 공이 숫자별로 각각 2개씩 총 10개가 들어 있는 주머니에서 4개의 공을 동시에 꺼낼 때, 5의 약수가 적힌 공의 개수가 2가 되도록 꺼내는 경우의 수는? (단, 같은 숫자가 적힌 공끼리는 서로 구별하지 않는다.)</span></div>
+            <div class="choices">
+                <span>&nbsp;① 12</span>
+                <span>&nbsp;② 15</span>
+                <span>&nbsp;③ 18</span>
+                <span>&nbsp;④ 21</span>
+                <span>&nbsp;⑤ 24</span>
+            </div>
+            <div class="writing-area" data-h="160"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    <p>5의 약수: 1, 5 &ensp;→&ensp; 1이 2개, 5가 2개 (총 4개)</p>
+                    <p>5의 약수 적힌 공 2개 선택 (같은 숫자 구별 ✕):</p>
+                    <p>&ensp;(1, 1), (1, 5), (5, 5) &ensp;&rarr;&ensp; 3가지</p>
+                    <p>나머지 2개는 {2, 3, 4}에서 (각 2개씩):</p>
+                    <p>&ensp;\({}_{3}\mathrm{H}_{2} = {}_{4}\mathrm{C}_{2} = 6\)가지</p>
+                    <p>\(\therefore\; 3 \times 6 = \boldsymbol{③ \; 18}\)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Level 2 기본 연습 ── -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">4</div>
+            <h2>Level 2 기본 연습</h2>
+        </div>
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 1</span><span class="problem-text">집합 \(X = \{1, 2, 3, 4, 5, 6\}\)에 대하여 다음 조건을 만족시키는 함수 \(f : X \to X\)의 개수는?</span></div>
+            <div class="cond-box">
+                (가) \(f(1) + f(2) + f(3) = 5\)<br>
+                (나) \(f(3) \leq f(4) \leq f(5)\)
+            </div>
+            <div class="choices">
+                <span>&nbsp;① 600</span>
+                <span>&nbsp;② 606</span>
+                <span>&nbsp;③ 612</span>
+                <span>&nbsp;④ 618</span>
+                <span>&nbsp;⑤ 624</span>
+            </div>
+            <div class="writing-area" data-h="180"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    <p>(가)에서 \(f(i) \geq 1\)이므로 \(f(1)+f(2)+f(3)=5\)의 해를 \(f(3)\)별로 분류:</p>
+                    <table style="font-size:13px; border-collapse:collapse; margin:6px auto; text-align:center;">
+                        <tr style="background:#f0f0f0;"><td style="padding:4px 10px; border:1px solid #ccc;"><b>\(f(3)\)</b></td><td style="padding:4px 10px; border:1px solid #ccc;"><b>\((f(1),f(2),f(3))\) 수</b></td><td style="padding:4px 10px; border:1px solid #ccc;"><b>\(f(3) \leq f(4) \leq f(5)\) 수</b></td></tr>
+                        <tr><td style="padding:4px 10px; border:1px solid #ccc;">1</td><td style="padding:4px 10px; border:1px solid #ccc;">3</td><td style="padding:4px 10px; border:1px solid #ccc;">21</td></tr>
+                        <tr><td style="padding:4px 10px; border:1px solid #ccc;">2</td><td style="padding:4px 10px; border:1px solid #ccc;">2</td><td style="padding:4px 10px; border:1px solid #ccc;">15</td></tr>
+                        <tr><td style="padding:4px 10px; border:1px solid #ccc;">3</td><td style="padding:4px 10px; border:1px solid #ccc;">1</td><td style="padding:4px 10px; border:1px solid #ccc;">10</td></tr>
+                    </table>
+                    <p>\(f(6)\)은 자유: 6가지</p>
+                    <p>\(\therefore\; (3 \times 21 + 2 \times 15 + 1 \times 10) \times 6 = 103 \times 6 = \boldsymbol{④ \; 618}\)</p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 2</span><span class="problem-text">흰 공 3개와 검은 공 4개를 3명에게 남김없이 나누어 줄 때, 모든 사람이 적어도 1개의 공을 받도록 나누어 주는 경우의 수는? (단, 같은 색의 공끼리는 서로 구별하지 않는다.)</span></div>
+            <div class="choices">
+                <span>&nbsp;① 91</span>
+                <span>&nbsp;② 93</span>
+                <span>&nbsp;③ 95</span>
+                <span>&nbsp;④ 97</span>
+                <span>&nbsp;⑤ 99</span>
+            </div>
+            <div class="writing-area" data-h="180"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    <p>전체 배분 (제한 없음):</p>
+                    <p>&ensp;흰 공: \({}_{3}\mathrm{H}_{3} = {}_{5}\mathrm{C}_{3} = 10\), &ensp;검은 공: \({}_{3}\mathrm{H}_{4} = {}_{6}\mathrm{C}_{4} = 15\)</p>
+                    <p>&ensp;전체 = \(10 \times 15 = 150\)</p>
+                    <p>포함-배제 (0개 받는 사람 제외):</p>
+                    <p>&ensp;\(|A_{i}|\) (1명이 0개): \({}_{2}\mathrm{H}_{3} \times {}_{2}\mathrm{H}_{4} = 4 \times 5 = 20\), &ensp;\(\sum = 3 \times 20 = 60\)</p>
+                    <p>&ensp;\(|A_{i} \cap A_{j}|\) (2명이 0개): \(1\), &ensp;\(\sum = 3 \times 1 = 3\)</p>
+                    <p>\(\therefore\; 150 - 60 + 3 = \boldsymbol{② \; 93}\)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">확률과 통계 &middot; Ⅰ. 경우의 수 &middot; 2. 중복조합 (스스로 확인하기)</div>
 </div>
 
 <button class="global-answer-btn" id="globalAnswerBtn">
@@ -1579,7 +1539,6 @@ const classId = urlParams.get('class') || 'default';
         <div class="records-list" id="recordsList"></div>
     </div>
 </div>
-
 <script>
 // ── file:// 프로토콜 감지 (iPad Safari에서 localStorage 차단됨) ──
 if (window.location.protocol === 'file:') {
@@ -1614,7 +1573,7 @@ function toggleAllAnswers() {
 
 // ── localStorage 저장/불러오기 시스템 ──
 function getStorageKey() {
-    return 'worksheet_PS_3차시_같은것이있는순열';
+    return 'worksheet_PS_7차시_스스로확인하기_중복조합';
 }
 
 function getAllRecords() {
@@ -2090,173 +2049,6 @@ class AlgebraTiles {
 // 예: var simMultiply = new StepSimulation('simMultiply');
 // 예: var tiles = new AlgebraTiles('tilesContainer');
 
-var simSamePerm = new StepSimulation('simSamePerm');
-var simVisual1122 = new StepSimulation('simVisual1122');
-var simGridPath = new StepSimulation('simGridPath');
-
-// ── 격자 경로 시뮬레이션 ──
-(function() {
-    var svg1 = document.getElementById('gpsSvg1');
-    var drawLayer = document.getElementById('gpsDrawLayer');
-    var checkBtn = document.getElementById('gpsCheck');
-    var inputEl = document.getElementById('gpsInput');
-    var feedbackEl = document.getElementById('gpsFeedback');
-    var nextBtn = document.getElementById('gpsNextStage');
-    var stage1 = document.getElementById('gpsStage1');
-    var stage2 = document.getElementById('gpsStage2');
-    if (!svg1) return;
-
-    // 격자 교차점 좌표 (3×3, 좌하가 A, 우상이 B)
-    var pts = [
-        {x:30,y:190},{x:110,y:190},{x:190,y:190},  // row0 (하단)
-        {x:30,y:110},{x:110,y:110},{x:190,y:110},  // row1
-        {x:30,y:30}, {x:110,y:30}, {x:190,y:30}    // row2 (상단)
-    ];
-
-    // 터치 드래그 경로 그리기
-    var drawing = false;
-    var pathPoints = [];
-    var currentPath = null;
-
-    function nearestPt(cx, cy) {
-        var best = -1, bestD = 999;
-        for (var i = 0; i < pts.length; i++) {
-            var d = Math.abs(pts[i].x - cx) + Math.abs(pts[i].y - cy);
-            if (d < bestD) { bestD = d; best = i; }
-        }
-        return bestD < 50 ? best : -1;
-    }
-
-    function isAdjacent(a, b) {
-        // a,b are indices in pts. Adjacent = differ by 1 col or 1 row (→ or ↑ only)
-        var ar = Math.floor(a/3), ac = a%3;
-        var br = Math.floor(b/3), bc = b%3;
-        // → : same row, col+1
-        if (ar === br && bc === ac + 1) return true;
-        // ↑ : same col, row+1 (row increases = y decreases)
-        if (ac === bc && br === ar + 1) return true;
-        return false;
-    }
-
-    function updateDrawPath() {
-        if (currentPath) currentPath.remove();
-        if (pathPoints.length < 2) return;
-        var d = 'M' + pts[pathPoints[0]].x + ',' + pts[pathPoints[0]].y;
-        for (var i = 1; i < pathPoints.length; i++) {
-            d += ' L' + pts[pathPoints[i]].x + ',' + pts[pathPoints[i]].y;
-        }
-        currentPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        currentPath.setAttribute('d', d);
-        currentPath.setAttribute('fill', 'none');
-        currentPath.setAttribute('stroke', '#E74C3C');
-        currentPath.setAttribute('stroke-width', '3');
-        currentPath.setAttribute('stroke-linecap', 'round');
-        currentPath.setAttribute('stroke-linejoin', 'round');
-        currentPath.setAttribute('opacity', '0.7');
-        drawLayer.appendChild(currentPath);
-    }
-
-    function getSvgCoords(e) {
-        var rect = svg1.getBoundingClientRect();
-        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        var scaleX = 220 / rect.width;
-        var scaleY = 220 / rect.height;
-        return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
-    }
-
-    svg1.addEventListener('pointerdown', function(e) {
-        e.preventDefault();
-        var c = getSvgCoords(e);
-        var idx = nearestPt(c.x, c.y);
-        if (idx < 0) return;
-        drawing = true;
-        pathPoints = [idx];
-        updateDrawPath();
-    });
-
-    svg1.addEventListener('pointermove', function(e) {
-        if (!drawing) return;
-        e.preventDefault();
-        var c = getSvgCoords(e);
-        var idx = nearestPt(c.x, c.y);
-        if (idx < 0) return;
-        var last = pathPoints[pathPoints.length - 1];
-        if (idx !== last && isAdjacent(last, idx) && pathPoints.indexOf(idx) === -1) {
-            pathPoints.push(idx);
-            updateDrawPath();
-        }
-    });
-
-    svg1.addEventListener('pointerup', function() {
-        drawing = false;
-        setTimeout(function() {
-            if (currentPath) { currentPath.remove(); currentPath = null; }
-            pathPoints = [];
-        }, 500);
-    });
-
-    svg1.addEventListener('pointerleave', function() {
-        drawing = false;
-        if (currentPath) { currentPath.remove(); currentPath = null; }
-        pathPoints = [];
-    });
-
-    // 정답 확인
-    checkBtn.addEventListener('click', function() {
-        var val = parseInt(inputEl.value);
-        if (val === 6) {
-            feedbackEl.textContent = '정답입니다! 최단 경로는 6가지입니다.';
-            feedbackEl.className = 'gps-feedback correct';
-            nextBtn.disabled = false;
-        } else if (isNaN(val) || val === 0) {
-            feedbackEl.textContent = '숫자를 입력해 주세요.';
-            feedbackEl.className = 'gps-feedback wrong';
-        } else {
-            feedbackEl.textContent = '다시 생각해 보세요.';
-            feedbackEl.className = 'gps-feedback wrong';
-        }
-    });
-
-    inputEl.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') checkBtn.click();
-    });
-
-    // 다음 단계
-    nextBtn.addEventListener('click', function() {
-        stage1.style.display = 'none';
-        stage2.style.display = 'block';
-    });
-
-    // 2단계 StepSimulation (gpsSteps 내부 sim-step들)
-    var stepsContainer = document.getElementById('gpsSteps');
-    var steps = stepsContainer.querySelectorAll('.sim-step');
-    var total = steps.length;
-    var current = 0;
-    var progressEl = document.getElementById('gpsStepSim-progress');
-
-    function showGpsStep(n) {
-        if (n < 0 || n >= total) return;
-        steps.forEach(function(s) { s.classList.remove('active'); });
-        steps[n].classList.add('active');
-        current = n;
-        progressEl.textContent = (current + 1) + ' / ' + total;
-        var btns = stage2.querySelectorAll('.sim-btn');
-        btns.forEach(function(btn) {
-            if (btn.dataset.dir === 'prev') btn.disabled = (current === 0);
-            if (btn.dataset.dir === 'next') btn.disabled = (current === total - 1);
-        });
-    }
-
-    // gpsStepSim을 window에 등록하여 기존 이벤트 위임으로 동작
-    window.gpsStepSim = {
-        next: function() { showGpsStep(current + 1); },
-        prev: function() { showGpsStep(current - 1); }
-    };
-
-    showGpsStep(0);
-})();
-
 // ── 초기화 ──
 const canvases = [];
 document.querySelectorAll('.writing-area').forEach(area => {
@@ -2273,8 +2065,214 @@ window.addEventListener('resize', () => {
     resizeTimer = setTimeout(() => { canvases.forEach(c => c.resize()); }, 300);
 });
 
+// ── Interactive Simulation Classes ──
+
+class ArrowMapSim {
+    constructor(id) {
+        this.el = document.getElementById(id);
+        if (!this.el) return;
+        this.mapEl = document.getElementById('fnMap');
+        this.svg = document.getElementById('fnSvg');
+        this.xVals = [1, 2, 3, 4, 5];
+        this.yVals = [1, 2, 3, 4];
+        this.arrows = []; // [{x, y}]
+        this.dragging = false;
+        this.dragFrom = null; // x value
+        this.dragLine = null; // temp SVG line
+        this.xNodes = {};
+        this.yNodes = {};
+        this.build();
+        this.bindDrag();
+    }
+    build() {
+        var self = this;
+        // X column
+        var xCol = document.createElement('div');
+        xCol.className = 'fn-col';
+        var xLabel = document.createElement('div');
+        xLabel.className = 'fn-col-label';
+        xLabel.textContent = 'X';
+        xCol.appendChild(xLabel);
+        this.xVals.forEach(function(v) {
+            var node = document.createElement('div');
+            node.className = 'fn-node x-node';
+            node.textContent = v;
+            node.dataset.side = 'x';
+            node.dataset.val = v;
+            xCol.appendChild(node);
+            self.xNodes[v] = node;
+        });
+        // Y column
+        var yCol = document.createElement('div');
+        yCol.className = 'fn-col';
+        yCol.style.marginLeft = '120px';
+        var yLabel = document.createElement('div');
+        yLabel.className = 'fn-col-label';
+        yLabel.textContent = 'Y';
+        yCol.appendChild(yLabel);
+        this.yVals.forEach(function(v) {
+            var node = document.createElement('div');
+            node.className = 'fn-node y-node';
+            node.textContent = v;
+            node.dataset.side = 'y';
+            node.dataset.val = v;
+            yCol.appendChild(node);
+            self.yNodes[v] = node;
+        });
+        // Insert before SVG
+        this.mapEl.insertBefore(xCol, this.svg);
+        this.mapEl.insertBefore(yCol, this.svg);
+    }
+    getCenter(node) {
+        var mapRect = this.mapEl.getBoundingClientRect();
+        var nRect = node.getBoundingClientRect();
+        return {
+            x: nRect.left + nRect.width / 2 - mapRect.left,
+            y: nRect.top + nRect.height / 2 - mapRect.top
+        };
+    }
+    bindDrag() {
+        var self = this;
+        this.mapEl.addEventListener('pointerdown', function(e) {
+            var node = e.target.closest('.fn-node.x-node');
+            if (!node) return;
+            e.preventDefault();
+            var xVal = parseInt(node.dataset.val);
+            // If already mapped, ignore (use undo to remove)
+            var existing = self.arrows.find(function(a) { return a.x === xVal; });
+            if (existing) return;
+            self.dragging = true;
+            self.dragFrom = xVal;
+            self.mapEl.setPointerCapture(e.pointerId);
+            // Create temp line
+            var c = self.getCenter(node);
+            var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', c.x); line.setAttribute('y1', c.y);
+            line.setAttribute('x2', c.x); line.setAttribute('y2', c.y);
+            line.classList.add('dragging');
+            self.svg.appendChild(line);
+            self.dragLine = line;
+        });
+        this.mapEl.addEventListener('pointermove', function(e) {
+            if (!self.dragging || !self.dragLine) return;
+            e.preventDefault();
+            var mapRect = self.mapEl.getBoundingClientRect();
+            var px = e.clientX - mapRect.left;
+            var py = e.clientY - mapRect.top;
+            self.dragLine.setAttribute('x2', px);
+            self.dragLine.setAttribute('y2', py);
+        });
+        var endDrag = function(e) {
+            if (!self.dragging) return;
+            self.dragging = false;
+            // Remove temp line
+            if (self.dragLine) { self.dragLine.remove(); self.dragLine = null; }
+            // Check if pointer is over a Y node
+            var target = document.elementFromPoint(e.clientX, e.clientY);
+            var yNode = target ? target.closest('.fn-node.y-node') : null;
+            if (yNode) {
+                var yVal = parseInt(yNode.dataset.val);
+                self.addArrow(self.dragFrom, yVal);
+            }
+            self.dragFrom = null;
+            if (e.pointerId !== undefined) {
+                try { self.mapEl.releasePointerCapture(e.pointerId); } catch(ex) {}
+            }
+        };
+        this.mapEl.addEventListener('pointerup', endDrag);
+        this.mapEl.addEventListener('pointercancel', endDrag);
+    }
+    isValid(xVal, yVal) {
+        // Check non-decreasing condition: for x1 < x2, f(x1) <= f(x2)
+        var testArrows = this.arrows.filter(function(a) { return a.x !== xVal; });
+        testArrows.push({ x: xVal, y: yVal });
+        for (var i = 0; i < testArrows.length; i++) {
+            for (var j = i + 1; j < testArrows.length; j++) {
+                var a = testArrows[i], b = testArrows[j];
+                if ((a.x < b.x && a.y > b.y) || (a.x > b.x && a.y < b.y)) return false;
+            }
+        }
+        return true;
+    }
+    shake(node) {
+        node.style.transition = 'none';
+        node.style.boxShadow = '0 0 0 3px rgba(229,62,62,0.5)';
+        node.style.background = '#FED7D7';
+        setTimeout(function() {
+            node.style.transition = 'all 0.3s';
+            node.style.boxShadow = '';
+            node.style.background = '';
+        }, 400);
+    }
+    addArrow(xVal, yVal) {
+        if (!this.isValid(xVal, yVal)) {
+            // Flash the Y node red to indicate invalid
+            this.shake(this.yNodes[yVal]);
+            this.shake(this.xNodes[xVal]);
+            return;
+        }
+        this.arrows = this.arrows.filter(function(a) { return a.x !== xVal; });
+        this.arrows.push({ x: xVal, y: yVal });
+        this.render();
+    }
+    undo() {
+        this.arrows.pop();
+        this.render();
+    }
+    reset() {
+        this.arrows = [];
+        this.render();
+    }
+    render() {
+        var self = this;
+        // Clear SVG
+        while (this.svg.firstChild) this.svg.removeChild(this.svg.firstChild);
+        // Add arrow marker def
+        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        var marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        marker.setAttribute('id', 'fnArrowHead');
+        marker.setAttribute('markerWidth', '8'); marker.setAttribute('markerHeight', '6');
+        marker.setAttribute('refX', '8'); marker.setAttribute('refY', '3');
+        marker.setAttribute('orient', 'auto');
+        var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute('points', '0 0, 8 3, 0 6');
+        poly.setAttribute('fill', '#4299e1');
+        marker.appendChild(poly);
+        defs.appendChild(marker);
+        this.svg.appendChild(defs);
+        // Draw arrows
+        this.arrows.forEach(function(a) {
+            var xNode = self.xNodes[a.x];
+            var yNode = self.yNodes[a.y];
+            if (!xNode || !yNode) return;
+            var c1 = self.getCenter(xNode);
+            var c2 = self.getCenter(yNode);
+            var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', c1.x); line.setAttribute('y1', c1.y);
+            line.setAttribute('x2', c2.x); line.setAttribute('y2', c2.y);
+            line.setAttribute('marker-end', 'url(#fnArrowHead)');
+            self.svg.appendChild(line);
+        });
+        // Update node styles
+        var mappedX = {};
+        this.arrows.forEach(function(a) { mappedX[a.x] = true; });
+        this.xVals.forEach(function(v) {
+            self.xNodes[v].classList.toggle('connected', !!mappedX[v]);
+        });
+    }
+}
+
 // ── iOS 호환 이벤트 위임 ──
 document.addEventListener('click', function(e) {
+    // 시뮬레이션 액션 버튼
+    var simAction = e.target.closest('[data-sim-action]');
+    if (simAction) {
+        e.preventDefault();
+        var action = simAction.dataset.simAction;
+        if (action === 'fn-reset' && typeof simFunction !== 'undefined') simFunction.reset();
+        if (action === 'fn-undo' && typeof simFunction !== 'undefined') simFunction.undo();
+    }
+
     // 정답 토글
     var toggle = e.target.closest('.answer-toggle');
     if (toggle) { e.preventDefault(); toggleAnswer(toggle); }
@@ -2341,6 +2339,9 @@ document.getElementById('recordsList').addEventListener('click', function(e) {
         }
     }
 });
+
+// (7차시: StepSimulation 없음)
+var simFunction = new ArrowMapSim('simFunction');
 
 // ── KaTeX auto-render ──
 if (typeof renderMathInElement === 'function') {
