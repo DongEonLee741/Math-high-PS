@@ -1382,8 +1382,8 @@ var DriveSync = (function() {
     var _userEmail = '';
 
     function openLogin() {
-        var returnUrl = encodeURIComponent(window.location.href);
-        window.location.href = APPS_SCRIPT_URL + '?action=login&returnUrl=' + returnUrl;
+        var origin = window.location.origin || 'https://math-high-cm1.web.app';
+        window.location.href = origin + '/';
     }
 
     function checkLogin(callback) {
@@ -1392,6 +1392,7 @@ var DriveSync = (function() {
         if (driveEmail) {
             _isLoggedIn = true;
             _userEmail = driveEmail;
+            try { sessionStorage.setItem('driveSync_email', driveEmail); } catch(e) {}
             urlParams.delete('driveEmail');
             var cleanUrl = window.location.pathname;
             var remaining = urlParams.toString();
@@ -1409,24 +1410,16 @@ var DriveSync = (function() {
                 return;
             }
         } catch(e) {}
-        fetch(APPS_SCRIPT_URL + '?action=profile', { credentials: 'include', redirect: 'follow' })
-        .then(function(res) { if (!res.ok) throw new Error('not logged in'); return res.json(); })
-        .then(function(data) {
-            if (data.success && data.email) {
-                _isLoggedIn = true;
-                _userEmail = data.email;
-                try { sessionStorage.setItem('driveSync_email', data.email); } catch(e) {}
-            }
-            if (callback) callback(_isLoggedIn);
-        })
-        .catch(function() { _isLoggedIn = false; if (callback) callback(false); });
+        _isLoggedIn = false;
+        if (callback) callback(false);
     }
 
     function saveToDrive(storageKey, data, callback) {
+        if (!_isLoggedIn || !_userEmail) { if (callback) callback({ success: false, error: '로그인이 필요합니다' }); return; }
         fetch(APPS_SCRIPT_URL, {
-            method: 'POST', credentials: 'include',
+            method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({ action: 'save', key: storageKey, data: data })
+            body: JSON.stringify({ action: 'save', key: storageKey, userEmail: _userEmail, data: data })
         })
         .then(function(res) { return res.json(); })
         .then(function(result) { if (callback) callback(result); })
@@ -1434,14 +1427,16 @@ var DriveSync = (function() {
     }
 
     function loadFromDrive(storageKey, callback) {
-        fetch(APPS_SCRIPT_URL + '?action=load&key=' + encodeURIComponent(storageKey), { credentials: 'include' })
+        if (!_isLoggedIn || !_userEmail) { if (callback) callback({ success: false, error: '로그인이 필요합니다' }); return; }
+        fetch(APPS_SCRIPT_URL + '?action=load&key=' + encodeURIComponent(storageKey) + '&userEmail=' + encodeURIComponent(_userEmail))
         .then(function(res) { return res.json(); })
         .then(function(result) { if (callback) callback(result); })
         .catch(function(err) { console.warn('Drive 불러오기 실패:', err); if (callback) callback({ success: false, error: err.message }); });
     }
 
     function listFiles(callback) {
-        fetch(APPS_SCRIPT_URL + '?action=list', { credentials: 'include' })
+        if (!_isLoggedIn || !_userEmail) { if (callback) callback({ success: false, error: '로그인이 필요합니다' }); return; }
+        fetch(APPS_SCRIPT_URL + '?action=list&userEmail=' + encodeURIComponent(_userEmail))
         .then(function(res) { return res.json(); })
         .then(function(result) { if (callback) callback(result); })
         .catch(function(err) { if (callback) callback({ success: false, error: err.message }); });

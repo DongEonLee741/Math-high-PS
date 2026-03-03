@@ -1,14 +1,22 @@
 /**
- * 확률과통계 학습지 — Google Drive 저장/불러오기 웹앱
+ * 확률과통계 학습지 — Google Drive 저장/불러오기 웹앱 (v2)
  *
  * ═══════════════════════════════════════════════════════
  *  배포 설정 (반드시 아래대로 설정!)
- *    - 실행 주체 : "웹앱에 액세스하는 사용자"
- *    - 액세스   : "Google 계정이 있는 모든 사용자"
+ *    - 실행 주체 : "나" (스크립트 소유자)
+ *    - 액세스   : "모든 사용자" (Google 로그인 없이)
  * ═══════════════════════════════════════════════════════
+ *
+ * v2 변경사항:
+ *   - "Execute as: Me" 배포로 CORS 문제 해결
+ *   - Session.getActiveUser() 대신 userEmail 파라미터로 학생 식별
+ *   - 폴더 구조: 확률과통계/students/{email}/{단원}/{학습지}.json
+ *   - Login.html, Callback.html 불필요 (Firebase Auth로 인증)
  */
 
 // ===== 설정 =====
+var ROOT_FOLDER_NAME = '확률과통계';
+var STUDENTS_FOLDER_NAME = 'students';
 var LEGACY_FOLDER_NAME = '확률과통계_학습지';  // 이전 버전 호환
 
 // ===== 유틸리티 =====
@@ -30,7 +38,6 @@ function parseKey(key) {
       fileName: parts[parts.length - 1]
     };
   }
-  // 구 형식 — 이전 단일 폴더에 저장
   return {
     folderPath: [LEGACY_FOLDER_NAME],
     fileName: key
@@ -38,8 +45,25 @@ function parseKey(key) {
 }
 
 /**
+ * userEmail을 경로에 삽입하여 학생별 폴더 구조 생성
+ *
+ * 원래: ["확률과통계", "1단원_순열과조합"]
+ * 변환: ["확률과통계", "students", "user@email.com", "1단원_순열과조합"]
+ */
+function parseKeyWithUser(key, userEmail) {
+  var parsed = parseKey(key);
+  if (parsed.folderPath.length >= 1 && parsed.folderPath[0] !== LEGACY_FOLDER_NAME) {
+    var root = parsed.folderPath[0];
+    var rest = parsed.folderPath.slice(1);
+    parsed.folderPath = [root, STUDENTS_FOLDER_NAME, userEmail].concat(rest);
+  } else {
+    parsed.folderPath = [LEGACY_FOLDER_NAME, STUDENTS_FOLDER_NAME, userEmail];
+  }
+  return parsed;
+}
+
+/**
  * 경로 배열을 따라 하위 폴더를 생성/탐색
- * 예: ["확률과통계", "1단원_순열과조합"] → Drive에 중첩 폴더 생성
  */
 function getOrCreateFolderByPath(pathParts) {
   var current = DriveApp.getRootFolder();
@@ -53,13 +77,6 @@ function getOrCreateFolderByPath(pathParts) {
     }
   }
   return current;
-}
-
-/**
- * (이전 호환) 학습지 전용 폴더를 가져오거나 없으면 생성
- */
-function getOrCreateFolder() {
-  return getOrCreateFolderByPath([LEGACY_FOLDER_NAME]);
 }
 
 /**
@@ -82,70 +99,52 @@ function createJsonResponse(data) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+/**
+ * 이메일 형식 기본 검증
+ */
+function isValidEmail(email) {
+  return email && email.indexOf('@') > 0 && email.indexOf('.') > 0;
+}
+
 // ===== GET 요청 처리 =====
 
 /**
  * GET 요청 처리
  *
- * ?action=login                              → 로그인 페이지 (HTML)
- * ?action=login&returnUrl=...                → 로그인 후 돌아갈 URL
- * ?action=profile                            → 로그인한 사용자 정보 (JSON)
- * ?action=list                               → 저장된 학습지 목록 (JSON)
- * ?action=load&key=worksheet_PS_2차시_중복순열 → 특정 학습지 불러오기 (JSON)
- * ?action=callback                           → postMessage 콜백 페이지 (HTML)
+ * ?action=profile&userEmail=...     → 사용자 정보 확인 (JSON)
+ * ?action=list&userEmail=...        → 저장된 학습지 목록 (JSON)
+ * ?action=load&key=...&userEmail=...→ 특정 학습지 불러오기 (JSON)
  */
 function doGet(e) {
   try {
     var action = e.parameter.action || '';
+    var userEmail = e.parameter.userEmail || '';
 
-    // ── 로그인 페이지 ──
-    if (action === 'login') {
-      var template = HtmlService.createTemplateFromFile('Login');
-      template.returnUrl = e.parameter.returnUrl || '';
-      template.userEmail = Session.getActiveUser().getEmail() || '';
-      return template.evaluate()
-        .setTitle('학습지 로그인')
-        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-        .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
-    }
-
-    // ── 콜백 페이지 (iframe/팝업용) ──
-    if (action === 'callback') {
-      var template = HtmlService.createTemplateFromFile('Callback');
-      template.userEmail = Session.getActiveUser().getEmail() || '';
-      return template.evaluate()
-        .setTitle('로그인 완료')
-        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-    }
-
-    // ── 사용자 프로필 조회 ──
+    // ── 사용자 프로필 확인 ──
     if (action === 'profile') {
-      var email = Session.getActiveUser().getEmail();
-      if (!email) {
-        return createJsonResponse({ success: false, error: '로그인이 필요합니다' });
+      if (!isValidEmail(userEmail)) {
+        return createJsonResponse({ success: false, error: 'userEmail 파라미터가 필요합니다' });
       }
       return createJsonResponse({
         success: true,
-        email: email,
-        name: email.split('@')[0]
+        email: userEmail,
+        name: userEmail.split('@')[0]
       });
     }
 
     // ── 저장된 파일 목록 ──
     if (action === 'list') {
-      var email = Session.getActiveUser().getEmail();
-      if (!email) {
-        return createJsonResponse({ success: false, error: '로그인이 필요합니다' });
+      if (!isValidEmail(userEmail)) {
+        return createJsonResponse({ success: false, error: 'userEmail 파라미터가 필요합니다' });
       }
 
-      // path 파라미터가 있으면 해당 경로 탐색, 없으면 레거시 폴더
       var pathParam = e.parameter.path;
       var folder;
       if (pathParam) {
-        var pathParts = pathParam.split('/');
-        folder = getOrCreateFolderByPath(pathParts);
+        var parsed = parseKeyWithUser(pathParam + '/_dummy', userEmail);
+        folder = getOrCreateFolderByPath(parsed.folderPath);
       } else {
-        folder = getOrCreateFolder();
+        folder = getOrCreateFolderByPath([ROOT_FOLDER_NAME, STUDENTS_FOLDER_NAME, userEmail]);
       }
 
       var files = folder.getFiles();
@@ -167,9 +166,8 @@ function doGet(e) {
 
     // ── 특정 학습지 데이터 불러오기 ──
     if (action === 'load') {
-      var email = Session.getActiveUser().getEmail();
-      if (!email) {
-        return createJsonResponse({ success: false, error: '로그인이 필요합니다' });
+      if (!isValidEmail(userEmail)) {
+        return createJsonResponse({ success: false, error: 'userEmail 파라미터가 필요합니다' });
       }
 
       var key = e.parameter.key;
@@ -177,7 +175,7 @@ function doGet(e) {
         return createJsonResponse({ success: false, error: 'key 파라미터가 필요합니다' });
       }
 
-      var parsed = parseKey(key);
+      var parsed = parseKeyWithUser(key, userEmail);
       var folder = getOrCreateFolderByPath(parsed.folderPath);
       var file = findFileInFolder(folder, parsed.fileName + '.json');
 
@@ -212,7 +210,7 @@ function doGet(e) {
  * POST 요청 처리
  *
  * Body (JSON):
- *   { "action": "save", "key": "worksheet_PS_2차시_중복순열", "data": { ... } }
+ *   { "action": "save", "key": "확률과통계/1단원_순열과조합/2차시_중복순열", "userEmail": "student@email.com", "data": { ... } }
  */
 function doPost(e) {
   try {
@@ -220,9 +218,9 @@ function doPost(e) {
     var action = body.action;
 
     if (action === 'save') {
-      var email = Session.getActiveUser().getEmail();
-      if (!email) {
-        return createJsonResponse({ success: false, error: '로그인이 필요합니다' });
+      var userEmail = body.userEmail;
+      if (!isValidEmail(userEmail)) {
+        return createJsonResponse({ success: false, error: 'userEmail이 필요합니다' });
       }
 
       var key = body.key;
@@ -232,12 +230,11 @@ function doPost(e) {
         return createJsonResponse({ success: false, error: 'key와 data가 필요합니다' });
       }
 
-      var parsed = parseKey(key);
+      var parsed = parseKeyWithUser(key, userEmail);
       var folder = getOrCreateFolderByPath(parsed.folderPath);
       var fileName = parsed.fileName + '.json';
       var content = JSON.stringify(data);
 
-      // 기존 파일이 있으면 업데이트, 없으면 생성
       var existingFile = findFileInFolder(folder, fileName);
       if (existingFile) {
         existingFile.setContent(content);
@@ -249,6 +246,7 @@ function doPost(e) {
         success: true,
         message: '저장 완료',
         fileName: fileName,
+        userEmail: userEmail,
         timestamp: new Date().toISOString()
       });
     }

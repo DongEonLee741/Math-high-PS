@@ -522,6 +522,10 @@ function checkExistingSession() {
         var displayName = sessionStorage.getItem(SS.DISPLAY) || email;
         var role = sessionStorage.getItem(SS.ROLE) || getRole(email);
         applyRole(email, displayName, role);
+        // DriveSync 이메일이 없으면 Firebase Auth 이메일로 대체
+        if (!sessionStorage.getItem(SS.DRIVE)) {
+            sessionStorage.setItem(SS.DRIVE, email);
+        }
         return true;
     }
     return false;
@@ -564,8 +568,9 @@ async function handleLogin() {
         storeAuth(email, displayName, role, user.uid);
         applyRole(email, displayName, role);
 
-        // Drive 인증으로 이어서 리디렉트
-        startDriveAuth();
+        // Firebase Auth 이메일을 DriveSync용으로도 저장
+        sessionStorage.setItem(SS.DRIVE, email);
+        setupLinkInterception();
 
     } catch (error) {
         console.error('Login error:', error);
@@ -590,7 +595,8 @@ async function handleRedirectResult() {
 
             storeAuth(email, displayName, role, user.uid);
             applyRole(email, displayName, role);
-            startDriveAuth();
+            sessionStorage.setItem(SS.DRIVE, email);
+            setupLinkInterception();
             return true;
         }
     } catch (e) {
