@@ -646,6 +646,73 @@
         }
         .save-actions .btn-records:active { background: #dbeafe; }
 
+        /* ── Google Drive 연동 ── */
+        .drive-sync-area {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-drive {
+            border: 1.5px solid #4285f4;
+            background: #4285f4;
+            color: #fff;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            -webkit-transition: all 0.15s;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-drive:active {
+            -webkit-transform: scale(0.96);
+            transform: scale(0.96);
+            background: #3367d6;
+        }
+        .btn-drive.logged-in {
+            background: #fff;
+            color: #4285f4;
+            font-size: 11px;
+            padding: 4px 8px;
+        }
+        .btn-drive-load {
+            border: 1.5px solid #34a853;
+            background: #34a853;
+            color: #fff;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            -webkit-transition: all 0.15s;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-drive-load:active {
+            -webkit-transform: scale(0.96);
+            transform: scale(0.96);
+            background: #2d8e47;
+        }
+        .drive-status {
+            font-size: 11px;
+            color: #64748b;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         /* ── 기록 모달 오버레이 ── */
         .records-overlay {
             display: none;
@@ -1314,6 +1381,10 @@ const classId = urlParams.get('class') || 'default';
             <button class="btn-save" id="btnSave">💾 저장</button>
             <button class="btn-records" id="btnRecords">📋 기록</button>
         </div>
+        <div class="drive-sync-area">
+            <button class="btn-drive" id="btnDriveLogin" title="Google Drive 연동">☁️ Drive</button>
+            <button class="btn-drive-load" id="btnDriveLoad" style="display:none;">📥 불러오기</button>
+        </div>
         <div class="field"><label>학년 반</label> <input type="text" placeholder="예: 1-3"></div>
         <div class="field"><label>번호</label> <input type="text" style="width:40px;" placeholder="00"></div>
         <div class="field"><label>이름</label> <input type="text" placeholder="이름 입력"></div>
@@ -1828,6 +1899,131 @@ function toggleAllAnswers() {
     });
 }
 
+// ══════════════════════════════════════════════════
+// ── Google Drive 연동 모듈 (DriveSync) ──
+// ══════════════════════════════════════════════════
+var DriveSync = (function() {
+    var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4a1O3vjFC1O4V0b-teADBC9SkNSB8nW2WyKxdoe-yODQW33M8l8IGi2o1qhAvPWnx/exec';
+    var _isLoggedIn = false;
+    var _userEmail = '';
+
+    function openLogin() {
+        var returnUrl = encodeURIComponent(window.location.href);
+        window.location.href = APPS_SCRIPT_URL + '?action=login&returnUrl=' + returnUrl;
+    }
+
+    function checkLogin(callback) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var driveEmail = urlParams.get('driveEmail');
+        if (driveEmail) {
+            _isLoggedIn = true;
+            _userEmail = driveEmail;
+            urlParams.delete('driveEmail');
+            var cleanUrl = window.location.pathname;
+            var remaining = urlParams.toString();
+            if (remaining) cleanUrl += '?' + remaining;
+            window.history.replaceState({}, '', cleanUrl);
+            if (callback) callback(true);
+            return;
+        }
+        try {
+            var saved = sessionStorage.getItem('driveSync_email');
+            if (saved) {
+                _isLoggedIn = true;
+                _userEmail = saved;
+                if (callback) callback(true);
+                return;
+            }
+        } catch(e) {}
+        fetch(APPS_SCRIPT_URL + '?action=profile', { credentials: 'include', redirect: 'follow' })
+        .then(function(res) { if (!res.ok) throw new Error('not logged in'); return res.json(); })
+        .then(function(data) {
+            if (data.success && data.email) {
+                _isLoggedIn = true;
+                _userEmail = data.email;
+                try { sessionStorage.setItem('driveSync_email', data.email); } catch(e) {}
+            }
+            if (callback) callback(_isLoggedIn);
+        })
+        .catch(function() { _isLoggedIn = false; if (callback) callback(false); });
+    }
+
+    function saveToDrive(storageKey, data, callback) {
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: 'save', key: storageKey, data: data })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(result) { if (callback) callback(result); })
+        .catch(function(err) { console.warn('Drive 저장 실패:', err); if (callback) callback({ success: false, error: err.message }); });
+    }
+
+    function loadFromDrive(storageKey, callback) {
+        fetch(APPS_SCRIPT_URL + '?action=load&key=' + encodeURIComponent(storageKey), { credentials: 'include' })
+        .then(function(res) { return res.json(); })
+        .then(function(result) { if (callback) callback(result); })
+        .catch(function(err) { console.warn('Drive 불러오기 실패:', err); if (callback) callback({ success: false, error: err.message }); });
+    }
+
+    function listFiles(callback) {
+        fetch(APPS_SCRIPT_URL + '?action=list', { credentials: 'include' })
+        .then(function(res) { return res.json(); })
+        .then(function(result) { if (callback) callback(result); })
+        .catch(function(err) { if (callback) callback({ success: false, error: err.message }); });
+    }
+
+    return {
+        openLogin: openLogin, checkLogin: checkLogin, saveToDrive: saveToDrive,
+        loadFromDrive: loadFromDrive, listFiles: listFiles,
+        isLoggedIn: function() { return _isLoggedIn; },
+        userEmail: function() { return _userEmail; }
+    };
+})();
+
+function updateDriveUI(loggedIn) {
+    var loginBtn = document.getElementById('btnDriveLogin');
+    var loadBtn = document.getElementById('btnDriveLoad');
+    if (!loginBtn) return;
+    if (loggedIn) {
+        loginBtn.textContent = '☁️ ' + DriveSync.userEmail().split('@')[0];
+        loginBtn.classList.add('logged-in');
+        loginBtn.title = DriveSync.userEmail() + ' (로그인됨)';
+        loadBtn.style.display = 'inline-flex';
+    } else {
+        loginBtn.textContent = '☁️ Drive';
+        loginBtn.classList.remove('logged-in');
+        loginBtn.title = 'Google Drive 연동';
+        loadBtn.style.display = 'none';
+    }
+}
+
+function handleDriveLogin() {
+    if (DriveSync.isLoggedIn()) {
+        showToast(DriveSync.userEmail() + ' 로그인됨');
+    } else {
+        DriveSync.openLogin();
+    }
+}
+
+function handleDriveLoad() {
+    if (!DriveSync.isLoggedIn()) { DriveSync.openLogin(); return; }
+    var storageKey = getStorageKey();
+    showToast('Drive에서 불러오는 중...');
+    DriveSync.loadFromDrive(storageKey, function(result) {
+        if (!result.success) { showToast('Drive에 저장된 데이터가 없습니다'); return; }
+        try { localStorage.setItem(storageKey, JSON.stringify(result.data)); } catch(e) {}
+        var records = result.data.records || [];
+        if (records.length > 0) {
+            records.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
+            loadRecord(records[0].id);
+            showToast('Drive에서 불러왔습니다 (' + records.length + '개 기록)');
+        } else {
+            showToast('Drive에 저장된 기록이 없습니다');
+        }
+    });
+}
+
 // ── localStorage 저장/불러오기 시스템 ──
 function getStorageKey() {
     return 'worksheet_PS_6차시_중복조합';
@@ -1917,6 +2113,16 @@ function saveRecord() {
     records.push(record);
     if (saveAllRecords(records)) {
         showToast('저장되었습니다.');
+        // ── Google Drive에도 저장 ──
+        if (DriveSync.isLoggedIn()) {
+            var storageKey = getStorageKey();
+            var dataToSave = { version: 1, records: records };
+            DriveSync.saveToDrive(storageKey, dataToSave, function(result) {
+                if (result.success) {
+                    showToast('Drive에도 저장 완료 ☁️');
+                }
+            });
+        }
     }
 }
 
@@ -2910,6 +3116,16 @@ document.getElementById('btnRecords').addEventListener('click', function(e) {
 });
 document.getElementById('btnCloseRecords').addEventListener('click', function(e) {
     e.preventDefault(); closeRecordsPanel();
+});
+// Google Drive 버튼 이벤트 바인딩
+document.getElementById('btnDriveLogin').addEventListener('click', function(e) {
+    e.preventDefault(); handleDriveLogin();
+});
+document.getElementById('btnDriveLoad').addEventListener('click', function(e) {
+    e.preventDefault(); handleDriveLoad();
+});
+DriveSync.checkLogin(function(loggedIn) {
+    updateDriveUI(loggedIn);
 });
 document.getElementById('recordsOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeRecordsPanel();
