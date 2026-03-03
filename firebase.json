@@ -1,0 +1,27 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/*.pdf",
+      "**/*.md",
+      "**/plan/**",
+      "**/*.py",
+      "**/*.ps1",
+      "**/*_backup*"
+    ],
+    "headers": [
+      {
+        "source": "**/*.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  }
+}
