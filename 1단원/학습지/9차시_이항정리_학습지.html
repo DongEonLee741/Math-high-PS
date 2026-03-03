@@ -1930,8 +1930,9 @@ function handleDriveLogin() {
 function handleDriveLoad() {
     if (!DriveSync.isLoggedIn()) { DriveSync.openLogin(); return; }
     var storageKey = getStorageKey();
+    var driveKey = getDriveKey();
     showToast('Drive에서 불러오는 중...');
-    DriveSync.loadFromDrive(storageKey, function(result) {
+    DriveSync.loadFromDrive(driveKey, function(result) {
         if (!result.success) { showToast('Drive에 저장된 데이터가 없습니다'); return; }
         try { localStorage.setItem(storageKey, JSON.stringify(result.data)); } catch(e) {}
         var records = result.data.records || [];
@@ -1948,6 +1949,10 @@ function handleDriveLoad() {
 // ── localStorage 저장/불러오기 시스템 ──
 function getStorageKey() {
     return 'worksheet_PS_9차시_이항정리';
+}
+
+function getDriveKey() {
+    return '확률과통계/1단원_순열과조합/9차시_이항정리';
 }
 
 function getAllRecords() {
@@ -2036,9 +2041,9 @@ function saveRecord() {
         showToast('저장되었습니다.');
         // ── Google Drive에도 저장 ──
         if (DriveSync.isLoggedIn()) {
-            var storageKey = getStorageKey();
+            var driveKey = getDriveKey();
             var dataToSave = { version: 1, records: records };
-            DriveSync.saveToDrive(storageKey, dataToSave, function(result) {
+            DriveSync.saveToDrive(driveKey, dataToSave, function(result) {
                 if (result.success) {
                     showToast('Drive에도 저장 완료 ☁️');
                 }
