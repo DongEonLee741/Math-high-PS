@@ -436,7 +436,6 @@ import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult,
   from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
 // ===== 설정 =====
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4a1O3vjFC1O4V0b-teADBC9SkNSB8nW2WyKxdoe-yODQW33M8l8IGi2o1qhAvPWnx/exec';
 const TEACHER_EMAILS = ['roal2745@gmail.com'];
 
 const firebaseConfig = {
@@ -457,7 +456,8 @@ const SS = {
     DISPLAY: 'auth_displayName',
     ROLE: 'auth_role',
     UID: 'auth_uid',
-    DRIVE: 'driveSync_email'  // 학습지 DriveSync와 동일 키
+    DRIVE: 'driveSync_email',  // 학습지 DriveSync와 동일 키
+    TOKEN: 'driveSync_token'   // Google Drive API access token
 };
 
 // ===== DOM =====
@@ -531,12 +531,6 @@ function checkExistingSession() {
     return false;
 }
 
-// ===== Drive 인증으로 리디렉트 =====
-function startDriveAuth() {
-    var returnUrl = encodeURIComponent(window.location.href);
-    window.location.href = APPS_SCRIPT_URL + '?action=login&returnUrl=' + returnUrl;
-}
-
 // ===== Google 로그인 =====
 async function handleLogin() {
     btnLogin.style.display = 'none';
@@ -546,6 +540,7 @@ async function handleLogin() {
         await setPersistence(auth, browserSessionPersistence);
         var provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: 'select_account' });
+        provider.addScope('https://www.googleapis.com/auth/drive.file');
 
         var result;
         try {
@@ -565,11 +560,15 @@ async function handleLogin() {
         var displayName = user.displayName || email;
         var role = getRole(email);
 
+        var credential = GoogleAuthProvider.credentialFromResult(result);
+        var accessToken = credential ? credential.accessToken : '';
+
         storeAuth(email, displayName, role, user.uid);
         applyRole(email, displayName, role);
 
-        // Firebase Auth 이메일을 DriveSync용으로도 저장
+        // Drive 연동: 이메일 + access token 저장
         sessionStorage.setItem(SS.DRIVE, email);
+        if (accessToken) sessionStorage.setItem(SS.TOKEN, accessToken);
         setupLinkInterception();
 
     } catch (error) {
@@ -593,9 +592,13 @@ async function handleRedirectResult() {
             var displayName = user.displayName || email;
             var role = getRole(email);
 
+            var credential = GoogleAuthProvider.credentialFromResult(result);
+            var accessToken = credential ? credential.accessToken : '';
+
             storeAuth(email, displayName, role, user.uid);
             applyRole(email, displayName, role);
             sessionStorage.setItem(SS.DRIVE, email);
+            if (accessToken) sessionStorage.setItem(SS.TOKEN, accessToken);
             setupLinkInterception();
             return true;
         }

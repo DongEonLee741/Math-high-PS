@@ -1823,10 +1823,15 @@ function toggleAllAnswers() {
 // ══════════════════════════════════════════════════
 // ── Google Drive 연동 모듈 (DriveSync) ──
 // ══════════════════════════════════════════════════
+// Google Drive REST API를 직접 호출하여 학생 개인 Drive에 저장
 var DriveSync = (function() {
-    var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4a1O3vjFC1O4V0b-teADBC9SkNSB8nW2WyKxdoe-yODQW33M8l8IGi2o1qhAvPWnx/exec';
+    var DRIVE_API = 'https://www.googleapis.com/drive/v3';
+    var UPLOAD_API = 'https://www.googleapis.com/upload/drive/v3';
+    var APP_FOLDER = '확률과통계 학습지';
     var _isLoggedIn = false;
     var _userEmail = '';
+    var _accessToken = '';
+    var _folderId = null;
 
     function openLogin() {
         var origin = window.location.origin || 'https://math-high-cm1.web.app';
@@ -1837,22 +1842,20 @@ var DriveSync = (function() {
         var urlParams = new URLSearchParams(window.location.search);
         var driveEmail = urlParams.get('driveEmail');
         if (driveEmail) {
-            _isLoggedIn = true;
-            _userEmail = driveEmail;
             try { sessionStorage.setItem('driveSync_email', driveEmail); } catch(e) {}
             urlParams.delete('driveEmail');
             var cleanUrl = window.location.pathname;
             var remaining = urlParams.toString();
             if (remaining) cleanUrl += '?' + remaining;
             window.history.replaceState({}, '', cleanUrl);
-            if (callback) callback(true);
-            return;
         }
         try {
-            var saved = sessionStorage.getItem('driveSync_email');
-            if (saved) {
+            var token = sessionStorage.getItem('driveSync_token');
+            var email = sessionStorage.getItem('driveSync_email') || driveEmail;
+            if (token && email) {
                 _isLoggedIn = true;
-                _userEmail = saved;
+                _userEmail = email;
+                _accessToken = token;
                 if (callback) callback(true);
                 return;
             }
@@ -1861,32 +1864,107 @@ var DriveSync = (function() {
         if (callback) callback(false);
     }
 
-    function saveToDrive(storageKey, data, callback) {
-        if (!_isLoggedIn || !_userEmail) { if (callback) callback({ success: false, error: '로그인이 필요합니다' }); return; }
-        fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({ action: 'save', key: storageKey, userEmail: _userEmail, data: data })
+    function _authHeaders(extra) {
+        var h = { 'Authorization': 'Bearer ' + _accessToken };
+        if (extra) { for (var k in extra) { if (extra.hasOwnProperty(k)) h[k] = extra[k]; } }
+        return h;
+    }
+
+    function _handleAuthError() {
+        _isLoggedIn = false; _accessToken = ''; _folderId = null;
+        try { sessionStorage.removeItem('driveSync_token'); } catch(e) {}
+    }
+
+    function _getOrCreateFolder(callback) {
+        if (_folderId) { callback(_folderId); return; }
+        var q = "name='" + APP_FOLDER + "' and mimeType='application/vnd.google-apps.folder' and trashed=false";
+        fetch(DRIVE_API + '/files?q=' + encodeURIComponent(q) + '&fields=files(id)', { headers: _authHeaders() })
+        .then(function(res) {
+            if (res.status === 401) { _handleAuthError(); throw new Error('로그인이 만료되었습니다. 메인 페이지에서 다시 로그인해주세요.'); }
+            return res.json();
         })
-        .then(function(res) { return res.json(); })
-        .then(function(result) { if (callback) callback(result); })
-        .catch(function(err) { console.warn('Drive 저장 실패:', err); if (callback) callback({ success: false, error: err.message }); });
+        .then(function(data) {
+            if (data.files && data.files.length > 0) {
+                _folderId = data.files[0].id; callback(_folderId);
+            } else {
+                fetch(DRIVE_API + '/files', {
+                    method: 'POST',
+                    headers: _authHeaders({ 'Content-Type': 'application/json' }),
+                    body: JSON.stringify({ name: APP_FOLDER, mimeType: 'application/vnd.google-apps.folder' })
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(folder) { _folderId = folder.id; callback(_folderId); })
+                .catch(function(err) { callback(null, err.message); });
+            }
+        })
+        .catch(function(err) { callback(null, err.message); });
+    }
+
+    function saveToDrive(storageKey, data, callback) {
+        if (!_isLoggedIn || !_accessToken) {
+            if (callback) callback({ success: false, error: '로그인이 필요합니다. 메인 페이지에서 로그인해주세요.' });
+            return;
+        }
+        var fileName = storageKey.replace(/\//g, '_') + '.json';
+        _getOrCreateFolder(function(folderId, err) {
+            if (!folderId) { if (callback) callback({ success: false, error: err || '폴더 생성 실패' }); return; }
+            var q = "name='" + fileName + "' and '" + folderId + "' in parents and trashed=false";
+            fetch(DRIVE_API + '/files?q=' + encodeURIComponent(q) + '&fields=files(id)', { headers: _authHeaders() })
+            .then(function(res) { return res.json(); })
+            .then(function(result) {
+                var content = JSON.stringify(data);
+                if (result.files && result.files.length > 0) {
+                    return fetch(UPLOAD_API + '/files/' + result.files[0].id + '?uploadType=media', {
+                        method: 'PATCH', headers: _authHeaders({ 'Content-Type': 'application/json' }), body: content
+                    });
+                } else {
+                    var metadata = { name: fileName, parents: [folderId], mimeType: 'application/json' };
+                    var boundary = '___drivesync___';
+                    var body = '--' + boundary + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' +
+                        JSON.stringify(metadata) + '\r\n--' + boundary + '\r\nContent-Type: application/json\r\n\r\n' +
+                        content + '\r\n--' + boundary + '--';
+                    return fetch(UPLOAD_API + '/files?uploadType=multipart', {
+                        method: 'POST', headers: _authHeaders({ 'Content-Type': 'multipart/related; boundary=' + boundary }), body: body
+                    });
+                }
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(file) { if (callback) callback({ success: true, fileId: file.id }); })
+            .catch(function(err) { console.warn('Drive 저장 실패:', err); if (callback) callback({ success: false, error: err.message }); });
+        });
     }
 
     function loadFromDrive(storageKey, callback) {
-        if (!_isLoggedIn || !_userEmail) { if (callback) callback({ success: false, error: '로그인이 필요합니다' }); return; }
-        fetch(APPS_SCRIPT_URL + '?action=load&key=' + encodeURIComponent(storageKey) + '&userEmail=' + encodeURIComponent(_userEmail))
-        .then(function(res) { return res.json(); })
-        .then(function(result) { if (callback) callback(result); })
-        .catch(function(err) { console.warn('Drive 불러오기 실패:', err); if (callback) callback({ success: false, error: err.message }); });
+        if (!_isLoggedIn || !_accessToken) {
+            if (callback) callback({ success: false, error: '로그인이 필요합니다. 메인 페이지에서 로그인해주세요.' });
+            return;
+        }
+        var fileName = storageKey.replace(/\//g, '_') + '.json';
+        _getOrCreateFolder(function(folderId, err) {
+            if (!folderId) { if (callback) callback({ success: false, error: err || '폴더를 찾을 수 없습니다' }); return; }
+            var q = "name='" + fileName + "' and '" + folderId + "' in parents and trashed=false";
+            fetch(DRIVE_API + '/files?q=' + encodeURIComponent(q) + '&fields=files(id)', { headers: _authHeaders() })
+            .then(function(res) { return res.json(); })
+            .then(function(result) {
+                if (!result.files || result.files.length === 0) { throw new Error('저장된 데이터가 없습니다'); }
+                return fetch(DRIVE_API + '/files/' + result.files[0].id + '?alt=media', { headers: _authHeaders() });
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(fileData) { if (callback) callback({ success: true, data: fileData }); })
+            .catch(function(err) { console.warn('Drive 불러오기 실패:', err); if (callback) callback({ success: false, error: err.message }); });
+        });
     }
 
     function listFiles(callback) {
-        if (!_isLoggedIn || !_userEmail) { if (callback) callback({ success: false, error: '로그인이 필요합니다' }); return; }
-        fetch(APPS_SCRIPT_URL + '?action=list&userEmail=' + encodeURIComponent(_userEmail))
-        .then(function(res) { return res.json(); })
-        .then(function(result) { if (callback) callback(result); })
-        .catch(function(err) { if (callback) callback({ success: false, error: err.message }); });
+        if (!_isLoggedIn || !_accessToken) { if (callback) callback({ success: false, error: '로그인이 필요합니다' }); return; }
+        _getOrCreateFolder(function(folderId) {
+            if (!folderId) { if (callback) callback({ success: true, files: [] }); return; }
+            var q = "'" + folderId + "' in parents and trashed=false";
+            fetch(DRIVE_API + '/files?q=' + encodeURIComponent(q) + '&fields=files(id,name,modifiedTime)', { headers: _authHeaders() })
+            .then(function(res) { return res.json(); })
+            .then(function(result) { if (callback) callback({ success: true, files: result.files || [] }); })
+            .catch(function(err) { if (callback) callback({ success: false, error: err.message }); });
+        });
     }
 
     return {
