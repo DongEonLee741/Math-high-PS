@@ -1,0 +1,26 @@
+# PDFs
+*.pdf
+
+# Claude config
+.claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+
+# Python scripts (별도 관리)
+*.py
+
+# Plan docs
+plan/
+
+# 교과 진도표
+*.xlsx
+
+# 2~3단원 (아직 미완성)
+2단원/
+3단원/
