@@ -10,6 +10,65 @@
     <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
     <link rel="stylesheet" href="https://math-class.it.kr/lib/css/slide-common.css">
 
+    <!-- 격자 경로 시뮬레이션 고유 스타일 (학습지 인라인 CSS 복사) -->
+    <style>
+        .grid-path-sim {
+            background: #eff6ff; border: 1.5px solid #3b82f6;
+            border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
+        }
+        .grid-path-sim h3 {
+            font-size: 15px; font-weight: 700; color: #2563eb; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .gps-stage { margin-top: 10px; }
+        .gps-instruction { font-size: 14px; margin-bottom: 10px; }
+        .gps-svg-wrap { display: flex; justify-content: center; margin: 8px 0; }
+        .gps-svg-wrap svg { touch-action: none; }
+        .gps-answer-row {
+            display: flex; align-items: center; gap: 6px;
+            justify-content: center; margin: 12px 0; font-size: 14px;
+        }
+        .gps-answer-row input {
+            width: 50px; height: 36px; border: 2px solid #3b82f6; border-radius: 6px;
+            text-align: center; font-size: 16px; font-weight: 700; font-family: inherit; outline: none;
+        }
+        .gps-answer-row input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
+        .gps-check {
+            background: #4a90d9; color: #fff; border: none; border-radius: 6px;
+            padding: 6px 14px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+        }
+        .gps-feedback { text-align: center; font-size: 14px; font-weight: 600; min-height: 20px; margin: 6px 0; }
+        .gps-feedback.correct { color: #16a34a; }
+        .gps-feedback.wrong { color: #ef4444; }
+        .gps-next-btn {
+            display: block; margin: 8px auto 0; background: #4a90d9; color: #fff;
+            border: none; border-radius: 8px; padding: 8px 20px; font-size: 14px;
+            font-weight: 600; cursor: pointer; font-family: inherit;
+        }
+        .gps-next-btn:disabled { opacity: 0.4; cursor: default; }
+        .gps-path-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 8px; max-width: 420px; margin: 12px auto;
+        }
+        .gps-mini { text-align: center; }
+        .gps-mini svg { width: 100%; max-width: 120px; }
+        .gps-mini-label { font-size: 12px; color: #64748b; margin-top: 2px; font-weight: 600; }
+        .gps-decompose {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 12px 0;
+        }
+        .gps-decompose-item { text-align: center; background: #fff; border-radius: 8px; padding: 8px 10px; border: 1px solid #e2e8f0; }
+        .gps-decompose-item .label { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+        .gps-decompose-item .segs { font-size: 15px; font-weight: 700; }
+        .gps-decompose-item .segs .h-seg { color: #ef4444; }
+        .gps-decompose-item .segs .v-seg { color: #2980B9; }
+        .gps-insight {
+            background: #fff; border: 2px solid #3b82f6; border-radius: 10px;
+            padding: 14px 16px; margin-top: 12px; text-align: center;
+        }
+        .gps-insight p { font-size: 14px; line-height: 1.8; margin-bottom: 4px; }
+        .gps-insight .highlight-text { font-size: 16px; font-weight: 700; color: #2563eb; }
+    </style>
+
     <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
     <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
 
@@ -313,10 +372,33 @@
         <hr class="divider">
 
         <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 6</span> 오른쪽 그림과 같은 바둑판 모양의 도로에서 최단거리로 가는 경우의 수를 구하시오.</div>
-            <div class="sub-problem"><span class="num">⑴</span> 집에서 도서관까지 가는 경우의 수</div>
+            <div class="problem-label" style="display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+                <div style="flex:1; min-width:200px;"><span class="p-num">문제 6</span> 집에서 도서관까지 가는 도로망이 오른쪽 그림과 같을 때, 다음을 구하시오.</div>
+                <svg viewBox="0 0 290 220" width="250" style="flex-shrink:0;" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="#b0b8c4" stroke-width="1.2">
+                        <line x1="30" y1="20" x2="230" y2="20"/>
+                        <line x1="30" y1="60" x2="230" y2="60"/>
+                        <line x1="30" y1="100" x2="230" y2="100"/>
+                        <line x1="30" y1="140" x2="230" y2="140"/>
+                        <line x1="30" y1="180" x2="230" y2="180"/>
+                        <line x1="30" y1="20" x2="30" y2="180"/>
+                        <line x1="70" y1="20" x2="70" y2="180"/>
+                        <line x1="110" y1="20" x2="110" y2="180"/>
+                        <line x1="150" y1="20" x2="150" y2="180"/>
+                        <line x1="190" y1="20" x2="190" y2="180"/>
+                        <line x1="230" y1="20" x2="230" y2="180"/>
+                    </g>
+                    <circle cx="30" cy="180" r="5" fill="#E74C3C"/>
+                    <text x="10" y="200" font-size="12" fill="#E74C3C" font-weight="700" font-family="Pretendard,sans-serif">집</text>
+                    <circle cx="150" cy="100" r="5" fill="#f59e0b"/>
+                    <text x="128" y="120" font-size="11" fill="#b45309" font-weight="700" font-family="Pretendard,sans-serif">편의점</text>
+                    <circle cx="230" cy="20" r="5" fill="#2980B9"/>
+                    <text x="238" y="24" font-size="12" fill="#2980B9" font-weight="700" font-family="Pretendard,sans-serif">도서관</text>
+                </svg>
+            </div>
+            <div class="sub-problem"><span class="num">⑴</span> 집에서 출발하여 도서관까지 최단 거리로 가는 경우의 수</div>
             <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
-            <div class="sub-problem"><span class="num">⑵</span> 집에서 편의점을 거쳐 도서관까지 가는 경우의 수</div>
+            <div class="sub-problem"><span class="num">⑵</span> 집에서 출발하여 편의점을 거쳐서 도서관까지 최단 거리로 가는 경우의 수</div>
             <div class="writing-area" data-h="143"><canvas></canvas><div class="canvas-toolbar"></div></div>
             <div class="answer-reveal">
                 <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>

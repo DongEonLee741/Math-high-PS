@@ -8,6 +8,7 @@
   <!-- 공통 라이브러리 (Firebase Hosting) -->
   <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
   <link rel="stylesheet" href="https://math-class.it.kr/lib/css/worksheet-common.css">
+  <link rel="stylesheet" href="https://math-class.it.kr/lib/css/auth-overlay.css">
 
   <!-- KaTeX (defer) -->
   <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
@@ -19,7 +20,7 @@
     import { initFirebaseWorksheet } from 'https://math-class.it.kr/lib/js/firebase-worksheet.js';
 
     const app = initWorksheetApp('worksheet_4차시_스스로확인하기');
-    initFirebaseWorksheet('PS_4차시_스스로확인하기', { showAuth: false });
+    initFirebaseWorksheet('PS_4차시_스스로확인하기', { showAuth: true });
   </script>
 </head>
 <body>
@@ -130,7 +131,44 @@
 
         <!-- 문제 4 -->
         <div class="problem">
-            <div class="problem-label"><span class="p-num">문제 4</span> 다음 그림과 같이 A 지점에서 B 지점까지 최단 거리로 가는 경우의 수를 구하시오. (단, P, Q 지점을 반드시 지난다.)</div>
+            <div class="problem-label" style="display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+                <div style="flex:1; min-width:200px;"><span class="p-num">문제 4</span> 다음 그림과 같은 도로망이 있다. A 지점에서 출발하여 B 지점까지 최단 거리로 갈 때, 두 지점 P, Q를 모두 지나는 경우의 수를 구하시오.</div>
+                <svg viewBox="0 0 280 170" width="240" style="flex-shrink:0;" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 격자 도로 (4칸×3칸, 5×4 교차점) -->
+                    <g stroke="#333" stroke-width="1.4">
+                        <!-- 가로선 4개 -->
+                        <line x1="25" y1="20" x2="245" y2="20"/>
+                        <line x1="25" y1="60" x2="245" y2="60"/>
+                        <line x1="25" y1="100" x2="245" y2="100"/>
+                        <line x1="25" y1="140" x2="245" y2="140"/>
+                        <!-- 세로선 5개 -->
+                        <line x1="25" y1="20" x2="25" y2="140"/>
+                        <line x1="80" y1="20" x2="80" y2="140"/>
+                        <line x1="135" y1="20" x2="135" y2="140"/>
+                        <line x1="190" y1="20" x2="190" y2="140"/>
+                        <line x1="245" y1="20" x2="245" y2="140"/>
+                    </g>
+                    <!-- 교차점 -->
+                    <g fill="#555">
+                        <circle cx="25" cy="20" r="3"/><circle cx="80" cy="20" r="3"/><circle cx="135" cy="20" r="3"/><circle cx="190" cy="20" r="3"/><circle cx="245" cy="20" r="3"/>
+                        <circle cx="25" cy="60" r="3"/><circle cx="80" cy="60" r="3"/><circle cx="135" cy="60" r="3"/><circle cx="190" cy="60" r="3"/><circle cx="245" cy="60" r="3"/>
+                        <circle cx="25" cy="100" r="3"/><circle cx="80" cy="100" r="3"/><circle cx="135" cy="100" r="3"/><circle cx="190" cy="100" r="3"/><circle cx="245" cy="100" r="3"/>
+                        <circle cx="25" cy="140" r="3"/><circle cx="80" cy="140" r="3"/><circle cx="135" cy="140" r="3"/><circle cx="190" cy="140" r="3"/><circle cx="245" cy="140" r="3"/>
+                    </g>
+                    <!-- A (좌상단) -->
+                    <circle cx="25" cy="20" r="5" fill="#E74C3C"/>
+                    <text x="5" y="16" font-size="13" fill="#E74C3C" font-weight="700" font-family="Pretendard,sans-serif">A</text>
+                    <!-- P (col2, row1) -->
+                    <circle cx="135" cy="60" r="5" fill="#333"/>
+                    <text x="142" y="56" font-size="13" fill="#333" font-weight="700" font-family="Pretendard,sans-serif">P</text>
+                    <!-- Q (col3, row2) -->
+                    <circle cx="190" cy="100" r="5" fill="#333"/>
+                    <text x="197" y="96" font-size="13" fill="#333" font-weight="700" font-family="Pretendard,sans-serif">Q</text>
+                    <!-- B (우하단) -->
+                    <circle cx="245" cy="140" r="5" fill="#2980B9"/>
+                    <text x="250" y="153" font-size="13" fill="#2980B9" font-weight="700" font-family="Pretendard,sans-serif">B</text>
+                </svg>
+            </div>
             <div class="tip-box">
                 <strong>참고</strong> &nbsp; 격자 경로에서 A&rarr;P&rarr;Q&rarr;B로 나누어 각 구간의 최단 경로 수를 곱합니다.
             </div>
