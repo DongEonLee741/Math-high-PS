@@ -1,18 +1,27 @@
-name: Deploy to Firebase Hosting
+name: Trigger Firebase Deployment via CM1
+
+# PS 저장소에 push하면 CM1 저장소의 통합 배포 워크플로우를 트리거합니다.
+# Firebase 배포는 CM1 저장소(Math-high-CM1)에서 통합 관리됩니다.
 
 on:
   push:
     branches: [main]
 
 jobs:
-  deploy:
+  trigger-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Trigger CM1 deploy workflow
+        uses: actions/github-script@v7
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: math-high-cm1
+          github-token: ${{ secrets.GH_PAT }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'DongEonLee741',
+              repo: 'Math-high-CM1',
+              event_type: 'ps-updated',
+              client_payload: {
+                message: 'PS repository updated, triggering full site deploy'
+              }
+            });
+            console.log('✅ CM1 deploy workflow triggered successfully');

@@ -1,27 +1,11 @@
 {
+  "_note": "PS 저장소는 Firebase에 직접 배포하지 않습니다. 배포는 Math-high-CM1 저장소의 GitHub Actions에서 통합 관리됩니다. 로컬 배포: 공통수학1/ 워크스페이스에서 firebase deploy --only hosting 실행",
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "**/*.pdf",
-      "**/*.md",
-      "**/plan/**",
-      "**/*.py",
-      "**/*.ps1",
-      "**/*_backup*"
-    ],
-    "headers": [
-      {
-        "source": "**/*.html",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache"
-          }
-        ]
-      }
+      "**/node_modules/**"
     ]
   }
 }

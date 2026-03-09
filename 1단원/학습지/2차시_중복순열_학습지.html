@@ -10,6 +10,65 @@
   <link rel="stylesheet" href="https://math-class.it.kr/lib/css/worksheet-common.css">
   <link rel="stylesheet" href="https://math-class.it.kr/lib/css/auth-overlay.css">
 
+  <!-- 이 차시 고유 스타일 -->
+  <style>
+    /* ── PADLOCK 게임 ── */
+    .padlock-game {
+        background: #f0fdf4; border: 1.5px solid #22c55e;
+        border-radius: 10px; padding: 14px 16px; margin-bottom: 14px;
+    }
+    .padlock-game h3 {
+        font-size: 15px; font-weight: 700; color: #16a34a; margin-bottom: 4px;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .padlock-desc { font-size: 13px; color: #64748b; margin-bottom: 10px; }
+    .padlock-stats { text-align: center; font-size: 13px; color: #64748b; margin-bottom: 10px; }
+    .padlock-board { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 12px; }
+    .plk-row { display: flex; gap: 6px; }
+    .plk-tile {
+        width: 44px; height: 44px; border: 2px solid #d0d0d0; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px; font-weight: 700; background: #fff; color: #334155;
+        transition: all 0.3s;
+    }
+    .plk-tile.correct { background: #6aaa64; border-color: #6aaa64; color: #fff; }
+    .plk-tile.present { background: #c9b458; border-color: #c9b458; color: #fff; }
+    .plk-tile.absent  { background: #787c7e; border-color: #787c7e; color: #fff; }
+    .padlock-input { display: none; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+    .padlock-input.active { display: flex; }
+    .padlock-digits { display: flex; gap: 6px; }
+    .plk-cell {
+        width: 44px; height: 44px; border: 2px solid #4a90d9; border-radius: 8px;
+        text-align: center; font-size: 22px; font-weight: 700; font-family: inherit; outline: none;
+        -webkit-appearance: none; appearance: none;
+    }
+    .plk-cell:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(74,144,217,0.3); }
+    .plk-submit {
+        background: #4a90d9; color: #fff; border: none; border-radius: 8px;
+        padding: 10px 20px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .plk-submit:disabled { opacity: 0.4; cursor: default; }
+    .padlock-keypad { display: none; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 10px; max-width: 260px; margin-left: auto; margin-right: auto; }
+    .padlock-keypad.active { display: flex; }
+    .plk-key {
+        width: 42px; height: 42px; border: 1.5px solid #cbd5e1; border-radius: 8px;
+        background: #fff; font-size: 18px; font-weight: 600; cursor: pointer; font-family: inherit;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .plk-key:active { background: #e2e8f0; }
+    .plk-key.del { width: 66px; font-size: 13px; font-weight: 700; }
+    .plk-start {
+        display: block; margin: 0 auto; background: #16a34a; color: #fff; border: none;
+        border-radius: 8px; padding: 10px 28px; font-size: 15px; font-weight: 700;
+        cursor: pointer; font-family: inherit;
+    }
+    .plk-start.retry { background: #f59e0b; }
+    .plk-start.hide { display: none; }
+    .padlock-result { text-align: center; font-size: 14px; font-weight: 600; margin-top: 8px; min-height: 20px; }
+    .padlock-result.win { color: #16a34a; }
+    .padlock-result.lose { color: #ef4444; }
+  </style>
+
   <!-- KaTeX (defer) -->
   <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
   <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
