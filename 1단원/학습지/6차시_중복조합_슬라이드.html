@@ -13,6 +13,126 @@
     <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
     <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
 
+    <style>
+        /* ── Interactive Simulations ── */
+        .sim-activity {
+            background: #f7f9fc; border: 2px solid #a8c4e0; border-radius: 14px;
+            padding: 16px; margin: 16px 0; -webkit-user-select: none; user-select: none;
+        }
+        .sim-activity h3 { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
+        .sim-activity h3 .badge { background: #dbeafe; color: #1d4ed8; }
+        .sim-activity .sim-body { display: flex; flex-direction: column; gap: 12px; }
+        .sim-activity .sim-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .sim-activity .sim-result {
+            text-align: center; padding: 10px; background: #fff; border: 1.5px solid #d0dce8;
+            border-radius: 10px; font-size: 14px; min-height: 20px; transition: background 0.3s;
+        }
+        .sim-activity .sim-action-btn {
+            background: #4299e1; color: #fff; border: none; padding: 8px 16px; border-radius: 8px;
+            font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; min-width: 44px;
+            touch-action: manipulation;
+        }
+        .sim-activity .sim-action-btn:active { background: #2b6cb0; }
+        .sim-activity .sim-action-btn.secondary { background: #e2e8f0; color: #4a5568; }
+        .sim-activity .sim-action-btn.secondary:active { background: #cbd5e0; }
+
+        /* S2: 일대일 대응 변환기 */
+        .bij-controls { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .bij-controls label { font-size: 13px; font-weight: 600; color: #4a5568; display: flex; align-items: center; gap: 6px; }
+        .bij-controls input[type="range"] { width: 80px; }
+        .bij-phase { text-align: center; margin: 10px 0; }
+        .bij-phase-title { font-size: 13px; font-weight: 700; color: #5a67d8; margin-bottom: 6px; }
+        .bij-boxes { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+        .bij-box {
+            min-width: 60px; min-height: 80px; background: #fff; border: 2px solid #e2e8f0; border-radius: 10px;
+            padding: 6px; text-align: center; transition: border-color 0.2s, transform 0.15s; touch-action: manipulation;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .bij-box:active { transform: scale(0.95); }
+        .bij-box-label { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+        .bij-balls-area { min-height: 28px; display: flex; gap: 3px; justify-content: center; align-items: center; flex-wrap: wrap; flex: 1; }
+        .bij-ball { width: 22px; height: 22px; border-radius: 50%; background: #F6AD55; border: 2px solid #DD6B20; font-size: 14px; display: flex; align-items: center; justify-content: center; color: #744210; }
+        .bij-btn-row { display: flex; gap: 4px; margin-top: 4px; }
+        .bij-btn {
+            width: 28px; height: 28px; border-radius: 50%; border: 2px solid #cbd5e0; background: #f7fafc;
+            font-size: 16px; font-weight: 700; color: #4a5568; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s; touch-action: manipulation; line-height: 1;
+        }
+        .bij-btn:active { transform: scale(0.9); background: #edf2f7; }
+        .bij-btn.bij-add { border-color: #68D391; color: #276749; }
+        .bij-btn.bij-remove { border-color: #FC8181; color: #9B2C2C; }
+        .bij-sb-row { display: flex; gap: 3px; justify-content: center; align-items: center; flex-wrap: wrap; font-size: 22px; font-weight: 700; min-height: 40px; }
+        .bij-sb-item { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+        .bij-sb-star { background: #FFFBEA; border: 2px solid #D69E2E; color: #744210; }
+        .bij-sb-bar { background: #EBF4FF; border: 2px solid #4299E1; color: #2B6CB0; }
+        .bij-pos-row { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
+        .bij-pos-cell {
+            width: 36px; height: 36px; border: 2px solid #e2e8f0; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;
+        }
+        .bij-pos-cell.star-pos { background: #FEFCBF; border-color: #D69E2E; color: #744210; }
+        .bij-pos-cell.bar-pos { background: #EBF8FF; border-color: #90CDF4; color: #4A90A4; }
+        .bij-arrow { font-size: 18px; color: #a0aec0; text-align: center; margin: 4px 0; }
+
+        /* S3: 분배법칙 항-해 대응 탐색기 */
+        .dist-brackets { display: flex; gap: 0; justify-content: center; flex-wrap: wrap; align-items: center; font-size: 18px; }
+        .dist-bracket {
+            display: inline-flex; align-items: center; gap: 2px;
+            font-size: 18px; font-weight: 400; color: #718096;
+        }
+        .dist-bracket::before { content: '('; font-size: 20px; color: #a0aec0; margin-right: 1px; }
+        .dist-bracket::after { content: ')'; font-size: 20px; color: #a0aec0; margin-left: 1px; }
+        .dist-plus { color: #a0aec0; font-size: 14px; margin: 0 1px; }
+        .dist-letter {
+            width: 30px; height: 30px; border: 2px solid #d0dce8; border-radius: 8px;
+            background: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: all 0.15s; touch-action: manipulation;
+        }
+        .dist-letter:active { transform: scale(0.9); }
+        .dist-letter.sel-a { background: #FED7D7; border-color: #E53E3E; color: #9B2C2C; }
+        .dist-letter.sel-b { background: #BEE3F8; border-color: #3182CE; color: #2A4365; }
+        .dist-letter.sel-c { background: #C6F6D5; border-color: #38A169; color: #22543D; }
+        .dist-letter.selected { box-shadow: 0 0 0 3px rgba(66,153,225,0.5); transform: scale(1.15); }
+        .dist-product { font-size: 15px; font-weight: 700; color: #2D3748; text-align: center; min-height: 24px; }
+        .dist-log {
+            max-height: 200px; overflow-y: auto; background: #fff; border: 1.5px solid #e2e8f0;
+            border-radius: 10px; padding: 4px 8px; font-size: 12px;
+        }
+        .dist-log table { width: 100%; border-collapse: collapse; }
+        .dist-log th { background: #EDF2F7; padding: 5px 4px; font-weight: 600; color: #4A5568; font-size: 11px; position: sticky; top: 0; }
+        .dist-log td { padding: 3px 4px; border-bottom: 1px solid #f1f5f9; text-align: center; }
+        .dist-dup-msg { color: #e53e3e; font-size: 12px; font-weight: 600; text-align: center; animation: shake 0.3s; }
+        @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+        /* S4: 번호 붙이기/떼기 */
+        .tag-controls { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .tag-controls label { font-size: 13px; font-weight: 600; color: #4a5568; display: flex; align-items: center; gap: 6px; }
+        .tag-controls input[type="range"] { width: 80px; }
+        .tag-toggle {
+            display: flex; border: 2px solid #9b59b6; border-radius: 10px; overflow: hidden; max-width: 340px; margin: 0 auto;
+        }
+        .tag-toggle button {
+            flex: 1; padding: 10px 8px; background: #fff; color: #9b59b6; border: none;
+            font-size: 13px; font-weight: 600; cursor: pointer; min-height: 44px; touch-action: manipulation;
+        }
+        .tag-toggle button.active { background: #9b59b6; color: #fff; }
+        .tag-boxes { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 10px 0; }
+        .tag-box {
+            min-width: 80px; min-height: 80px; background: #F7FAFC; border: 2px solid #E2E8F0;
+            border-radius: 12px; padding: 6px; text-align: center;
+        }
+        .tag-box-label { font-size: 12px; font-weight: 600; color: #4A5568; margin-bottom: 4px; }
+        .tag-box-balls { min-height: 36px; display: flex; gap: 3px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .tag-ball {
+            width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; color: #fff; transition: all 0.3s;
+        }
+        .tag-ball.numbered { background: #e53e3e; border: 2px solid #c53030; }
+        .tag-ball.plain { background: #a0aec0; border: 2px solid #718096; }
+        .tag-counter { font-size: 20px; font-weight: 800; text-align: center; }
+    </style>
+
     <script type="module">
         import { initFirebaseSlide } from 'https://math-class.it.kr/lib/js/firebase-slide.js';
         initFirebaseSlide('PS_6차시_중복조합');
