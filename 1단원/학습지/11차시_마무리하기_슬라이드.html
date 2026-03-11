@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>스스로 마무리하기 — 경우의 수 — 수업 슬라이드</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
+    <link rel="stylesheet" href="https://math-class.it.kr/lib/css/slide-common.css">
+
+    <!-- 11차시 고유 스타일: 투표 현황 바 차트 + 선택지 -->
+    <style>
+        .choices-5 {
+            display: flex; gap: 16px; flex-wrap: wrap;
+            margin: 6px 0 6px 8px; font-size: 14px;
+        }
+        .choices-5 span { white-space: nowrap; }
+
+        /* 투표 현황 버튼 */
+        #btnVoteStatus {
+            position: fixed;
+            top: 12px;
+            right: 396px;
+            z-index: 10000;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.15s;
+        }
+        #btnVoteStatus:active { transform: scale(0.95); background: #2563eb; }
+
+        /* 바 차트 오버레이 */
+        .vote-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 20000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .vote-overlay.active { display: flex; }
+        .vote-panel {
+            background: #fff;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .vote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+        .vote-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 0;
+        }
+        .vote-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 0 4px;
+            line-height: 1;
+        }
+        .vote-close:active { color: #334155; }
+        .vote-list {
+            overflow-y: auto;
+            padding: 12px 18px 18px;
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
+        }
+        .vote-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .vote-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+            min-width: 56px;
+            text-align: right;
+        }
+        .vote-bar-bg {
+            flex: 1;
+            height: 24px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .vote-bar {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 6px;
+            transition: width 0.4s ease, background 0.4s;
+            min-width: 2px;
+        }
+        .vote-count {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            min-width: 36px;
+        }
+        .vote-empty {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+    </style>
+
+    <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
+    <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
+
+    <script type="module">
+        import { initFirebaseSlide } from 'https://math-class.it.kr/lib/js/firebase-slide.js';
+        initFirebaseSlide('PS_11차시_마무리하기');
+    </script>
+</head>
+<body>
+
+
+
+<div class="container">
+
+    <!-- 헤더 -->
+    <div class="header">
+        <div class="header-unit">Ⅰ. 경우의 수</div>
+        <div class="header-title">
+            <h1>스스로 마무리하기</h1>
+            <div class="header-info">
+                <span>교과서 31~33쪽</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학생 정보 -->
+    <div class="student-info">
+        <div class="save-actions">
+            <button class="btn-save" id="btnSave">💾 저장</button>
+            <button class="btn-records" id="btnRecords">📋 기록</button>
+        </div>
+        <div class="field"><label>학년 반</label> <input type="text" placeholder="예: 1-3"></div>
+        <div class="field"><label>번호</label> <input type="text" style="width:40px;" placeholder="00"></div>
+        <div class="field"><label>이름</label> <input type="text" placeholder="이름 입력"></div>
+    </div>
+
+    <!-- 성취기준 -->
+    <div class="achievement">
+        <strong>성취기준</strong> &nbsp; [12확통01-01~03] 순열, 조합, 이항정리를 이해하고, 문제를 해결할 수 있다.
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 1: 객관식 문제 01~08                              -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">1</div>
+            <h2>스스로 마무리하기 (01~08)</h2>
+        </div>
+
+        <div class="problem" data-qid="q01">
+            <div class="problem-label"><span class="p-num">01</span> \({}_{5}\mathrm{C}_{3} + {}_{2}\Pi_{4}\)의 값은?</div>
+            <div class="choices-5"><span>① 25</span> <span>② 26</span> <span>③ 27</span> <span>④ 28</span> <span>⑤ 29</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(10 + 16 = 26\). 답: <strong>② 26</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q02">
+            <div class="problem-label"><span class="p-num">02</span> 서로 다른 6개의 공을 3개의 주머니 A, B, C에 남김없이 나누어 넣을 때, A에 공을 2개만 넣는 경우의 수는? (빈 주머니 가능)</div>
+            <div class="choices-5"><span>① 180</span> <span>② 200</span> <span>③ 220</span> <span>④ 240</span> <span>⑤ 260</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\({}_{6}\mathrm{C}_{2}\times 2^{4} = 240\). 답: <strong>④ 240</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q03">
+            <div class="problem-label"><span class="p-num">03</span> a, b, c 중 중복허용 5개 일렬 나열, 양 끝에 서로 다른 문자가 오는 경우의 수는?</div>
+            <div class="choices-5"><span>① 162</span> <span>② 166</span> <span>③ 170</span> <span>④ 174</span> <span>⑤ 178</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(243 - 81 = 162\). 답: <strong>① 162</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q04">
+            <div class="problem-label"><span class="p-num">04</span> \(X=\{1,2,3,4\}\), \(Y=\{1,2\}\), 치역=공역인 함수 \(f:X\to Y\)의 개수는?</div>
+            <div class="choices-5"><span>① 11</span> <span>② 12</span> <span>③ 13</span> <span>④ 14</span> <span>⑤ 15</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(2^4 - 2 = 14\). 답: <strong>④ 14</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q05">
+            <div class="problem-label"><span class="p-num">05</span> a,b,c,d,e,f 나열, a가 b보다 앞 &amp; f가 c보다 뒤인 경우의 수는?</div>
+            <div class="choices-5"><span>① 120</span> <span>② 140</span> <span>③ 160</span> <span>④ 180</span> <span>⑤ 200</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(720 \div 4 = 180\). 답: <strong>④ 180</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q06">
+            <div class="problem-label"><span class="p-num">06</span> 도로망 A→B 최단거리 경우의 수는?</div>
+            <div class="choices-5"><span>① 26</span> <span>② 27</span> <span>③ 28</span> <span>④ 29</span> <span>⑤ 30</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>답: <strong>② 27</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q07">
+            <div class="problem-label"><span class="p-num">07</span> 같은 공 5개를 한 번에 1개 또는 2개씩 옮기는 경우의 수는?</div>
+            <div class="choices-5"><span>① 6</span> <span>② 7</span> <span>③ 8</span> <span>④ 9</span> <span>⑤ 10</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(1+4+3 = 8\). 답: <strong>③ 8</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q08">
+            <div class="problem-label"><span class="p-num">08</span> 같은 공 15개를 서로 다른 4상자에 각 2개 이상 넣는 경우의 수는?</div>
+            <div class="choices-5"><span>① 105</span> <span>② 110</span> <span>③ 115</span> <span>④ 120</span> <span>⑤ 125</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\({}_{4}\mathrm{H}_{7} = {}_{10}\mathrm{C}_{3} = 120\). 답: <strong>④ 120</strong></div></div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 2: 문제 09~14                                     -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">2</div>
+            <h2>스스로 마무리하기 (09~14)</h2>
+        </div>
+
+        <div class="problem" data-qid="q09">
+            <div class="problem-label"><span class="p-num">09</span> 1,2,3,4,5에서 중복허용 6개 택할 때, 3을 2개 이상 택하는 경우의 수는?</div>
+            <div class="choices-5"><span>① 65</span> <span>② 70</span> <span>③ 75</span> <span>④ 80</span> <span>⑤ 85</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(210-84-56=70\). 답: <strong>② 70</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q10">
+            <div class="problem-label"><span class="p-num">10</span> \(a+b+c+d=17\), a,b,c 홀수 d 짝수 (자연수) 순서쌍의 개수는?</div>
+            <div class="choices-5"><span>① 78</span> <span>② 80</span> <span>③ 82</span> <span>④ 84</span> <span>⑤ 86</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\({}_{9}\mathrm{C}_{3}=84\). 답: <strong>④ 84</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q11">
+            <div class="problem-label"><span class="p-num">11</span> \((x+1)(x^2-2/x)^7\)에서 \(x^5\) 계수는?</div>
+            <div class="choices-5"><span>① \(-320\)</span> <span>② \(-300\)</span> <span>③ \(-280\)</span> <span>④ \(-260\)</span> <span>⑤ \(-240\)</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\({}_{7}\mathrm{C}_{3}(-2)^3 = -280\). 답: <strong>③ \(-280\)</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q12">
+            <div class="problem-label"><span class="p-num">12</span> \(7^{21}\)을 36으로 나눈 나머지는?</div>
+            <div class="choices-5"><span>① 19</span> <span>② 20</span> <span>③ 21</span> <span>④ 22</span> <span>⑤ 23</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(127 = 3\times 36+19\). 답: <strong>① 19</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q13">
+            <div class="problem-label"><span class="p-num">13</span> \(A=\{1,\ldots,10\}\)의 부분집합 \(X\): \(1\in X\), \(n(X)\)는 짝수. 개수는?</div>
+            <div class="choices-5"><span>① 192</span> <span>② 208</span> <span>③ 224</span> <span>④ 240</span> <span>⑤ 256</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(2^8 = 256\). 답: <strong>⑤ 256</strong></div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q14">
+            <div class="problem-label"><span class="p-num">14</span> \((1+x)+(1+x)^2+\cdots+(1+x)^{10}\)에서 \(x^3\) 계수는?</div>
+            <div class="choices-5"><span>① 310</span> <span>② 320</span> <span>③ 330</span> <span>④ 340</span> <span>⑤ 350</span></div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\({}_{11}\mathrm{C}_{4} = 330\). 답: <strong>③ 330</strong></div></div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 3: 서술형 15~19                                   -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">3</div>
+            <h2>서술형 (15~19)</h2>
+        </div>
+
+        <div class="problem" data-qid="q15">
+            <div class="problem-label"><span class="p-num">15</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> 3가지 시설 중복허용 5가지 나열, 각 시설 적어도 1번 포함하는 추천 코스의 수</div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(243 - 96 + 3 = \boldsymbol{150}\)</div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q16">
+            <div class="problem-label"><span class="p-num">16</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> 6의 약수 중복허용 4개 나열, 자릿수 합 10~12인 네 자리 수의 개수</div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(22 + 28 + 29 = \boldsymbol{79}\)</div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q17">
+            <div class="problem-label"><span class="p-num">17</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> A(-1,a), B(0,b), C(1,c), D(2,d), \(a+b+c+d=12\), AB와 CD가 한 점에서 만남. 순서쌍의 개수</div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(165 - 25 = \boldsymbol{140}\)</div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q18">
+            <div class="problem-label"><span class="p-num">18</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> <span class="badge" style="background:#dbeafe;color:#1e40af;">신유형</span> \(X=\{0,1,2,3,4\}\), 비감소 함수 \(f\), 치역 합 = 7인 함수의 개수</div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(4+6+6+4 = \boldsymbol{20}\)</div></div>
+        </div>
+        <hr class="divider">
+
+        <div class="problem" data-qid="q19">
+            <div class="problem-label"><span class="p-num">19</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> \(A = {}_{15}\mathrm{C}_{0}+{}_{15}\mathrm{C}_{2}+\cdots+{}_{15}\mathrm{C}_{14}\), \(B = {}_{12}\mathrm{C}_{1}+\cdots+{}_{12}\mathrm{C}_{11}\), \(A/B\)의 값</div>
+            <div class="answer-reveal"><div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div><div class="answer-content"><div class="ans-label">정답</div>\(2^{14}/2^{11} = \boldsymbol{8}\)</div></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        확률과 통계 &middot; Ⅰ. 경우의 수 &middot; 11차시 &middot; 스스로 마무리하기
+    </div>
+
+</div>
+
+<!-- 기록 모달 오버레이 -->
+<div class="records-overlay" id="recordsOverlay">
+    <div class="records-panel">
+        <div class="records-header">
+            <h3>📋 저장 기록</h3>
+            <button class="close-btn" id="btnCloseRecords">&times;</button>
+        </div>
+        <div class="records-list" id="recordsList"></div>
+    </div>
+</div>
+
+<!-- KaTeX + 플립카드 이벤트 -->
+<script>
+document.addEventListener('click', function(e) {
+    var flipSingle = e.target.closest('.flip-card-single');
+    if (flipSingle && !e.target.closest('.flip-back a')) {
+        e.preventDefault();
+        flipSingle.classList.toggle('flipped');
+    }
+    var formulaFlip = e.target.closest('.formula-flip');
+    if (formulaFlip) {
+        e.preventDefault();
+        formulaFlip.classList.toggle('flipped');
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(formulaFlip, {delimiters: [{left: '\\(', right: '\\)', display: false}], throwOnError: false});
+        }
+    }
+});
+if (typeof renderMathInElement === 'function') {
+    renderMathInElement(document.body, {
+        delimiters: [
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+    });
+}
+</script>
+
+<!-- ══ 슬라이드 변환 IIFE ══ -->
+<script>
+(function() {
+    'use strict';
+    document.body.classList.add('slide-mode');
+    var container = document.querySelector('.container');
+    if (!container) return;
+
+    var headerUnit = '', headerTitle = '', headerInfo = '', achievementText = '';
+    var h = container.querySelector('.header');
+    if (h) {
+        var hu = h.querySelector('.header-unit');
+        if (hu) headerUnit = hu.textContent.trim();
+        var h1 = h.querySelector('h1');
+        if (h1) headerTitle = h1.innerHTML;
+        var hi = h.querySelector('.header-info span');
+        if (hi) headerInfo = hi.textContent.trim();
+    }
+    var ach = container.querySelector('.achievement');
+    if (ach) {
+        achievementText = ach.innerHTML.replace(/<strong>.*?<\/strong>\s*(&nbsp;)?\s*/i, '').trim();
+    }
+
+    var deck = document.createElement('div');
+    deck.className = 'slide-deck';
+    deck.id = 'slideDeck';
+    var slideIndex = 0;
+
+    function makeSlide(innerHtml, extraClass) {
+        var s = document.createElement('section');
+        s.className = 'slide' + (slideIndex === 0 ? ' active' : '');
+        s.setAttribute('data-slide', String(slideIndex));
+        var sc = document.createElement('div');
+        sc.className = 'slide-content' + (extraClass ? ' ' + extraClass : '');
+        sc.innerHTML = innerHtml;
+        s.appendChild(sc);
+        deck.appendChild(s);
+        slideIndex++;
+    }
+
+    function makeSlideFromEl(el) {
+        var s = document.createElement('section');
+        s.className = 'slide' + (slideIndex === 0 ? ' active' : '');
+        s.setAttribute('data-slide', String(slideIndex));
+        var sc = document.createElement('div');
+        sc.className = 'slide-content';
+        sc.appendChild(el);
+        s.appendChild(sc);
+        deck.appendChild(s);
+        slideIndex++;
+    }
+
+    var tHtml = '';
+    if (headerUnit) tHtml += '<div class="title-unit">' + headerUnit + '</div>';
+    tHtml += '<div class="title-main">' + headerTitle + '</div>';
+    if (headerInfo) tHtml += '<div class="title-meta"><span>' + headerInfo + '</span></div>';
+    if (achievementText) tHtml += '<div class="title-achievement"><strong>성취기준</strong>&nbsp; ' + achievementText + '</div>';
+    makeSlide(tHtml, 'title-slide');
+
+    var blockClasses = [
+        'concept-box', 'inquiry-box', 'example-box', 'self-practice',
+        'problem', 'step-simulation', 'flip-card-single', 'formula-flip-grid',
+        'algebra-tiles', 'matching-game', 'tutor-game',
+        'concept-game', 'padlock-game', 'tablecloth-svg',
+        'sim-activity'
+    ];
+
+    function isContentBlock(el) {
+        for (var i = 0; i < blockClasses.length; i++) {
+            if (el.classList.contains(blockClasses[i])) return true;
+        }
+        if (el.classList.contains('formula') && el.parentElement &&
+            el.parentElement.classList.contains('card')) return true;
+        return false;
+    }
+
+    var cards = container.querySelectorAll('.card');
+    for (var ci = 0; ci < cards.length; ci++) {
+        var card = cards[ci];
+        var st = card.querySelector('.section-title');
+        if (st) {
+            var sn = st.querySelector('.section-number');
+            var sh = st.querySelector('h2');
+            var secHtml = '';
+            if (sn) secHtml += '<div class="section-number">' + sn.textContent.trim() + '</div>';
+            if (sh) secHtml += '<h2>' + sh.innerHTML + '</h2>';
+            makeSlide(secHtml, 'section-header-slide');
+        }
+        var children = [];
+        for (var k = 0; k < card.children.length; k++) children.push(card.children[k]);
+        var pendingTip = null;
+        for (var j = 0; j < children.length; j++) {
+            var child = children[j];
+            if (child.classList.contains('section-title')) continue;
+            if (child.classList.contains('divider') || child.tagName === 'HR') continue;
+            if (child.classList.contains('tip-box')) { pendingTip = child; continue; }
+            if (isContentBlock(child)) {
+                if (pendingTip) {
+                    var wrapper = document.createElement('div');
+                    wrapper.appendChild(pendingTip);
+                    wrapper.appendChild(child);
+                    makeSlideFromEl(wrapper);
+                    pendingTip = null;
+                } else {
+                    makeSlideFromEl(child);
+                }
+            }
+        }
+    }
+
+    document.body.insertBefore(deck, container);
+    var was = deck.querySelectorAll('.writing-area, .canvas-toolbar');
+    for (var w = 0; w < was.length; w++) was[w].parentNode.removeChild(was[w]);
+
+    var total = slideIndex;
+    var navHtml = '<div class="slide-nav">' +
+        '<button class="nav-btn" id="navPrev">&#9664;</button>' +
+        '<span class="slide-counter" id="slideCounter">1 / ' + total + '</span>' +
+        '<button class="nav-btn" id="navNext">&#9654;</button>' +
+        '<button class="nav-btn nav-fs" id="navFS" title="전체 화면">&#9974;</button>' +
+        '</div>' +
+        '<div class="slide-progress"><div class="slide-progress-bar" id="progressBar"></div></div>';
+    document.body.insertAdjacentHTML('beforeend', navHtml);
+
+    var slides = deck.querySelectorAll('.slide');
+    var totalSlides = slides.length;
+    var current = 0;
+    var counter = document.getElementById('slideCounter');
+    var bar = document.getElementById('progressBar');
+    var btnP = document.getElementById('navPrev');
+    var btnN = document.getElementById('navNext');
+
+    function show(i) {
+        if (i < 0 || i >= totalSlides) return;
+        slides[current].classList.remove('active');
+        current = i;
+        slides[current].classList.add('active');
+        updateNav();
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(slides[current], {
+                delimiters: [
+                    { left: '\\(', right: '\\)', display: false },
+                    { left: '\\[', right: '\\]', display: true }
+                ],
+                throwOnError: false
+            });
+        }
+    }
+
+    window.goToSlide = show;
+
+    function updateNav() {
+        counter.textContent = (current + 1) + ' / ' + totalSlides;
+        bar.style.width = ((current + 1) / totalSlides * 100) + '%';
+        btnP.disabled = (current === 0);
+        btnN.disabled = (current === totalSlides - 1);
+    }
+
+    function tryNext() {
+        var cs = slides[current];
+        var ur = cs.querySelectorAll('.answer-content:not(.revealed), .solution-content:not(.revealed), .example-solution:not(.revealed)');
+        if (ur.length > 0) {
+            for (var i = 0; i < ur.length; i++) ur[i].classList.add('revealed');
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(cs, {
+                    delimiters: [
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '\\[', right: '\\]', display: true }
+                    ],
+                    throwOnError: false
+                });
+            }
+            return;
+        }
+        show(current + 1);
+    }
+
+    function tryPrev() {
+        show(current - 1);
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' '
+            || e.key === 'PageDown' || e.key === 'Enter') {
+            e.preventDefault(); tryNext();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+            e.preventDefault(); tryPrev();
+        } else if (e.key === 'Home') {
+            e.preventDefault(); show(0);
+        } else if (e.key === 'End') {
+            e.preventDefault(); show(totalSlides - 1);
+        } else if (e.key === 'Escape') {
+            if (document.fullscreenElement) document.exitFullscreen();
+        } else if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(function() {});
+            } else {
+                document.exitFullscreen();
+            }
+        }
+    });
+
+    var sx = 0, sy = 0;
+    document.addEventListener('touchstart', function(e) {
+        if (e.target.closest('.sim-activity')) return;
+        sx = e.touches[0].clientX;
+        sy = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - sx;
+        var dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+            if (dx < 0) tryNext();
+            else tryPrev();
+        }
+    }, { passive: true });
+
+    btnP.addEventListener('click', function() { tryPrev(); });
+    btnN.addEventListener('click', function() { tryNext(); });
+    document.getElementById('navFS').addEventListener('click', function() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(function() {});
+        } else {
+            document.exitFullscreen();
+        }
+    });
+
+    updateNav();
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(slides[0], {
+            delimiters: [
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            throwOnError: false
+        });
+    }
+})();
+</script>
+
+<!-- ══ TOC IIFE ══ -->
+<script>
+(function() {
+    var checkReady = setInterval(function() {
+        var slides = document.querySelectorAll('.slide');
+        var nav = document.querySelector('.slide-nav');
+        if (slides.length > 0 && nav) {
+            clearInterval(checkReady);
+            buildTOC(slides, nav);
+        }
+    }, 200);
+
+    function buildTOC(slides, nav) {
+        var overlay = document.createElement('div');
+        overlay.className = 'toc-overlay';
+        var panel = document.createElement('div');
+        panel.className = 'toc-panel';
+        var title = document.createElement('div');
+        title.className = 'toc-title';
+        title.textContent = '\uBAA9\uCC28';
+        panel.appendChild(title);
+
+        for (var i = 0; i < slides.length; i++) {
+            var btn = document.createElement('button');
+            btn.className = 'toc-item';
+            btn.dataset.index = i;
+            var content = slides[i].querySelector('.slide-content');
+            var label = '';
+            if (content) {
+                var h = content.querySelector('h1, h2, h3, .title-main');
+                if (h) label = h.textContent.trim();
+            }
+            if (!label) label = '\uC2AC\uB77C\uC774\uB4DC ' + (i + 1);
+            var numSpan = '<span class="toc-num">' + (i + 1) + '.</span>';
+            btn.innerHTML = numSpan + label.substring(0, 40);
+            btn.addEventListener('click', (function(idx) {
+                return function() {
+                    if (typeof window.goToSlide === 'function') window.goToSlide(idx);
+                    overlay.classList.remove('active');
+                };
+            })(i));
+            panel.appendChild(btn);
+        }
+
+        overlay.appendChild(panel);
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) overlay.classList.remove('active');
+        });
+        document.body.appendChild(overlay);
+
+        var tocBtn = document.createElement('button');
+        tocBtn.className = 'nav-btn nav-toc';
+        tocBtn.innerHTML = '&#9776;';
+        tocBtn.title = '\uBAA9\uCC28';
+        tocBtn.addEventListener('click', function() {
+            overlay.classList.toggle('active');
+            var items = panel.querySelectorAll('.toc-item');
+            var counter = document.getElementById('slideCounter');
+            var cur = 0;
+            if (counter) {
+                var m = counter.textContent.match(/(\d+)/);
+                if (m) cur = parseInt(m[1]) - 1;
+            }
+            for (var j = 0; j < items.length; j++) {
+                items[j].classList.toggle('active', j === cur);
+            }
+            var activeItem = panel.querySelector('.toc-item.active');
+            if (activeItem) activeItem.scrollIntoView({ block: 'center' });
+        });
+        nav.insertBefore(tocBtn, nav.firstChild);
+    }
+})();
+</script>
+
+<!-- ══ Auto-fit zoom IIFE ══ -->
+<script>
+(function() {
+    var MIN_ZOOM = 0.72;
+
+    function autoFitSlide(slide) {
+        var content = slide.querySelector('.slide-content');
+        if (!content) return;
+        content.style.zoom = '';
+        content.style.overflow = 'visible';
+        content.style.maxHeight = 'none';
+        var vh = window.innerHeight;
+        var padTop = parseFloat(getComputedStyle(slide).paddingTop) || 30;
+        var padBot = parseFloat(getComputedStyle(slide).paddingBottom) || 70;
+        var availH = vh - padTop - padBot;
+        var contentH = content.scrollHeight;
+        if (contentH > availH && availH > 0) {
+            var zoom = availH / contentH;
+            if (zoom < MIN_ZOOM) zoom = MIN_ZOOM;
+            zoom = Math.floor(zoom * 100) / 100;
+            content.style.zoom = zoom;
+            content.setAttribute('data-zoom', zoom);
+        } else {
+            content.removeAttribute('data-zoom');
+        }
+        content.style.overflow = '';
+        content.style.maxHeight = '';
+    }
+
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            if (m.type === 'attributes' && m.attributeName === 'class') {
+                var el = m.target;
+                if (el.classList.contains('slide') && el.classList.contains('active')) {
+                    setTimeout(function() { autoFitSlide(el); }, 80);
+                }
+            }
+        });
+    });
+
+    function init() {
+        var slides = document.querySelectorAll('.slide');
+        if (slides.length === 0) { setTimeout(init, 300); return; }
+        slides.forEach(function(s) {
+            observer.observe(s, { attributes: true, attributeFilter: ['class'] });
+        });
+        var active = document.querySelector('.slide.active');
+        if (active) setTimeout(function() { autoFitSlide(active); }, 200);
+        window.addEventListener('resize', function() {
+            var a = document.querySelector('.slide.active');
+            if (a) autoFitSlide(a);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 300); });
+    } else {
+        setTimeout(init, 300);
+    }
+})();
+</script>
+
+<!-- ══ 투표 현황 바 차트 IIFE (11차시 전용) ══ -->
+<script type="module">
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+
+(function() {
+  'use strict';
+
+  const db = getFirestore(getApp());
+  const urlParams = new URLSearchParams(window.location.search);
+  const classId = urlParams.get('class') || 'default';
+  const worksheetKey = 'PS_11차시_마무리하기';
+
+  // Problem labels
+  const qLabels = {};
+  for (let i = 1; i <= 19; i++) {
+    const key = 'q' + String(i).padStart(2, '0');
+    qLabels[key] = '문제 ' + String(i).padStart(2, '0');
+  }
+
+  // Create vote status button
+  const statusBtn = document.createElement('button');
+  statusBtn.id = 'btnVoteStatus';
+  statusBtn.textContent = '📊 현황';
+  document.body.appendChild(statusBtn);
+
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'vote-overlay';
+  overlay.innerHTML = '<div class="vote-panel">' +
+    '<div class="vote-header"><h3>📊 투표 현황</h3><button class="vote-close">&times;</button></div>' +
+    '<div class="vote-list" id="voteList"><div class="vote-empty">데이터를 불러오는 중...</div></div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  const voteList = document.getElementById('voteList');
+  const closeBtn = overlay.querySelector('.vote-close');
+
+  statusBtn.addEventListener('click', function() { overlay.classList.add('active'); });
+  closeBtn.addEventListener('click', function() { overlay.classList.remove('active'); });
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+
+  // Real-time listener
+  const voteRef = doc(db, 'classrooms', classId, 'votes', worksheetKey);
+  onSnapshot(voteRef, function(snap) {
+    const data = snap.data();
+    if (!data || !data.problems) {
+      voteList.innerHTML = '<div class="vote-empty">아직 투표가 없습니다.</div>';
+      return;
+    }
+
+    // Build sorted array (sort by ask count descending)
+    const items = [];
+    for (const qId in qLabels) {
+      const p = data.problems[qId] || {};
+      items.push({ qId, label: qLabels[qId], ask: p.count || 0, submit: p.submitted || 0 });
+    }
+    items.sort(function(a, b) { return b.ask - a.ask; });
+
+    const maxAsk = items.reduce(function(m, i) { return Math.max(m, i.ask); }, 1);
+    const maxSubmit = items.reduce(function(m, i) { return Math.max(m, i.submit); }, 1);
+
+    let html = '';
+    items.forEach(function(item) {
+      const askPct = maxAsk > 0 ? (item.ask / maxAsk * 100) : 0;
+      const subPct = maxSubmit > 0 ? (item.submit / maxSubmit * 100) : 0;
+      // Ask bar: gray→red gradient
+      const ar = maxAsk > 0 ? item.ask / maxAsk : 0;
+      const askColor = 'rgb(' + Math.round(59+ar*180) + ',' + Math.round(130-ar*62) + ',' + Math.round(246-ar*178) + ')';
+
+      html += '<div class="vote-row">' +
+        '<div class="vote-label">' + item.label + '</div>' +
+        '<div class="vote-bar-bg">' +
+          '<div class="vote-bar" style="width:' + subPct + '%;background:#10b981;opacity:0.5;position:absolute;"></div>' +
+          '<div class="vote-bar" style="width:' + askPct + '%;background:' + askColor + ';"></div>' +
+        '</div>' +
+        '<div class="vote-count" style="min-width:80px;font-size:11px;">📮' + item.submit + ' ❓' + item.ask + '</div>' +
+        '</div>';
+    });
+
+    voteList.innerHTML = html;
+  });
+})();
+</script>
+
+</body>
+</html>

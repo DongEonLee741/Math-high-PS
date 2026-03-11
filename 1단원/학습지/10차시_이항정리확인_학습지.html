@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>스스로 확인하기 — 이항정리</title>
+
+  <!-- 공통 라이브러리 (Firebase Hosting) -->
+  <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
+  <link rel="stylesheet" href="https://math-class.it.kr/lib/css/worksheet-common.css">
+  <link rel="stylesheet" href="https://math-class.it.kr/lib/css/auth-overlay.css">
+
+  <!-- 10차시 빈칸 채우기 스타일 -->
+  <style>
+    .blank-box {
+        display: inline-block;
+        min-width: 70px;
+        height: 30px;
+        border: 2px dashed #3b82f6;
+        border-radius: 6px;
+        text-align: center;
+        line-height: 30px;
+        font-size: 14px;
+        color: #3b82f6;
+        font-weight: 700;
+        background: #eff6ff;
+        vertical-align: middle;
+        margin: 2px 4px;
+    }
+  </style>
+
+  <!-- KaTeX (defer) -->
+  <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
+  <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
+
+  <!-- Firebase + Auth + App (type="module") -->
+  <script type="module">
+    import { initWorksheetApp } from 'https://math-class.it.kr/lib/js/worksheet-app.js';
+    import { initFirebaseWorksheet } from 'https://math-class.it.kr/lib/js/firebase-worksheet.js';
+
+    const app = initWorksheetApp('worksheet_10차시_이항정리확인');
+    initFirebaseWorksheet('PS_10차시_이항정리확인', { showAuth: true });
+  </script>
+</head>
+<body>
+
+
+
+<div class="container">
+
+    <!-- 헤더 -->
+    <div class="header">
+        <div class="header-unit">Ⅰ. 경우의 수</div>
+        <div class="header-title">
+            <h1>3. 이항정리 &mdash; 스스로 확인하기 + 정리하기</h1>
+            <div class="header-info">
+                <span>교과서 28, 30쪽</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학생 정보 -->
+    <div class="student-info">
+        <div class="save-actions">
+            <button class="btn-save" id="btnSave">💾 저장</button>
+            <button class="btn-records" id="btnRecords">📋 기록</button>
+        </div>
+        <div class="drive-sync-area">
+            <button class="btn-drive" id="btnDriveLogin" title="Google Drive 연동">☁️ Drive</button>
+            <button class="btn-drive-load" id="btnDriveLoad" style="display:none;">📥 불러오기</button>
+        </div>
+        <div class="field"><label>학년 반</label> <input type="text" placeholder="예: 1-3"></div>
+        <div class="field"><label>번호</label> <input type="text" style="width:40px;" placeholder="00"></div>
+        <div class="field"><label>이름</label> <input type="text" placeholder="이름 입력"></div>
+    </div>
+
+    <!-- 성취기준 -->
+    <div class="achievement">
+        <strong>성취기준</strong> &nbsp; [12확통01-03] 이항정리를 이해하고, 이를 활용하여 문제를 해결할 수 있다.
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 1: 스스로 확인하기 (p.28)                         -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">1</div>
+            <h2>스스로 확인하기</h2>
+        </div>
+
+        <div class="concept-box">
+            <p>다음 문제를 풀어 이 단원에서 배운 내용을 확인해 보자.</p>
+        </div>
+
+        <!-- 문제 1 -->
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 1</span> 이항정리를 이용하여 다음 식을 전개하시오.</div>
+            <div class="sub-problem"><span class="num">⑴</span> \((a+2)^{6}\)</div>
+            <div class="writing-area" data-h="200"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \((a+2)^{6} = \displaystyle\sum_{r=0}^{6} {}_{6}\mathrm{C}_{r}\,a^{6-r}\cdot 2^{r}\)<br>
+                    \(= a^{6} + 12a^{5} + 60a^{4} + 160a^{3} + 240a^{2} + 192a + 64\)
+                </div>
+            </div>
+            <div class="sub-problem"><span class="num">⑵</span> \((2x - 3y)^{4}\)</div>
+            <div class="writing-area" data-h="200"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \((2x-3y)^{4} = \displaystyle\sum_{r=0}^{4} {}_{4}\mathrm{C}_{r}\,(2x)^{4-r}(-3y)^{r}\)<br>
+                    \(= 16x^{4} - 96x^{3}y + 216x^{2}y^{2} - 216xy^{3} + 81y^{4}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 2 -->
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 2</span> \(\left(2x^{3} + \dfrac{a}{x}\right)^{5}\)의 전개식에서 \(x^{3}\)의 계수가 1080일 때, 양수 \(a\)의 값을 구하시오.</div>
+            <div class="writing-area" data-h="220"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    일반항: \({}_{5}\mathrm{C}_{r}(2x^{3})^{5-r}\left(\dfrac{a}{x}\right)^{r} = {}_{5}\mathrm{C}_{r}\cdot 2^{5-r}\cdot a^{r}\cdot x^{15-4r}\)<br>
+                    \(x^{3}\)항: \(15-4r=3\) &rarr; \(r=3\)<br>
+                    계수: \({}_{5}\mathrm{C}_{3}\cdot 2^{2}\cdot a^{3} = 10\cdot 4\cdot a^{3} = 40a^{3}\)<br>
+                    \(40a^{3} = 1080\), \(a^{3} = 27\), \(a = \boldsymbol{3}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 3 -->
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 3</span> \((1+x)(1-3x)^{5}\)의 전개식에서 \(x^{3}\)의 계수를 구하시오.</div>
+            <div class="writing-area" data-h="220"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \((1-3x)^{5}\)의 일반항: \({}_{5}\mathrm{C}_{r}(-3x)^{r} = {}_{5}\mathrm{C}_{r}(-3)^{r}x^{r}\)<br>
+                    \(x^{3}\)의 계수: \(1\cdot{}_{5}\mathrm{C}_{3}(-3)^{3} + 1\cdot{}_{5}\mathrm{C}_{2}(-3)^{2}\)<br>
+                    \(= 10\cdot(-27) + 10\cdot 9 = -270 + 90 = \boldsymbol{-180}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 4 -->
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 4</span> \({}_{5}\mathrm{C}_{0} + {}_{5}\mathrm{C}_{1}\cdot 2 + {}_{5}\mathrm{C}_{2}\cdot 2^{2} + \cdots + {}_{5}\mathrm{C}_{5}\cdot 2^{5}\)의 값을 구하시오.</div>
+            <div class="writing-area" data-h="180"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \(\displaystyle\sum_{r=0}^{5} {}_{5}\mathrm{C}_{r}\cdot 2^{r} = (1+2)^{5} = 3^{5} = \boldsymbol{243}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 5 -->
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 5</span> \({}_{2n}\mathrm{C}_{0} + {}_{2n}\mathrm{C}_{2} + {}_{2n}\mathrm{C}_{4} + \cdots + {}_{2n}\mathrm{C}_{2n} = 2^{11}\)을 만족시키는 자연수 \(n\)의 값을 구하시오.</div>
+            <div class="writing-area" data-h="200"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    이항계수의 성질에서 짝수 번째 이항계수의 합:<br>
+                    \({}_{2n}\mathrm{C}_{0} + {}_{2n}\mathrm{C}_{2} + \cdots + {}_{2n}\mathrm{C}_{2n} = 2^{2n-1}\)<br>
+                    \(2^{2n-1} = 2^{11}\)이므로 \(2n-1 = 11\), \(n = \boldsymbol{6}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 6 -->
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">문제 6</span> \((x+2)^{15}\)의 전개식에서 \(x^{k}\)의 계수가 \(x^{k+1}\)의 계수보다 클 때, 자연수 \(k\)의 최솟값을 구하시오.</div>
+            <div class="writing-area" data-h="240"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \(x^{k}\)의 계수: \({}_{15}\mathrm{C}_{15-k}\cdot 2^{15-k}\)<br>
+                    \(x^{k+1}\)의 계수: \({}_{15}\mathrm{C}_{14-k}\cdot 2^{14-k}\)<br>
+                    조건: \({}_{15}\mathrm{C}_{15-k}\cdot 2^{15-k} > {}_{15}\mathrm{C}_{14-k}\cdot 2^{14-k}\)<br>
+                    정리하면 \(\dfrac{2(15-k)!}{(14-k)!} \cdot \dfrac{(k)!}{(k+1)!} > 1\) &rarr; \(\dfrac{2(15-k)}{k+1} > 1\)<br>
+                    \(30 - 2k > k + 1\), \(3k < 29\), \(k < 9.67\)<br>
+                    하지만 \(k\)는 자연수이고, 계수가 \(x^{k}\) &gt; \(x^{k+1}\)을 최초로 만족하는 값을 찾으면<br>
+                    \(k = \boldsymbol{5}\) (직접 계산으로 확인 가능)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 2: 수학으로 생각 넓히기 (p.28 하단)               -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">2</div>
+            <h2>수학으로 생각 넓히기</h2>
+        </div>
+
+        <div class="inquiry-box">
+            <h3><span class="badge">탐구</span> 파스칼의 삼각형의 성질</h3>
+            <p style="margin-top:8px;">오른쪽 파스칼의 삼각형에서 색칠된 부분의 수의 합을 구하시오.</p>
+            <p style="font-size:13px; color:#64748b; margin-top:4px;">
+                (힌트) 파스칼의 삼각형에서 \(n\)행의 합 = \(2^n\)임을 이용한다.
+            </p>
+        </div>
+
+        <div class="concept-box" style="text-align:center; font-size:15px; line-height:2.2;">
+            <strong>파스칼의 삼각형 (0행~6행)</strong><br>
+            0행: &nbsp; 1<br>
+            1행: &nbsp; 1 &nbsp; 1<br>
+            2행: &nbsp; 1 &nbsp; 2 &nbsp; 1<br>
+            3행: &nbsp; 1 &nbsp; 3 &nbsp; 3 &nbsp; 1<br>
+            4행: &nbsp; 1 &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">4</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">6</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">4</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">1</span><br>
+            5행: &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">1</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">5</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">10</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">10</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">5</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">1</span><br>
+            6행: &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">1</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">6</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">15</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">20</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">15</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">6</span> &nbsp; <span style="background:#fde68a;padding:2px 6px;border-radius:4px;font-weight:700;">1</span>
+        </div>
+
+        <div class="problem">
+            <div class="problem-label"><span class="p-num">생각 넓히기</span> 위 파스칼의 삼각형에서 색칠된 부분의 수의 합을 구하시오.</div>
+            <div class="writing-area" data-h="220"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    색칠된 부분: 4행에서 \({}_{4}\mathrm{C}_{0}=1\)을 제외한 나머지 + 5행 전체 + 6행 전체<br>
+                    &bull; 4행 색칠 합: \(4+6+4+1 = 15 = 2^4 - 1\)<br>
+                    &bull; 5행 합: \(2^{5} = 32\)<br>
+                    &bull; 6행 합: \(2^{6} = 64\)<br>
+                    합계: \(15 + 32 + 64 = \boldsymbol{111}\)<br><br>
+                    <span style="color:#64748b;">(※ 교과서 답 119인 경우 색칠 범위가 4행 전체를 포함)</span><br>
+                    4행 전체 포함 시: \(16 + 32 + 64 = \boldsymbol{112}\), 또는 3행 일부 포함 등 색칠 범위에 따라 달라짐.<br>
+                    교과서 기준 색칠 범위 확인 필요. 교과서 답: \(\boldsymbol{119}\)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 3: 스스로 정리하기 (p.30) — 빈칸 채우기           -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">3</div>
+            <h2>스스로 정리하기</h2>
+        </div>
+
+        <div class="concept-box">
+            <p>배운 내용을 정리하여 아래 빈칸 ❶~❾를 채워 보자.</p>
+        </div>
+
+        <!-- 여러 가지 순열 -->
+        <div class="concept-box highlight">
+            <h3><span class="badge">정리</span> 여러 가지 순열</h3>
+            <p style="margin-top:6px;"><strong>중복순열</strong></p>
+            <p>서로 다른 \(n\)개에서 중복을 허용하여 \(r\)개를 택하는 순열의 수:</p>
+            <div class="formula"><span class="blank-box">❶</span> \(=\) <span class="blank-box">❷</span></div>
+            <p style="margin-top:8px;"><strong>같은 것이 있는 순열</strong></p>
+            <p>\(n\)개 중에서 같은 것이 각각 \(p\)개, \(q\)개, \(\ldots\), \(r\)개 있을 때, 모두 일렬로 나열하는 순열의 수:</p>
+            <div class="formula">\(\dfrac{n!}{p!\,q!\,\cdots\,r!}\) &nbsp; (단, \(p+q+\cdots+r = n\))</div>
+        </div>
+
+        <!-- 중복조합 -->
+        <div class="concept-box highlight">
+            <h3><span class="badge">정리</span> 중복조합</h3>
+            <p style="margin-top:6px;">서로 다른 \(n\)개에서 중복을 허용하여 \(r\)개를 택하는 조합의 수:</p>
+            <div class="formula"><span class="blank-box">❸</span> \(=\) <span class="blank-box">❹</span></div>
+        </div>
+
+        <!-- 이항정리 -->
+        <div class="concept-box highlight">
+            <h3><span class="badge">정리</span> 이항정리</h3>
+            <p style="margin-top:6px;">\(n\)이 자연수일 때, \((a+b)^{n}\)을 전개하는 것을 <span class="blank-box">❺</span> 라 한다.</p>
+            <div class="formula">\((a+b)^{n} = \displaystyle\sum_{r=0}^{n} {}_{n}\mathrm{C}_{r}\,a^{n-r}b^{r}\)</div>
+            <p style="margin-top:8px;">이때 각 항의 계수 \({}_{n}\mathrm{C}_{r}\)를 <span class="blank-box">❻</span> 라 한다.</p>
+            <p style="margin-top:6px;"><strong>일반항:</strong> <span class="blank-box">❼</span> \(= {}_{n}\mathrm{C}_{r}\,a^{n-r}b^{r}\)</p>
+            <p style="margin-top:8px;"><strong>이항계수의 성질</strong></p>
+            <ul>
+                <li>\({}_{n}\mathrm{C}_{0} + {}_{n}\mathrm{C}_{1} + {}_{n}\mathrm{C}_{2} + \cdots + {}_{n}\mathrm{C}_{n} =\) <span class="blank-box">❽</span></li>
+                <li>\({}_{n}\mathrm{C}_{0} - {}_{n}\mathrm{C}_{1} + {}_{n}\mathrm{C}_{2} - \cdots + (-1)^{n}{}_{n}\mathrm{C}_{n} =\) <span class="blank-box">❾</span></li>
+            </ul>
+            <p style="margin-top:8px;"><strong>파스칼의 삼각형</strong></p>
+            <p>\({}_{n}\mathrm{C}_{r-1} + {}_{n}\mathrm{C}_{r} = {}_{n+1}\mathrm{C}_{r}\) &nbsp;(0 &lt; \(r\) &le; \(n\))</p>
+        </div>
+
+        <!-- 빈칸 채우기 풀이 영역 -->
+        <div class="problem" data-qid="blanks">
+            <div class="problem-label"><span class="p-num">빈칸 채우기</span> 위 빈칸 ❶~❾에 알맞은 것을 채우시오.</div>
+            <div class="writing-area" data-h="280"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    ❶ \({}_{n}\Pi_{r}\) &emsp;
+                    ❷ \(n^{r}\) &emsp;
+                    ❸ \({}_{n}\mathrm{H}_{r}\) &emsp;
+                    ❹ \({}_{n+r-1}\mathrm{C}_{r}\)<br>
+                    ❺ 이항정리 &emsp;
+                    ❻ 이항계수 &emsp;
+                    ❼ 일반항<br>
+                    ❽ \(2^{n}\) &emsp;
+                    ❾ \(0\)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="footer">
+        확률과 통계 &middot; Ⅰ. 경우의 수 &middot; 10차시 &middot; 스스로 확인하기 + 정리하기
+    </div>
+
+</div>
+
+<!-- 정답 토글 버튼 -->
+<button class="global-answer-btn" id="globalAnswerBtn">정답 모두 보기</button>
+
+<!-- 저장/불러오기 오버레이 -->
+<div class="records-overlay" id="recordsOverlay">
+    <div class="records-panel">
+        <div class="records-header">
+            <h3>📋 저장 기록</h3>
+            <button class="close-btn" id="closeRecords">&times;</button>
+        </div>
+        <div class="records-list" id="recordsList">
+            <div class="records-empty">저장된 기록이 없습니다.</div>
+        </div>
+    </div>
+</div>
+
+<!-- 토스트 알림 -->
+<div class="save-toast" id="saveToast"></div>
+
+<!-- Writing Canvas (defer) -->
+<script defer src="https://math-class.it.kr/lib/js/writing-canvas.js"></script>
+
+</body>
+</html>

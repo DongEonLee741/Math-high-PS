@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>스스로 마무리하기 — 경우의 수</title>
+
+  <!-- 공통 라이브러리 (Firebase Hosting) -->
+  <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
+  <link rel="stylesheet" href="https://math-class.it.kr/lib/css/worksheet-common.css">
+  <link rel="stylesheet" href="https://math-class.it.kr/lib/css/auth-overlay.css">
+
+  <!-- 11차시 고유 스타일: 보내기 + 물어보기 버튼 -->
+  <style>
+    .canvas-toolbar .btn-submit-mini,
+    .canvas-toolbar .btn-ask-mini {
+        border: 1.5px solid;
+        color: #fff;
+        border-radius: 7px;
+        padding: 5px 7px;
+        font-size: 12px;
+        font-family: inherit;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        flex-shrink: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .canvas-toolbar .btn-submit-mini {
+        background: #10b981;
+        border-color: #10b981;
+    }
+    .canvas-toolbar .btn-submit-mini:active {
+        transform: scale(0.93);
+        background: #059669;
+        border-color: #059669;
+    }
+    .canvas-toolbar .btn-ask-mini {
+        background: #3b82f6;
+        border-color: #3b82f6;
+    }
+    .canvas-toolbar .btn-ask-mini:active {
+        transform: scale(0.93);
+        background: #2563eb;
+        border-color: #2563eb;
+    }
+    @media (max-width: 500px) {
+        .canvas-toolbar .btn-submit-mini,
+        .canvas-toolbar .btn-ask-mini { padding: 3px 5px; font-size: 10px; }
+    }
+    .slide .btn-submit-mini,
+    .slide .btn-ask-mini { display: none !important; }
+
+    /* 5지선다 선택지 — 가로 정렬 */
+    .choices-5 {
+        display: flex; gap: 16px; flex-wrap: wrap;
+        margin: 6px 0 6px 8px; font-size: 14px;
+    }
+    .choices-5 span { white-space: nowrap; }
+  </style>
+
+  <!-- KaTeX (defer) -->
+  <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
+  <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
+
+  <!-- Firebase + Auth + App (type="module") -->
+  <script type="module">
+    import { initWorksheetApp } from 'https://math-class.it.kr/lib/js/worksheet-app.js';
+    import { initFirebaseWorksheet } from 'https://math-class.it.kr/lib/js/firebase-worksheet.js';
+
+    const app = initWorksheetApp('worksheet_11차시_마무리하기');
+    initFirebaseWorksheet('PS_11차시_마무리하기', { showAuth: true });
+  </script>
+</head>
+<body>
+
+
+
+<div class="container">
+
+    <!-- 헤더 -->
+    <div class="header">
+        <div class="header-unit">Ⅰ. 경우의 수</div>
+        <div class="header-title">
+            <h1>스스로 마무리하기</h1>
+            <div class="header-info">
+                <span>교과서 31~33쪽</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학생 정보 -->
+    <div class="student-info">
+        <div class="save-actions">
+            <button class="btn-save" id="btnSave">💾 저장</button>
+            <button class="btn-records" id="btnRecords">📋 기록</button>
+        </div>
+        <div class="drive-sync-area">
+            <button class="btn-drive" id="btnDriveLogin" title="Google Drive 연동">☁️ Drive</button>
+            <button class="btn-drive-load" id="btnDriveLoad" style="display:none;">📥 불러오기</button>
+        </div>
+        <div class="field"><label>학년 반</label> <input type="text" placeholder="예: 1-3"></div>
+        <div class="field"><label>번호</label> <input type="text" style="width:40px;" placeholder="00"></div>
+        <div class="field"><label>이름</label> <input type="text" placeholder="이름 입력"></div>
+    </div>
+
+    <!-- 성취기준 -->
+    <div class="achievement">
+        <strong>성취기준</strong> &nbsp; [12확통01-01~03] 순열, 조합, 이항정리를 이해하고, 문제를 해결할 수 있다.
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 1: 객관식 문제 01~08 (p.31)                       -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">1</div>
+            <h2>스스로 마무리하기 (01~08)</h2>
+        </div>
+
+        <!-- 문제 01 -->
+        <div class="problem" data-qid="q01">
+            <div class="problem-label"><span class="p-num">01</span> \({}_{5}\mathrm{C}_{3} + {}_{2}\Pi_{4}\)의 값은?</div>
+            <div class="choices-5">
+                <span>① 25</span> <span>② 26</span> <span>③ 27</span> <span>④ 28</span> <span>⑤ 29</span>
+            </div>
+            <div class="writing-area" data-h="100"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \({}_{5}\mathrm{C}_{3} = 10\), \({}_{2}\Pi_{4} = 2^{4} = 16\)<br>
+                    \(10 + 16 = \boldsymbol{26}\). 답: <strong>② 26</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 02 -->
+        <div class="problem" data-qid="q02">
+            <div class="problem-label"><span class="p-num">02</span> 서로 다른 6개의 공을 서로 다른 3개의 주머니 A, B, C에 남김없이 나누어 넣을 때, 주머니 A에 공을 2개만 넣는 경우의 수는? (단, 빈 주머니가 있을 수 있다.)</div>
+            <div class="choices-5">
+                <span>① 180</span> <span>② 200</span> <span>③ 220</span> <span>④ 240</span> <span>⑤ 260</span>
+            </div>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    A에 넣을 2개 선택: \({}_{6}\mathrm{C}_{2} = 15\)<br>
+                    나머지 4개를 B, C에 배분: 각 공마다 2가지 선택 \(\rightarrow 2^{4} = 16\)<br>
+                    \(15 \times 16 = \boldsymbol{240}\). 답: <strong>④ 240</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 03 -->
+        <div class="problem" data-qid="q03">
+            <div class="problem-label"><span class="p-num">03</span> 문자 <strong>a, b, c</strong> 중에서 중복을 허용하여 5개를 택하여 일렬로 나열할 때, 양 끝에 서로 다른 문자가 오는 경우의 수는?</div>
+            <div class="choices-5">
+                <span>① 162</span> <span>② 166</span> <span>③ 170</span> <span>④ 174</span> <span>⑤ 178</span>
+            </div>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    전체: \(3^{5} = 243\)<br>
+                    양 끝이 같은 경우: \(3 \times 3^{3} = 81\)<br>
+                    양 끝이 다른 경우: \(243 - 81 = \boldsymbol{162}\). 답: <strong>① 162</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 04 -->
+        <div class="problem" data-qid="q04">
+            <div class="problem-label"><span class="p-num">04</span> 두 집합 \(X = \{1,\,2,\,3,\,4\}\), \(Y = \{1,\,2\}\)에 대하여 치역과 공역이 서로 같은 함수 \(f : X \longrightarrow Y\)의 개수는?</div>
+            <div class="choices-5">
+                <span>① 11</span> <span>② 12</span> <span>③ 13</span> <span>④ 14</span> <span>⑤ 15</span>
+            </div>
+            <div class="writing-area" data-h="120"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    전체 함수: \(2^{4} = 16\)<br>
+                    치역 \(\neq\) 공역인 함수(상수함수): 2개<br>
+                    \(16 - 2 = \boldsymbol{14}\). 답: <strong>④ 14</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 05 -->
+        <div class="problem" data-qid="q05">
+            <div class="problem-label"><span class="p-num">05</span> 6개의 문자 <strong>a, b, c, d, e, f</strong>를 일렬로 나열할 때, <strong>a</strong>가 <strong>b</strong>보다 앞에 오고 <strong>f</strong>가 <strong>c</strong>보다 뒤에 오도록 나열하는 경우의 수는?</div>
+            <div class="choices-5">
+                <span>① 120</span> <span>② 140</span> <span>③ 160</span> <span>④ 180</span> <span>⑤ 200</span>
+            </div>
+            <div class="writing-area" data-h="160"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    전체 나열: \(6! = 720\)<br>
+                    a&lt;b 확률 \(\frac{1}{2}\), f&gt;c 확률 \(\frac{1}{2}\) (서로 독립)<br>
+                    \(720 \times \frac{1}{4} = \boldsymbol{180}\). 답: <strong>④ 180</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 06 -->
+        <div class="problem" data-qid="q06">
+            <div class="problem-label"><span class="p-num">06</span> 다음 그림과 같은 도로망이 있을 때 이 도로망을 따라 A 지점에서 출발하여 B 지점까지 최단 거리로 가는 경우의 수는?</div>
+            <!-- 도로망: 5열×4행 격자, (3,1)→(3,2) 세로 도로 없음 → 최단경로 27 -->
+            <svg viewBox="0 0 250 175" width="230" style="display:block;margin:8px auto;" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="#333" stroke-width="1.2">
+                    <!-- 가로선 4줄 -->
+                    <line x1="20" y1="20" x2="220" y2="20"/>
+                    <line x1="20" y1="65" x2="220" y2="65"/>
+                    <line x1="20" y1="110" x2="220" y2="110"/>
+                    <line x1="20" y1="155" x2="220" y2="155"/>
+                    <!-- 세로선: col 0~4 (col 3은 끊김) -->
+                    <line x1="20" y1="20" x2="20" y2="155"/>
+                    <line x1="70" y1="20" x2="70" y2="155"/>
+                    <line x1="120" y1="20" x2="120" y2="155"/>
+                    <!-- col 3: 위쪽만 + 아래쪽만 (row1↔row2 끊김) -->
+                    <line x1="170" y1="20" x2="170" y2="65"/>
+                    <line x1="170" y1="110" x2="170" y2="155"/>
+                    <!-- col 4 -->
+                    <line x1="220" y1="20" x2="220" y2="155"/>
+                </g>
+                <circle cx="20" cy="20" r="4" fill="#E74C3C"/>
+                <text x="4" y="15" font-size="12" fill="#E74C3C" font-weight="700">A</text>
+                <circle cx="220" cy="155" r="4" fill="#2980B9"/>
+                <text x="225" y="165" font-size="12" fill="#2980B9" font-weight="700">B</text>
+            </svg>
+            <div class="choices-5">
+                <span>① 26</span> <span>② 27</span> <span>③ 28</span> <span>④ 29</span> <span>⑤ 30</span>
+            </div>
+            <div class="writing-area" data-h="160"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    각 교차점까지의 최단 경로 수를 구한다.<br>
+                    <span style="font-size:13px; font-family:monospace; line-height:1.8;">
+                    &nbsp;1 &ndash; 1 &ndash; 1 &ndash; 1 &ndash; 1<br>
+                    &nbsp;1 &ndash; 2 &ndash; 3 &ndash; 4 &ndash; 5<br>
+                    &nbsp;1 &ndash; 3 &ndash; 6 &ndash; <strong style="color:#E74C3C;">6</strong> &ndash; 11<br>
+                    &nbsp;1 &ndash; 4 &ndash; 10 &ndash; 16 &ndash; <strong>27</strong>
+                    </span><br>
+                    4열의 2행&rarr;3행 세로 도로가 없으므로 해당 교차점은 왼쪽에서만 도달.<br>
+                    답: <strong>② 27</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 07 -->
+        <div class="problem" data-qid="q07">
+            <div class="problem-label"><span class="p-num">07</span> 주머니 A에 들어 있는 같은 종류의 공 5개를 주머니 B로 모두 옮겨 담으려고 한다. 한 번에 한 개 또는 두 개씩 꺼내 옮겨 담는 경우의 수는?</div>
+            <div class="choices-5">
+                <span>① 6</span> <span>② 7</span> <span>③ 8</span> <span>④ 9</span> <span>⑤ 10</span>
+            </div>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    5를 1과 2의 순서합으로 나타내기 (2를 \(k\)개 사용):<br>
+                    \(k=0\): 1가지, \(k=1\): \({}_{4}\mathrm{C}_{1}=4\), \(k=2\): \({}_{3}\mathrm{C}_{2}=3\)<br>
+                    \(1+4+3 = \boldsymbol{8}\). 답: <strong>③ 8</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 08 -->
+        <div class="problem" data-qid="q08">
+            <div class="problem-label"><span class="p-num">08</span> 같은 종류의 공 15개를 서로 다른 상자 4개에 모두 나누어 넣으려고 한다. 각 상자에 공이 2개 이상 들어가도록 나누어 넣는 경우의 수는?</div>
+            <div class="choices-5">
+                <span>① 105</span> <span>② 110</span> <span>③ 115</span> <span>④ 120</span> <span>⑤ 125</span>
+            </div>
+            <div class="writing-area" data-h="140"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    각 상자에 2개씩 넣으면 남는 공: \(15 - 8 = 7\)개<br>
+                    \({}_{4}\mathrm{H}_{7} = {}_{10}\mathrm{C}_{7} = {}_{10}\mathrm{C}_{3} = \boldsymbol{120}\). 답: <strong>④ 120</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 2: 문제 09~14 (p.32)                              -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">2</div>
+            <h2>스스로 마무리하기 (09~14)</h2>
+        </div>
+
+        <!-- 문제 09 -->
+        <div class="problem" data-qid="q09">
+            <div class="problem-label"><span class="p-num">09</span> 5개의 숫자 1, 2, 3, 4, 5에서 중복을 허용하여 6개를 택할 때, 숫자 3을 2개 이상 택하는 경우의 수는?</div>
+            <div class="choices-5">
+                <span>① 65</span> <span>② 70</span> <span>③ 75</span> <span>④ 80</span> <span>⑤ 85</span>
+            </div>
+            <div class="writing-area" data-h="160"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    전체: \({}_{5}\mathrm{H}_{6} = {}_{10}\mathrm{C}_{6} = 210\)<br>
+                    3이 0개: \({}_{4}\mathrm{H}_{6} = {}_{9}\mathrm{C}_{6} = 84\)<br>
+                    3이 1개: \({}_{4}\mathrm{H}_{5} = {}_{8}\mathrm{C}_{5} = 56\)<br>
+                    2개 이상: \(210 - 84 - 56 = \boldsymbol{70}\). 답: <strong>② 70</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 10 -->
+        <div class="problem" data-qid="q10">
+            <div class="problem-label"><span class="p-num">10</span> 방정식 \(a+b+c+d=17\)을 만족시키는 네 자연수 \(a,\,b,\,c,\,d\)에 대하여 세 수 \(a,\,b,\,c\)는 모두 홀수이고, \(d\)는 짝수인 모든 순서쌍 \((a,\,b,\,c,\,d)\)의 개수는?</div>
+            <div class="choices-5">
+                <span>① 78</span> <span>② 80</span> <span>③ 82</span> <span>④ 84</span> <span>⑤ 86</span>
+            </div>
+            <div class="writing-area" data-h="180"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \(a=2a'+1,\;b=2b'+1,\;c=2c'+1\) (\(a',b',c'\ge 0\)), \(d=2d'\) (\(d'\ge 1\))<br>
+                    대입: \(2(a'+b'+c'+d') + 3 = 17\) &rarr; \(a'+b'+c'+d' = 7\)<br>
+                    \(d'' = d'-1 \ge 0\)으로 치환: \(a'+b'+c'+d'' = 6\)<br>
+                    \({}_{4}\mathrm{H}_{6} = {}_{9}\mathrm{C}_{3} = \boldsymbol{84}\). 답: <strong>④ 84</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 11 -->
+        <div class="problem" data-qid="q11">
+            <div class="problem-label"><span class="p-num">11</span> \((x+1)\left(x^{2} - \dfrac{2}{x}\right)^{7}\)의 전개식에서 \(x^{5}\)의 계수는?</div>
+            <div class="choices-5">
+                <span>① \(-320\)</span> <span>② \(-300\)</span> <span>③ \(-280\)</span> <span>④ \(-260\)</span> <span>⑤ \(-240\)</span>
+            </div>
+            <div class="writing-area" data-h="200"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \(\left(x^{2} - \frac{2}{x}\right)^{7}\)의 일반항: \({}_{7}\mathrm{C}_{r}(x^{2})^{7-r}\left(-\frac{2}{x}\right)^{r} = {}_{7}\mathrm{C}_{r}(-2)^{r}\,x^{14-3r}\)<br>
+                    \((x+1)\)을 곱할 때 \(x^{5}\)이 되려면:<br>
+                    &bull; \(1 \cdot x^{14-3r} = x^{5}\) &rarr; \(r = 3\): 계수 \({}_{7}\mathrm{C}_{3}(-2)^{3} = 35 \times (-8) = -280\)<br>
+                    &bull; \(x \cdot x^{14-3r} = x^{5}\) &rarr; \(r = \frac{10}{3}\): 정수 아님<br>
+                    답: <strong>③ \(-280\)</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 12 -->
+        <div class="problem" data-qid="q12">
+            <div class="problem-label"><span class="p-num">12</span> \(7^{21}\)을 36으로 나눈 나머지는?</div>
+            <div class="choices-5">
+                <span>① 19</span> <span>② 20</span> <span>③ 21</span> <span>④ 22</span> <span>⑤ 23</span>
+            </div>
+            <div class="writing-area" data-h="200"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    \(7^{21} = (6+1)^{21} = \displaystyle\sum_{r=0}^{21}{}_{21}\mathrm{C}_{r}\cdot 6^{r}\)<br>
+                    \(r \ge 2\)인 항은 \(6^{2}=36\)의 배수이므로 나머지에 기여 안 함.<br>
+                    나머지: \({}_{21}\mathrm{C}_{0} + {}_{21}\mathrm{C}_{1}\cdot 6 = 1 + 126 = 127\)<br>
+                    \(127 = 3 \times 36 + \boldsymbol{19}\). 답: <strong>① 19</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 13 -->
+        <div class="problem" data-qid="q13">
+            <div class="problem-label"><span class="p-num">13</span> 다음 조건을 만족시키는 집합 \(A = \{1,\,2,\,3,\,\ldots,\,10\}\)의 부분집합 \(X\)의 개수는?</div>
+            <div class="concept-box" style="margin:6px 0 6px 24px; padding:8px 12px; font-size:14px;">
+                <strong>조건</strong><br>
+                (가) \(1 \in X\)<br>
+                (나) \(n(X)\)는 2의 배수이다.
+            </div>
+            <div class="choices-5">
+                <span>① 192</span> <span>② 208</span> <span>③ 224</span> <span>④ 240</span> <span>⑤ 256</span>
+            </div>
+            <div class="writing-area" data-h="180"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    1은 반드시 포함. 나머지 9개 원소 \(\{2,\ldots,10\}\) 중 홀수 개를 선택해야<br>
+                    \(n(X) = 1 + (\text{선택 수})\)가 짝수.<br>
+                    9개에서 홀수 개 선택: \(2^{8} = \boldsymbol{256}\). 답: <strong>⑤ 256</strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 14 -->
+        <div class="problem" data-qid="q14">
+            <div class="problem-label"><span class="p-num">14</span> 다음 식의 전개식에서 \(x^{3}\)의 계수는?</div>
+            <div class="formula" style="margin:4px 0 4px 24px;">\((1+x) + (1+x)^{2} + (1+x)^{3} + \cdots + (1+x)^{10}\)</div>
+            <div class="choices-5">
+                <span>① 310</span> <span>② 320</span> <span>③ 330</span> <span>④ 340</span> <span>⑤ 350</span>
+            </div>
+            <div class="writing-area" data-h="200"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    각 \((1+x)^{k}\)에서 \(x^{3}\)의 계수: \({}_{k}\mathrm{C}_{3}\) (\(k \ge 3\))<br>
+                    합: \({}_{3}\mathrm{C}_{3} + {}_{4}\mathrm{C}_{3} + \cdots + {}_{10}\mathrm{C}_{3} = {}_{11}\mathrm{C}_{4} = \boldsymbol{330}\)<br>
+                    답: <strong>③ 330</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  카드 3: 서술형 문제 15~19 (p.32~33)                    -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="card">
+        <div class="section-title">
+            <div class="section-number">3</div>
+            <h2>서술형 (15~19)</h2>
+        </div>
+
+        <!-- 문제 15 -->
+        <div class="problem" data-qid="q15">
+            <div class="problem-label"><span class="p-num">15</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> 어느 놀이공원의 시설에 대관람차, 회전목마, 범퍼카가 있다. 이 3가지 시설 중에서 중복을 허용하여 5가지를 택해 일렬로 나열하여 추천 코스를 만들려고 한다. 이때 각 시설이 적어도 한 번 포함되도록 만든 추천 코스의 경우의 수를 구하시오.</div>
+            <div class="writing-area" data-h="220"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    전체 중복순열: \(3^{5} = 243\)<br>
+                    포함-배제: 한 시설 제외 \({}_{3}\mathrm{C}_{1}\cdot 2^{5} = 96\),
+                    두 시설 제외 \({}_{3}\mathrm{C}_{2}\cdot 1^{5} = 3\)<br>
+                    \(243 - 96 + 3 = \boldsymbol{150}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 16 -->
+        <div class="problem" data-qid="q16">
+            <div class="problem-label"><span class="p-num">16</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> 6의 양의 약수 중에서 중복을 허용하여 4개를 택하여 일렬로 나열하여 만들 수 있는 네 자리 자연수 중 각 자리의 모든 수의 합이 10 이상 12 이하인 자연수의 개수를 구하시오.</div>
+            <div class="writing-area" data-h="260"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    6의 약수: 1, 2, 3, 6<br>
+                    <strong>합 10:</strong> \(\{6,1,1,2\}\!\rightarrow\!12\), \(\{3,3,3,1\}\!\rightarrow\!4\), \(\{3,3,2,2\}\!\rightarrow\!6\) = 22<br>
+                    <strong>합 11:</strong> \(\{6,1,1,3\}\!\rightarrow\!12\), \(\{6,1,2,2\}\!\rightarrow\!12\), \(\{3,3,3,2\}\!\rightarrow\!4\) = 28<br>
+                    <strong>합 12:</strong> \(\{6,1,2,3\}\!\rightarrow\!24\), \(\{6,2,2,2\}\!\rightarrow\!4\), \(\{3,3,3,3\}\!\rightarrow\!1\) = 29<br>
+                    \(22 + 28 + 29 = \boldsymbol{79}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 17 -->
+        <div class="problem" data-qid="q17">
+            <div class="problem-label"><span class="p-num">17</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> 좌표평면 위의 네 점 \(\mathrm{A}(-1,\,a)\), \(\mathrm{B}(0,\,b)\), \(\mathrm{C}(1,\,c)\), \(\mathrm{D}(2,\,d)\)가 다음 조건을 만족시킬 때, 네 자연수 \(a,\,b,\,c,\,d\)의 모든 순서쌍 \((a,\,b,\,c,\,d)\)의 개수를 구하시오.</div>
+            <div class="concept-box" style="margin:6px 0 6px 24px; padding:8px 12px; font-size:14px;">
+                <strong>조건</strong><br>
+                (가) \(a + b + c + d = 12\)<br>
+                (나) 두 직선 \(\mathrm{AB}\), \(\mathrm{CD}\)는 한 점에서 만난다.
+            </div>
+            <div class="writing-area" data-h="240"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    직선 AB의 기울기 \(= b - a\), 직선 CD의 기울기 \(= d - c\)<br>
+                    한 점에서 만남 &rarr; 기울기가 다름: \(b-a \neq d-c\), 즉 \(a+d \neq b+c\)<br>
+                    전체: \(a+b+c+d=12\) (자연수) &rarr; \({}_{11}\mathrm{C}_{3} = 165\)<br>
+                    \(a+d = b+c = 6\)인 경우: \(5 \times 5 = 25\)<br>
+                    \(165 - 25 = \boldsymbol{140}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 18 -->
+        <div class="problem" data-qid="q18">
+            <div class="problem-label"><span class="p-num">18</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> <span class="badge" style="background:#dbeafe;color:#1e40af;">신유형</span> 집합 \(X = \{0,\,1,\,2,\,3,\,4\}\)에 대하여 \(X\)에서 \(X\)로의 함수 \(f\) 중 다음 조건을 만족시키는 함수 \(f\)의 개수를 구하시오.</div>
+            <div class="concept-box" style="margin:6px 0 6px 24px; padding:8px 12px; font-size:14px;">
+                <strong>조건</strong><br>
+                (가) 집합 \(X\)의 임의의 두 원소 \(x_{1},\,x_{2}\)에 대하여 \(x_{1} < x_{2}\)이면 \(f(x_{1}) \le f(x_{2})\)이다.<br>
+                (나) 함수 \(f\)의 치역의 모든 원소의 합은 7이다.
+            </div>
+            <div class="writing-area" data-h="260"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    (가)에서 \(f\)는 단조증가(비감소) 함수.<br>
+                    치역의 합 = 7인 \(\{0,1,2,3,4\}\)의 부분집합:<br>
+                    &bull; \(\{3,4\}\): \({}_{4}\mathrm{C}_{1} = 4\)가지<br>
+                    &bull; \(\{0,3,4\}\): \({}_{4}\mathrm{C}_{2} = 6\)가지<br>
+                    &bull; \(\{1,2,4\}\): \({}_{4}\mathrm{C}_{2} = 6\)가지<br>
+                    &bull; \(\{0,1,2,4\}\): \({}_{4}\mathrm{C}_{3} = 4\)가지<br>
+                    \(4 + 6 + 6 + 4 = \boldsymbol{20}\)
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- 문제 19 -->
+        <div class="problem" data-qid="q19">
+            <div class="problem-label"><span class="p-num">19</span> <span class="badge" style="background:#fef3c7;color:#92400e;">서술형</span> 두 수 \(A\), \(B\)가
+            \[A = {}_{15}\mathrm{C}_{0} + {}_{15}\mathrm{C}_{2} + {}_{15}\mathrm{C}_{4} + \cdots + {}_{15}\mathrm{C}_{14}\]
+            \[B = {}_{12}\mathrm{C}_{1} + {}_{12}\mathrm{C}_{3} + {}_{12}\mathrm{C}_{5} + \cdots + {}_{12}\mathrm{C}_{11}\]
+            일 때, \(\dfrac{A}{B}\)의 값을 구하시오.</div>
+            <div class="writing-area" data-h="220"><canvas></canvas><div class="canvas-toolbar"></div></div>
+            <div class="answer-reveal">
+                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
+                <div class="answer-content">
+                    <div class="ans-label">정답</div>
+                    이항계수의 성질에서 짝수/홀수 번째 합 \(= 2^{n-1}\):<br>
+                    \(A = {}_{15}\mathrm{C}_{0} + {}_{15}\mathrm{C}_{2} + \cdots + {}_{15}\mathrm{C}_{14} = 2^{14}\)<br>
+                    \(B = {}_{12}\mathrm{C}_{1} + {}_{12}\mathrm{C}_{3} + \cdots + {}_{12}\mathrm{C}_{11} = 2^{11}\)<br>
+                    \(\dfrac{A}{B} = \dfrac{2^{14}}{2^{11}} = 2^{3} = \boldsymbol{8}\)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="footer">
+        확률과 통계 &middot; Ⅰ. 경우의 수 &middot; 11차시 &middot; 스스로 마무리하기
+    </div>
+
+</div>
+
+<!-- 정답 토글 버튼 -->
+<button class="global-answer-btn" id="globalAnswerBtn">정답 모두 보기</button>
+
+<!-- 저장/불러오기 오버레이 -->
+<div class="records-overlay" id="recordsOverlay">
+    <div class="records-panel">
+        <div class="records-header">
+            <h3>📋 저장 기록</h3>
+            <button class="close-btn" id="closeRecords">&times;</button>
+        </div>
+        <div class="records-list" id="recordsList">
+            <div class="records-empty">저장된 기록이 없습니다.</div>
+        </div>
+    </div>
+</div>
+
+<!-- 토스트 알림 -->
+<div class="save-toast" id="saveToast"></div>
+
+<!-- Writing Canvas (defer) -->
+<script defer src="https://math-class.it.kr/lib/js/writing-canvas.js"></script>
+
+<!-- ══ 투표(물어보기) IIFE — 11차시 전용 ══ -->
+<script type="module">
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { increment } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+(function() {
+  'use strict';
+
+  // Wait for DOM + Firebase init
+  function init() {
+    if (document.body.classList.contains('slide')) return;
+
+    const db = getFirestore(getApp());
+    const urlParams = new URLSearchParams(window.location.search);
+    const classId = urlParams.get('class') || 'default';
+    const worksheetKey = 'PS_11차시_마무리하기';
+
+    // Find qId from closest .problem[data-qid] above a writing-area
+    function findQid(wa) {
+      let el = wa.previousElementSibling;
+      while (el) {
+        if (el.dataset && el.dataset.qid) return el.dataset.qid;
+        if (el.classList.contains('problem') && el.dataset.qid) return el.dataset.qid;
+        el = el.previousElementSibling;
+      }
+      // Try parent
+      const prob = wa.closest('.problem[data-qid]');
+      if (prob) return prob.dataset.qid;
+      return null;
+    }
+
+    // Inject submit + ask buttons into each writing-area toolbar
+    document.querySelectorAll('.writing-area').forEach(function(wa) {
+      const toolbar = wa.querySelector('.canvas-toolbar');
+      if (!toolbar) return;
+      if (toolbar.querySelector('.btn-submit-mini')) return;
+
+      // ── 📮 보내기 버튼 ──
+      const submitBtn = document.createElement('button');
+      submitBtn.className = 'btn-submit-mini';
+      submitBtn.textContent = '📮';
+      submitBtn.title = '보내기';
+
+      submitBtn.addEventListener('click', async function() {
+        const qId = findQid(wa);
+        if (!qId) return;
+
+        try {
+          const voteRef = doc(db, 'classrooms', classId, 'votes', worksheetKey);
+          await setDoc(voteRef, {
+            problems: {
+              [qId]: { submitted: increment(1) }
+            }
+          }, { merge: true });
+
+          submitBtn.textContent = '✅';
+          setTimeout(function() { submitBtn.textContent = '📮'; }, 600);
+        } catch (e) {
+          console.error('Submit error:', e);
+        }
+      });
+
+      // ── ❓ 물어보기 버튼 ──
+      const askBtn = document.createElement('button');
+      askBtn.className = 'btn-ask-mini';
+      askBtn.textContent = '❓';
+      askBtn.title = '물어보기';
+
+      askBtn.addEventListener('click', async function() {
+        const qId = findQid(wa);
+        if (!qId) return;
+
+        try {
+          const voteRef = doc(db, 'classrooms', classId, 'votes', worksheetKey);
+          await setDoc(voteRef, {
+            problems: {
+              [qId]: { count: increment(1) }
+            }
+          }, { merge: true });
+
+          askBtn.textContent = '🙋';
+          setTimeout(function() { askBtn.textContent = '❓'; }, 500);
+        } catch (e) {
+          console.error('Vote error:', e);
+        }
+      });
+
+      // Insert before btn-toggle (at end of toolbar)
+      const toggleBtn = toolbar.querySelector('.btn-toggle');
+      if (toggleBtn) {
+        toolbar.insertBefore(submitBtn, toggleBtn);
+        toolbar.insertBefore(askBtn, toggleBtn);
+      } else {
+        toolbar.appendChild(submitBtn);
+        toolbar.appendChild(askBtn);
+      }
+    });
+  }
+
+  // Small delay to let writing-canvas.js build toolbars
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 800); });
+  } else {
+    setTimeout(init, 800);
+  }
+})();
+</script>
+
+</body>
+</html>
