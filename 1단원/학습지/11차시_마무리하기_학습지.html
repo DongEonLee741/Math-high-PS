@@ -10,9 +10,8 @@
   <link rel="stylesheet" href="https://math-class.it.kr/lib/css/worksheet-common.css">
   <link rel="stylesheet" href="https://math-class.it.kr/lib/css/auth-overlay.css">
 
-  <!-- 11차시 고유 스타일: 보내기 + 물어보기 버튼 -->
+  <!-- 11차시 고유 스타일: 물어보기 버튼 -->
   <style>
-    .canvas-toolbar .btn-submit-mini,
     .canvas-toolbar .btn-ask-mini {
         border: 1.5px solid;
         color: #fff;
@@ -29,15 +28,6 @@
         flex-shrink: 0;
         -webkit-tap-highlight-color: transparent;
     }
-    .canvas-toolbar .btn-submit-mini {
-        background: #10b981;
-        border-color: #10b981;
-    }
-    .canvas-toolbar .btn-submit-mini:active {
-        transform: scale(0.93);
-        background: #059669;
-        border-color: #059669;
-    }
     .canvas-toolbar .btn-ask-mini {
         background: #3b82f6;
         border-color: #3b82f6;
@@ -48,10 +38,8 @@
         border-color: #2563eb;
     }
     @media (max-width: 500px) {
-        .canvas-toolbar .btn-submit-mini,
         .canvas-toolbar .btn-ask-mini { padding: 3px 5px; font-size: 10px; }
     }
-    .slide .btn-submit-mini,
     .slide .btn-ask-mini { display: none !important; }
 
     /* 5지선다 선택지 — 가로 정렬 */
@@ -629,31 +617,6 @@ import { increment } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-fi
       if (!toolbar) return;
       if (toolbar.querySelector('.btn-submit-mini')) return;
 
-      // ── 📮 보내기 버튼 ──
-      const submitBtn = document.createElement('button');
-      submitBtn.className = 'btn-submit-mini';
-      submitBtn.textContent = '📮';
-      submitBtn.title = '보내기';
-
-      submitBtn.addEventListener('click', async function() {
-        const qId = findQid(wa);
-        if (!qId) return;
-
-        try {
-          const voteRef = doc(db, 'classrooms', classId, 'votes', worksheetKey);
-          await setDoc(voteRef, {
-            problems: {
-              [qId]: { submitted: increment(1) }
-            }
-          }, { merge: true });
-
-          submitBtn.textContent = '✅';
-          setTimeout(function() { submitBtn.textContent = '📮'; }, 600);
-        } catch (e) {
-          console.error('Submit error:', e);
-        }
-      });
-
       // ── ❓ 물어보기 버튼 ──
       const askBtn = document.createElement('button');
       askBtn.className = 'btn-ask-mini';
@@ -682,10 +645,8 @@ import { increment } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-fi
       // Insert before btn-toggle (at end of toolbar)
       const toggleBtn = toolbar.querySelector('.btn-toggle');
       if (toggleBtn) {
-        toolbar.insertBefore(submitBtn, toggleBtn);
         toolbar.insertBefore(askBtn, toggleBtn);
       } else {
-        toolbar.appendChild(submitBtn);
         toolbar.appendChild(askBtn);
       }
     });
