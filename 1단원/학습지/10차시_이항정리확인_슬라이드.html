@@ -10,6 +10,46 @@
     <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
     <link rel="stylesheet" href="https://math-class.it.kr/lib/css/slide-common.css">
 
+    <style>
+        .blank-fill {
+            display: inline-block;
+            min-width: 60px;
+            padding: 2px 12px;
+            border: 2px dashed #3b82f6;
+            border-radius: 6px;
+            text-align: center;
+            color: #3b82f6;
+            font-weight: 700;
+            background: #eff6ff;
+            vertical-align: middle;
+            transition: all 0.4s ease;
+        }
+        .blank-fill .blank-num {
+            font-size: 0.95em;
+        }
+        .blank-fill .blank-ans {
+            display: none;
+        }
+        .blank-fill.revealed {
+            border-style: solid;
+            border-color: #22c55e;
+            background: #f0fdf4;
+            color: #166534;
+            animation: blankPop 0.4s ease;
+        }
+        .blank-fill.revealed .blank-num {
+            display: none;
+        }
+        .blank-fill.revealed .blank-ans {
+            display: inline;
+        }
+        @keyframes blankPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+    </style>
+
     <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
     <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
 
@@ -230,7 +270,7 @@
         <div class="concept-box highlight">
             <h3><span class="badge">정리</span> 여러 가지 순열</h3>
             <p style="margin-top:6px;"><strong>중복순열:</strong> 서로 다른 \(n\)개에서 중복 허용 \(r\)개 택하는 순열의 수</p>
-            <div class="formula"><span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❶</span> \(=\) <span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❷</span></div>
+            <div class="formula"><span class="blank-fill" data-step="1"><span class="blank-num">❶</span><span class="blank-ans">\({}_{n}\Pi_{r}\)</span></span> \(=\) <span class="blank-fill" data-step="2"><span class="blank-num">❷</span><span class="blank-ans">\(n^{r}\)</span></span></div>
             <p style="margin-top:8px;"><strong>같은 것이 있는 순열:</strong> \(\dfrac{n!}{p!\,q!\,\cdots\,r!}\)</p>
         </div>
 
@@ -238,34 +278,22 @@
         <div class="concept-box highlight">
             <h3><span class="badge">정리</span> 중복조합</h3>
             <p style="margin-top:6px;">서로 다른 \(n\)개에서 중복 허용 \(r\)개 택하는 조합의 수:</p>
-            <div class="formula"><span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❸</span> \(=\) <span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❹</span></div>
+            <div class="formula"><span class="blank-fill" data-step="3"><span class="blank-num">❸</span><span class="blank-ans">\({}_{n}\mathrm{H}_{r}\)</span></span> \(=\) <span class="blank-fill" data-step="4"><span class="blank-num">❹</span><span class="blank-ans">\({}_{n+r-1}\mathrm{C}_{r}\)</span></span></div>
         </div>
 
         <!-- 이항정리 -->
         <div class="concept-box highlight">
             <h3><span class="badge">정리</span> 이항정리</h3>
-            <p style="margin-top:6px;">\((a+b)^{n}\)을 전개하는 것을 <span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❺</span> 라 한다.</p>
+            <p style="margin-top:6px;">\((a+b)^{n}\)을 전개하는 것을 <span class="blank-fill" data-step="5"><span class="blank-num">❺</span><span class="blank-ans">이항정리</span></span> 라 한다.</p>
             <div class="formula">\((a+b)^{n} = \displaystyle\sum_{r=0}^{n} {}_{n}\mathrm{C}_{r}\,a^{n-r}b^{r}\)</div>
-            <p style="margin-top:6px;">계수 \({}_{n}\mathrm{C}_{r}\)를 <span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❻</span> 라 한다. &emsp; <span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❼</span> \(= {}_{n}\mathrm{C}_{r}\,a^{n-r}b^{r}\)</p>
+            <p style="margin-top:6px;">계수 \({}_{n}\mathrm{C}_{r}\)를 <span class="blank-fill" data-step="6"><span class="blank-num">❻</span><span class="blank-ans">이항계수</span></span> 라 한다. &emsp; <span class="blank-fill" data-step="7"><span class="blank-num">❼</span><span class="blank-ans">일반항</span></span> \(= {}_{n}\mathrm{C}_{r}\,a^{n-r}b^{r}\)</p>
             <p style="margin-top:8px;"><strong>이항계수의 성질</strong></p>
             <ul>
-                <li>\({}_{n}\mathrm{C}_{0} + {}_{n}\mathrm{C}_{1} + \cdots + {}_{n}\mathrm{C}_{n} =\) <span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❽</span></li>
-                <li>\({}_{n}\mathrm{C}_{0} - {}_{n}\mathrm{C}_{1} + \cdots + (-1)^{n}{}_{n}\mathrm{C}_{n} =\) <span style="border:2px dashed #3b82f6;padding:2px 12px;border-radius:6px;color:#3b82f6;font-weight:700;">❾</span></li>
+                <li>\({}_{n}\mathrm{C}_{0} + {}_{n}\mathrm{C}_{1} + \cdots + {}_{n}\mathrm{C}_{n} =\) <span class="blank-fill" data-step="8"><span class="blank-num">❽</span><span class="blank-ans">\(2^{n}\)</span></span></li>
+                <li>\({}_{n}\mathrm{C}_{0} - {}_{n}\mathrm{C}_{1} + \cdots + (-1)^{n}{}_{n}\mathrm{C}_{n} =\) <span class="blank-fill" data-step="9"><span class="blank-num">❾</span><span class="blank-ans">\(0\)</span></span></li>
             </ul>
         </div>
 
-        <div class="problem" data-qid="blanks">
-            <div class="problem-label"><span class="p-num">빈칸 채우기</span> ❶~❾에 알맞은 것을 채우시오.</div>
-            <div class="answer-reveal">
-                <div class="answer-toggle"><span class="arrow">&#9654;</span> 정답 확인</div>
-                <div class="answer-content">
-                    <div class="ans-label">정답</div>
-                    ❶ \({}_{n}\Pi_{r}\) &emsp; ❷ \(n^{r}\) &emsp; ❸ \({}_{n}\mathrm{H}_{r}\) &emsp; ❹ \({}_{n+r-1}\mathrm{C}_{r}\)<br>
-                    ❺ 이항정리 &emsp; ❻ 이항계수 &emsp; ❼ 일반항<br>
-                    ❽ \(2^{n}\) &emsp; ❾ \(0\)
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- 푸터 -->
@@ -473,6 +501,29 @@ if (typeof renderMathInElement === 'function') {
 
     function tryNext() {
         var cs = slides[current];
+
+        // 빈칸 단계별 채우기
+        var blanks = cs.querySelectorAll('.blank-fill[data-step]');
+        if (blanks.length > 0) {
+            var nextBlank = null;
+            for (var b = 0; b < blanks.length; b++) {
+                if (!blanks[b].classList.contains('revealed')) {
+                    nextBlank = blanks[b];
+                    break;
+                }
+            }
+            if (nextBlank) {
+                nextBlank.classList.add('revealed');
+                if (typeof renderMathInElement === 'function') {
+                    renderMathInElement(nextBlank, {
+                        delimiters: [{ left: '\\(', right: '\\)', display: false }],
+                        throwOnError: false
+                    });
+                }
+                return;
+            }
+        }
+
         var simEl = cs.querySelector('.step-simulation');
         if (simEl) {
             var nextBtn = simEl.querySelector('.sim-btn[data-dir="next"]');
@@ -497,6 +548,23 @@ if (typeof renderMathInElement === 'function') {
 
     function tryPrev() {
         var cs = slides[current];
+
+        // 빈칸 역순 지우기
+        var blanks = cs.querySelectorAll('.blank-fill[data-step]');
+        if (blanks.length > 0) {
+            var lastRevealed = null;
+            for (var b = blanks.length - 1; b >= 0; b--) {
+                if (blanks[b].classList.contains('revealed')) {
+                    lastRevealed = blanks[b];
+                    break;
+                }
+            }
+            if (lastRevealed) {
+                lastRevealed.classList.remove('revealed');
+                return;
+            }
+        }
+
         var simEl = cs.querySelector('.step-simulation');
         if (simEl) {
             var prevBtn = simEl.querySelector('.sim-btn[data-dir="prev"]');
