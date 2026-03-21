@@ -41,6 +41,7 @@
     .dodeca-controls button:active { transform: scale(0.97); }
     .dodeca-check { background: #2563eb; color: #fff; }
     .dodeca-next { background: #22c55e; color: #fff; }
+    .dodeca-reset { background: #64748b; color: #fff; }
     .dodeca-result { text-align: center; font-size: 14px; min-height: 24px; margin-top: 8px; font-weight: 600; }
     .dodeca-legend { display: flex; justify-content: center; gap: 12px; margin-top: 8px; font-size: 12px; color: #64748b; }
     .dodeca-legend span { display: flex; align-items: center; gap: 4px; }
@@ -226,6 +227,7 @@
             <div class="dodeca-controls">
                 <button class="dodeca-check" id="dodecaCheck">확인</button>
                 <button class="dodeca-next" id="dodecaNext" style="display:none;">다음 단계</button>
+                <button class="dodeca-reset" id="dodecaReset" style="display:none;">🔄 처음부터</button>
             </div>
             <div class="dodeca-result" id="dodecaResult"></div>
             <div class="dodeca-legend" id="dodecaLegend" style="display:none;">
@@ -426,10 +428,10 @@ document.getElementById('recordsOverlay').addEventListener('click', function(e) 
 
     function renderVenn() {
         var ex = examples[curEx];
-        var w = 300, h = 200, cx1 = 110, cx2 = 190, cy = 100, r = 70;
+        var w = 450, h = 300, cx1 = 160, cx2 = 290, cy = 155, r = 100;
         var svg = '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'">';
-        svg += '<rect x="10" y="10" width="'+(w-20)+'" height="'+(h-20)+'" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>';
-        svg += '<text x="20" y="28" font-size="12" fill="#64748b" font-weight="600">S = {1,2,3,4,5,6}</text>';
+        svg += '<rect x="10" y="10" width="'+(w-20)+'" height="'+(h-20)+'" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>';
+        svg += '<text x="22" y="32" font-size="15" fill="#64748b" font-weight="700" font-family="inherit">S = {1, 2, 3, 4, 5, 6}</text>';
 
         if (ex.B !== null) {
             var aOnly = diff(ex.A, ex.B);
@@ -438,27 +440,30 @@ document.getElementById('recordsOverlay').addEventListener('click', function(e) 
             var outside = diff(S, union(ex.A, ex.B));
             var aFill = '#fff', bFill = '#fff';
             if (curOp === 'union') { aFill = '#dbeafe'; bFill = '#dbeafe'; }
-            svg += '<circle cx="'+cx1+'" cy="'+cy+'" r="'+r+'" fill="'+aFill+'" stroke="#3b82f6" stroke-width="2" opacity="0.7"/>';
-            svg += '<circle cx="'+cx2+'" cy="'+cy+'" r="'+r+'" fill="'+bFill+'" stroke="#f59e0b" stroke-width="2" opacity="0.7"/>';
+            svg += '<circle cx="'+cx1+'" cy="'+cy+'" r="'+r+'" fill="'+aFill+'" stroke="#3b82f6" stroke-width="2.5" opacity="0.7"/>';
+            svg += '<circle cx="'+cx2+'" cy="'+cy+'" r="'+r+'" fill="'+bFill+'" stroke="#f59e0b" stroke-width="2.5" opacity="0.7"/>';
             if (curOp === 'inter' && ab.length > 0) {
                 svg += '<clipPath id="clipA"><circle cx="'+cx1+'" cy="'+cy+'" r="'+r+'"/></clipPath>';
                 svg += '<circle cx="'+cx2+'" cy="'+cy+'" r="'+r+'" fill="#d1fae5" clip-path="url(#clipA)" opacity="0.8"/>';
             }
-            svg += '<text x="'+cx1+'" y="'+(cy-r-8)+'" text-anchor="middle" font-size="14" font-weight="700" fill="#3b82f6">A</text>';
-            svg += '<text x="'+cx2+'" y="'+(cy-r-8)+'" text-anchor="middle" font-size="14" font-weight="700" fill="#f59e0b">B</text>';
-            var positions = [{x:cx1-30,y:cy-10},{x:cx1-20,y:cy+20},{x:cx1+5,y:cy-20},{x:cx2+30,y:cy-10},{x:cx2+20,y:cy+20},{x:cx2-5,y:cy-20},{x:150,y:cy-5},{x:150,y:cy+15},{x:40,y:h-30},{x:260,y:h-30}];
-            var pIdx = 0;
-            aOnly.forEach(function(v){var p=positions[pIdx++]||{x:cx1-25,y:cy};var dim=(curOp==='inter')?0.3:1;svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="14" font-weight="600" fill="#3b82f6" opacity="'+dim+'">'+v+'</text>';});
-            bOnly.forEach(function(v){var p=positions[pIdx++]||{x:cx2+25,y:cy};var dim=(curOp==='inter')?0.3:1;svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="14" font-weight="600" fill="#f59e0b" opacity="'+dim+'">'+v+'</text>';});
-            ab.forEach(function(v){var p=positions[pIdx++]||{x:150,y:cy};svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="14" font-weight="700" fill="#059669">'+v+'</text>';});
-            outside.forEach(function(v){var p=positions[pIdx++]||{x:40,y:h-25};var dim=(curOp!=='none')?0.3:1;svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="13" fill="#94a3b8" opacity="'+dim+'">'+v+'</text>';});
+            svg += '<text x="'+(cx1-10)+'" y="'+(cy-r-10)+'" text-anchor="middle" font-size="18" font-weight="700" fill="#3b82f6">A</text>';
+            svg += '<text x="'+(cx2+10)+'" y="'+(cy-r-10)+'" text-anchor="middle" font-size="18" font-weight="700" fill="#f59e0b">B</text>';
+            var posA=[{x:105,y:130},{x:115,y:160},{x:105,y:190}];
+            var posB=[{x:345,y:130},{x:335,y:160},{x:345,y:190}];
+            var posAB=[{x:225,y:140},{x:225,y:165},{x:225,y:190}];
+            var posOut=[{x:50,y:270},{x:400,y:270},{x:225,y:270}];
+            aOnly.forEach(function(v,i){var p=posA[i]||{x:110,y:155};var dim=(curOp==='inter')?0.3:1;svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="20" font-weight="700" fill="#3b82f6" opacity="'+dim+'">'+v+'</text>';});
+            bOnly.forEach(function(v,i){var p=posB[i]||{x:340,y:155};var dim=(curOp==='inter')?0.3:1;svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="20" font-weight="700" fill="#f59e0b" opacity="'+dim+'">'+v+'</text>';});
+            ab.forEach(function(v,i){var p=posAB[i]||{x:225,y:155};svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="20" font-weight="800" fill="#059669">'+v+'</text>';});
+            outside.forEach(function(v,i){var p=posOut[i]||{x:225,y:270};var dim=(curOp!=='none')?0.3:1;svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="18" font-weight="600" fill="#94a3b8" opacity="'+dim+'">'+v+'</text>';});
         } else {
             var Ac = diff(S, ex.A);
             var aFill = (curOp==='union') ? '#dbeafe' : '#fff';
-            svg += '<circle cx="150" cy="'+cy+'" r="80" fill="'+aFill+'" stroke="#3b82f6" stroke-width="2" opacity="0.7"/>';
-            svg += '<text x="150" y="'+(cy-80-8)+'" text-anchor="middle" font-size="14" font-weight="700" fill="#3b82f6">A</text>';
-            ex.A.forEach(function(v,i){var angle=(i/ex.A.length)*Math.PI*2-Math.PI/2;var px=150+40*Math.cos(angle),py=cy+40*Math.sin(angle);svg+='<text x="'+px+'" y="'+py+'" text-anchor="middle" font-size="14" font-weight="600" fill="#3b82f6">'+v+'</text>';});
-            Ac.forEach(function(v,i){var px=[35,265,35][i]||35,py=[50,50,h-25][i]||h-25;var op=(curOp==='inter')?1:0.5;svg+='<text x="'+px+'" y="'+py+'" text-anchor="middle" font-size="14" font-weight="600" fill="#ef4444" opacity="'+op+'">'+v+'</text>';});
+            svg += '<circle cx="225" cy="'+cy+'" r="110" fill="'+aFill+'" stroke="#3b82f6" stroke-width="2.5" opacity="0.7"/>';
+            svg += '<text x="225" y="'+(cy-110-10)+'" text-anchor="middle" font-size="18" font-weight="700" fill="#3b82f6">A</text>';
+            ex.A.forEach(function(v,i){var angle=(i/ex.A.length)*Math.PI*2-Math.PI/2;var px=225+55*Math.cos(angle),py=cy+55*Math.sin(angle);svg+='<text x="'+px+'" y="'+py+'" text-anchor="middle" font-size="20" font-weight="700" fill="#3b82f6">'+v+'</text>';});
+            var acPos=[{x:50,y:60},{x:400,y:60},{x:50,y:270}];
+            Ac.forEach(function(v,i){var p=acPos[i]||{x:400,y:270};var op=(curOp==='inter')?1:0.5;svg+='<text x="'+p.x+'" y="'+p.y+'" text-anchor="middle" font-size="20" font-weight="700" fill="#ef4444" opacity="'+op+'">'+v+'</text>';});
         }
         svg += '</svg>';
         svgWrap.innerHTML = svg;
@@ -502,12 +507,24 @@ document.getElementById('recordsOverlay').addEventListener('click', function(e) 
     var stepLabel = document.getElementById('dodecaStepLabel');
     var checkBtn = document.getElementById('dodecaCheck');
     var nextBtn = document.getElementById('dodecaNext');
+    var resetBtn = document.getElementById('dodecaReset');
     var resultEl = document.getElementById('dodecaResult');
     var legendEl = document.getElementById('dodecaLegend');
     if (!grid) return;
     var answersA = [1,2,3,4,6,12], answersB = [3,6,9,12];
     var step = 1, selected = [];
     for (var i = 1; i <= 12; i++) { var face = document.createElement('div'); face.className = 'dodeca-face'; face.textContent = i; face.dataset.val = i; grid.appendChild(face); }
+    function resetAll() {
+        step = 1; selected = [];
+        stepLabel.textContent = 'Step 1: "12의 약수"인 면을 탭하세요 (사건 A)';
+        resultEl.textContent = ''; resultEl.style.color = '';
+        grid.querySelectorAll('.dodeca-face').forEach(function(f) { f.className = 'dodeca-face'; });
+        legendEl.style.display = 'none';
+        legendEl.innerHTML = '<span><span class="dot" style="background:#dbeafe;border:1px solid #3b82f6;"></span> A만</span><span><span class="dot" style="background:#fef3c7;border:1px solid #f59e0b;"></span> B만</span><span><span class="dot" style="background:#d1fae5;border:1px solid #10b981;"></span> A&cap;B</span>';
+        checkBtn.style.display = ''; nextBtn.style.display = 'none'; nextBtn.textContent = '다음 단계';
+        resetBtn.style.display = 'none';
+    }
+    resetBtn.addEventListener('click', resetAll);
     grid.addEventListener('click', function(e) {
         var face = e.target.closest('.dodeca-face'); if (!face || step > 2) return;
         var val = parseInt(face.dataset.val); var idx = selected.indexOf(val);
@@ -531,19 +548,19 @@ document.getElementById('recordsOverlay').addEventListener('click', function(e) 
         if (step === 1) {
             step = 2; selected = []; stepLabel.textContent = 'Step 2: "3의 배수"인 면을 탭하세요 (사건 B)'; resultEl.textContent = '';
             grid.querySelectorAll('.dodeca-face').forEach(function(f) { var v = parseInt(f.dataset.val); f.className = answersA.indexOf(v) >= 0 ? 'dodeca-face selected-a' : 'dodeca-face'; });
-            checkBtn.style.display = ''; nextBtn.style.display = 'none';
+            checkBtn.style.display = ''; nextBtn.style.display = 'none'; resetBtn.style.display = '';
         } else if (step === 2) {
             step = 3; stepLabel.textContent = 'Step 3: A ∩ B 확인 — 두 사건 모두에 속하는 면';
             resultEl.innerHTML = '\\(A \\cap B = \\{3, 6, 12\\}\\) — 3개의 공통 원소가 있으므로 <b>배반사건이 아닙니다</b>.';
             grid.querySelectorAll('.dodeca-face').forEach(function(f) { var v = parseInt(f.dataset.val); var inA = answersA.indexOf(v) >= 0, inB = answersB.indexOf(v) >= 0; if (inA && inB) f.className = 'dodeca-face selected-ab'; else if (inA) f.className = 'dodeca-face selected-a'; else if (inB) f.className = 'dodeca-face selected-b'; else f.className = 'dodeca-face'; });
-            legendEl.style.display = ''; checkBtn.style.display = 'none'; nextBtn.textContent = '여사건 보기'; nextBtn.style.display = '';
+            legendEl.style.display = ''; checkBtn.style.display = 'none'; nextBtn.textContent = '여사건 보기'; nextBtn.style.display = ''; resetBtn.style.display = '';
             if (typeof renderMathInElement === 'function') renderMathInElement(resultEl, {delimiters:[{left:'\\(',right:'\\)',display:false}],throwOnError:false});
         } else if (step === 3) {
             step = 4; stepLabel.textContent = 'Step 4: B의 여사건 B^c';
             resultEl.innerHTML = '\\(B^c = \\{1, 2, 4, 5, 7, 8, 10, 11\\}\\) — B에 속하지 않는 8개의 면';
             grid.querySelectorAll('.dodeca-face').forEach(function(f) { var v = parseInt(f.dataset.val); f.className = [1,2,4,5,7,8,10,11].indexOf(v) >= 0 ? 'dodeca-face selected-bc' : 'dodeca-face selected-b'; });
             legendEl.innerHTML = '<span><span class="dot" style="background:#fef3c7;border:1px solid #f59e0b;"></span> B</span><span><span class="dot" style="background:#fecaca;border:1px solid #ef4444;"></span> B<sup>c</sup></span>';
-            nextBtn.style.display = 'none';
+            nextBtn.style.display = 'none'; resetBtn.style.display = '';
             if (typeof renderMathInElement === 'function') renderMathInElement(resultEl, {delimiters:[{left:'\\(',right:'\\)',display:false}],throwOnError:false});
         }
     });
