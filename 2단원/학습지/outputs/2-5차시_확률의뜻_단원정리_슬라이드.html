@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>확률의 뜻 단원 정리 — 수업 슬라이드</title>
+
+    <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
+    <link rel="stylesheet" href="https://math-class.it.kr/lib/css/slide-common.css">
+
+    <style>
+    /* ── 말판 게임 보드 트랙 ── */
+    .board-track {
+        display: flex; gap: 4px; justify-content: center; align-items: flex-end;
+        margin: 20px 0; padding: 10px 0;
+    }
+    .board-cell {
+        width: 90px; height: 90px;
+        border: 2px solid #cbd5e1; border-radius: 12px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        font-size: 26px; font-weight: 700; background: #f8fafc;
+        position: relative; transition: all 0.3s;
+    }
+    .board-cell.start-cell {
+        background: #f1f5f9; border-color: #94a3b8;
+        font-size: 16px; color: #64748b;
+    }
+    .board-arrow {
+        font-size: 28px; color: #94a3b8; align-self: center;
+        margin: 0 -2px;
+    }
+    .board-cell .cell-num {
+        font-size: 26px; font-weight: 700; color: #334155;
+    }
+    .marker-row {
+        display: flex; gap: 4px; margin-top: 6px; min-height: 38px;
+        justify-content: center; align-items: center;
+    }
+    .marker {
+        width: 34px; height: 34px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 12px; font-weight: 700;
+        transition: all 0.5s ease;
+    }
+    .marker-subin { background: #ef4444; }
+    .marker-jiwon { background: #3b82f6; }
+    .marker-seona { background: #22c55e; }
+
+    /* ── 주사위 아이콘 ── */
+    .dice-row {
+        display: flex; justify-content: center; align-items: center;
+        gap: 20px; margin: 24px 0; flex-wrap: wrap;
+    }
+    .dice-block {
+        text-align: center; font-size: 20px; font-weight: 600;
+    }
+    .dice-icon {
+        width: 80px; height: 80px; border: 3px solid #e2e8f0;
+        border-radius: 14px; background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 36px; font-weight: 700; margin: 0 auto 6px;
+        color: #1e293b;
+    }
+    .dice-label { font-size: 16px; color: #64748b; }
+    .dice-multiply { font-size: 32px; font-weight: 700; color: #94a3b8; }
+    .dice-equals { font-size: 32px; font-weight: 700; color: #1e293b; }
+
+    /* ── 박스 배열 시각화 ── */
+    .box-arrangement {
+        display: flex; align-items: center; gap: 14px;
+        justify-content: center; font-size: 30px; margin: 28px 0;
+    }
+    .box-slot {
+        width: 110px; height: 90px;
+        border: 3px solid #1e293b; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 26px; font-weight: 700; background: #fff;
+        flex-direction: column; gap: 4px;
+        transition: all 0.3s;
+    }
+    .box-slot.highlight {
+        border-color: #2563eb; background: #eff6ff;
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+    .box-slot.highlight-gold {
+        border-color: #f59e0b; background: #fef3c7;
+        box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+    }
+    .box-slot .slot-label {
+        font-size: 13px; color: #64748b; font-weight: 600;
+    }
+
+    /* ── 수식 & 강조 박스 ── */
+    .formula-big {
+        font-size: clamp(26px, 4vw, 36px);
+        text-align: center; margin: 24px 0; font-weight: 700;
+        line-height: 1.6;
+    }
+    .highlight-box {
+        background: #fef3c7; border: 2px solid #f59e0b;
+        border-radius: 12px; padding: 18px 28px;
+        text-align: center; font-size: clamp(20px, 3vw, 26px);
+        font-weight: 700; margin: 20px 0; line-height: 1.5;
+    }
+    .conclusion-box {
+        background: #eff6ff; border: 2px solid #2563eb;
+        border-radius: 14px; padding: 22px 28px;
+        margin: 20px 0; font-size: clamp(20px, 3vw, 24px);
+        line-height: 1.6;
+    }
+    .final-box {
+        background: #f0fdf4; border: 2px solid #22c55e;
+        border-radius: 14px; padding: 22px 28px;
+        margin: 20px 0; text-align: center;
+    }
+
+    /* ── 카운터 예제 보드 (작은 크기) ── */
+    .mini-board {
+        display: flex; gap: 2px; justify-content: center;
+        align-items: flex-end; margin: 12px 0;
+    }
+    .mini-cell {
+        width: 50px; height: 50px; border: 1.5px solid #cbd5e1;
+        border-radius: 8px; display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        font-size: 16px; font-weight: 700; background: #f8fafc;
+    }
+    .mini-cell .cell-num { font-size: 16px; color: #334155; }
+    .mini-marker {
+        width: 22px; height: 22px; border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center;
+        color: white; font-size: 9px; font-weight: 700;
+    }
+    .mini-arrow { font-size: 16px; color: #94a3b8; align-self: center; }
+
+    /* ── 반례 카드 ── */
+    .counter-card {
+        background: #fff; border: 1.5px solid #e2e8f0;
+        border-radius: 12px; padding: 16px 20px;
+        margin-bottom: 14px;
+    }
+    .counter-card .counter-label {
+        font-size: 18px; font-weight: 700; color: #ef4444;
+        margin-bottom: 6px;
+    }
+    .counter-card .counter-values {
+        font-size: 18px; font-weight: 600; margin-bottom: 8px;
+    }
+    .counter-card .counter-explain {
+        font-size: 17px; color: #64748b; line-height: 1.5;
+    }
+
+    /* ── 대칭 시각화 행 ── */
+    .sym-row {
+        display: flex; align-items: center; gap: 12px;
+        justify-content: center; font-size: 22px; font-weight: 600;
+        margin: 12px 0; padding: 12px 20px; border-radius: 10px;
+        background: #f8fafc; border: 1.5px solid #e2e8f0;
+        transition: all 0.3s;
+    }
+    .sym-row.active-row {
+        background: #eff6ff; border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
+    }
+    .sym-row .sym-box {
+        width: 80px; height: 50px; border: 2px solid #334155;
+        border-radius: 8px; display: flex; align-items: center;
+        justify-content: center; font-size: 18px; font-weight: 700;
+        background: #fff;
+    }
+    .sym-row .sym-box.sym-highlight {
+        border-color: #2563eb; background: #dbeafe; color: #1d4ed8;
+    }
+    .sym-star { color: #f59e0b; font-size: 20px; margin-left: 4px; }
+
+    /* ── 검증 테이블 ── */
+    .verify-table {
+        width: 100%; border-collapse: collapse; margin: 16px 0;
+        font-size: 18px;
+    }
+    .verify-table th {
+        background: #f1f5f9; padding: 10px 12px;
+        border: 1px solid #e2e8f0; font-weight: 700; color: #334155;
+        text-align: center;
+    }
+    .verify-table td {
+        padding: 10px 12px; border: 1px solid #e2e8f0;
+        text-align: center; font-weight: 600;
+    }
+    .verify-table tr.highlight-row {
+        background: #eff6ff;
+    }
+    .verify-table .marker-text-subin { color: #ef4444; }
+    .verify-table .marker-text-jiwon { color: #3b82f6; }
+    .verify-table .marker-text-seona { color: #22c55e; }
+
+    /* ── 최종 계산 스텝 ── */
+    .calc-step {
+        display: flex; align-items: baseline; gap: 12px;
+        font-size: clamp(20px, 3vw, 26px); font-weight: 600;
+        margin: 14px 0; padding: 12px 20px;
+        background: #f8fafc; border-radius: 10px;
+        border-left: 4px solid #2563eb;
+    }
+    .calc-step .step-num {
+        width: 32px; height: 32px; border-radius: 50%;
+        background: #2563eb; color: #fff; font-size: 16px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+
+    /* ── 질문 배너 ── */
+    .question-banner {
+        background: #fef3c7; border: 2px solid #f59e0b;
+        border-radius: 12px; padding: 14px 24px;
+        font-size: clamp(18px, 2.8vw, 24px); font-weight: 700;
+        text-align: center; margin: 16px 0;
+        color: #92400e;
+    }
+
+    /* ── Sub-step 시스템 ── */
+    .substep { transition: opacity 0.3s ease; }
+    .substep.hidden { display: none; opacity: 0; }
+    .substep.fade-in {
+        animation: fadeInSub 0.35s ease forwards;
+    }
+    @keyframes fadeInSub {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── 슬라이드 스텝 ── */
+    .slide-step { display: none; }
+    .slide-step.active { display: block; }
+
+    /* ── 진행 카운터 ── */
+    .progress-counter {
+        position: fixed; bottom: 20px; right: 20px;
+        background: rgba(30,41,59,0.85); color: #fff;
+        padding: 8px 18px; border-radius: 20px;
+        font-size: 16px; font-weight: 600;
+        z-index: 9999; user-select: none;
+    }
+    </style>
+
+    <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
+    <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
+
+    <script type="module">
+        import { initFirebaseSlide } from 'https://math-class.it.kr/lib/js/firebase-slide.js';
+        initFirebaseSlide('PS_2-5차시_확률의뜻_단원정리');
+    </script>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="header-unit">II. 확률</div>
+        <div class="header-title">
+            <h1>수학으로 생각 넓히기 &mdash; 말판 게임 풀이</h1>
+            <div class="header-info"><span>교과서 48쪽</span></div>
+        </div>
+    </div>
+
+    <div class="student-info">
+        <div class="save-actions">
+            <button class="btn-save" id="btnSave">💾 저장</button>
+            <button class="btn-records" id="btnRecords">📋 기록</button>
+        </div>
+        <div class="field"><label>학년 반</label> <input type="text" placeholder="예: 1-3"></div>
+        <div class="field"><label>번호</label> <input type="text" style="width:40px;" placeholder="00"></div>
+        <div class="field"><label>이름</label> <input type="text" placeholder="이름 입력"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SLIDE 1: 문제 상황 제시                                -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="card slide-step active" data-step="1">
+        <div class="section-title">
+            <div class="section-number">1</div>
+            <h2>문제 상황 — 말판 게임</h2>
+        </div>
+
+        <div class="substep" data-sub="1">
+            <p style="font-size:22px; line-height:1.6; margin-bottom:8px;">
+                <strong>수빈</strong>, <strong>지원</strong>, <strong>선아</strong> 세 사람이 말판 게임을 합니다.<br>
+                각자 주사위를 <strong>한 번씩</strong> 던져 나온 수만큼 이동합니다.
+            </p>
+
+            <!-- 보드 트랙: 초기 — 모두 출발 -->
+            <div class="board-track" id="board1">
+                <div class="board-cell start-cell">
+                    출발
+                    <div class="marker-row">
+                        <div class="marker marker-subin" id="m1-subin">수빈</div>
+                        <div class="marker marker-jiwon" id="m1-jiwon">지원</div>
+                        <div class="marker marker-seona" id="m1-seona">선아</div>
+                    </div>
+                </div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell"><span class="cell-num">1</span><div class="marker-row" id="slot1"></div></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell"><span class="cell-num">2</span><div class="marker-row" id="slot2"></div></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell"><span class="cell-num">3</span><div class="marker-row" id="slot3"></div></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell"><span class="cell-num">4</span><div class="marker-row" id="slot4"></div></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell"><span class="cell-num">5</span><div class="marker-row" id="slot5"></div></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell"><span class="cell-num">6</span><div class="marker-row" id="slot6"></div></div>
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="2">
+            <p style="font-size:20px; margin-bottom:6px; color:#64748b;">예시) 수빈=2, 지원=4, 선아=6</p>
+
+            <!-- 예시 보드 -->
+            <div class="board-track" id="board1ex">
+                <div class="board-cell start-cell" style="width:70px;height:70px;font-size:14px;">출발</div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell" style="width:70px;height:70px;"><span class="cell-num">1</span></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell" style="width:70px;height:70px;">
+                    <span class="cell-num">2</span>
+                    <div class="marker-row"><div class="marker marker-subin" style="width:28px;height:28px;font-size:10px;">수빈</div></div>
+                </div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell" style="width:70px;height:70px;"><span class="cell-num">3</span></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell" style="width:70px;height:70px;">
+                    <span class="cell-num">4</span>
+                    <div class="marker-row"><div class="marker marker-jiwon" style="width:28px;height:28px;font-size:10px;">지원</div></div>
+                </div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell" style="width:70px;height:70px;"><span class="cell-num">5</span></div>
+                <div class="board-arrow">&rarr;</div>
+                <div class="board-cell" style="width:70px;height:70px;">
+                    <span class="cell-num">6</span>
+                    <div class="marker-row"><div class="marker marker-seona" style="width:28px;height:28px;font-size:10px;">선아</div></div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="font-size:22px;">
+                지원이가 수빈과 선아 <strong>사이</strong>에 있다!
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="3">
+            <div class="question-banner">
+                이런 일이 일어날 확률은?
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SLIDE 2: 전체 경우의 수                                -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="card slide-step" data-step="2">
+        <div class="section-title">
+            <div class="section-number">2</div>
+            <h2>전체 경우의 수</h2>
+        </div>
+
+        <div class="substep" data-sub="1">
+            <div class="dice-row">
+                <div class="dice-block">
+                    <div class="dice-icon" style="color:#ef4444;">🎲</div>
+                    <div class="dice-label">수빈</div>
+                    <div style="font-size:22px; font-weight:700; margin-top:4px;">6가지</div>
+                </div>
+                <div class="dice-multiply">&times;</div>
+                <div class="dice-block">
+                    <div class="dice-icon" style="color:#3b82f6;">🎲</div>
+                    <div class="dice-label">지원</div>
+                    <div style="font-size:22px; font-weight:700; margin-top:4px;">6가지</div>
+                </div>
+                <div class="dice-multiply">&times;</div>
+                <div class="dice-block">
+                    <div class="dice-icon" style="color:#22c55e;">🎲</div>
+                    <div class="dice-label">선아</div>
+                    <div style="font-size:22px; font-weight:700; margin-top:4px;">6가지</div>
+                </div>
+                <div class="dice-equals">=</div>
+                <div class="dice-block">
+                    <div class="dice-icon" style="font-size:28px;">216</div>
+                    <div class="dice-label">가지</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="2">
+            <div class="formula-big">
+                \(n(S) = 6 \times 6 \times 6 = 6^3 = 216\)
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="3">
+            <div class="conclusion-box" style="text-align:center;">
+                이제 이 중에서 <strong>지원이가 가운데</strong>인 경우를 세야 합니다
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SLIDE 3: 같은 수 — 배제해야 하는 경우                    -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="card slide-step" data-step="3">
+        <div class="section-title">
+            <div class="section-number">3</div>
+            <h2>같은 수가 나오면?</h2>
+        </div>
+
+        <div class="substep" data-sub="1">
+            <div class="question-banner">
+                세 수 중에 같은 수가 있으면 &lsquo;사이에 있다&rsquo;가 성립할까?
+            </div>
+        </div>
+
+        <!-- 반례 1 -->
+        <div class="substep hidden" data-sub="2">
+            <div class="counter-card">
+                <div class="counter-label">반례 1</div>
+                <div class="counter-values">
+                    <span style="color:#ef4444;">수빈=3</span>,
+                    <span style="color:#3b82f6;">지원=3</span>,
+                    <span style="color:#22c55e;">선아=5</span>
+                </div>
+                <div class="mini-board">
+                    <div class="mini-cell" style="width:40px;height:40px;font-size:12px;">출발</div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">1</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">2</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell">
+                        <span class="cell-num">3</span>
+                        <div style="display:flex;gap:2px;">
+                            <div class="mini-marker marker-subin">수</div>
+                            <div class="mini-marker marker-jiwon">지</div>
+                        </div>
+                    </div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">4</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell">
+                        <span class="cell-num">5</span>
+                        <div><div class="mini-marker marker-seona">선</div></div>
+                    </div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">6</span></div>
+                </div>
+                <div class="counter-explain">수빈과 지원이 같은 자리 &rarr; 지원이가 &lsquo;사이&rsquo;에 있다고 할 수 없다</div>
+            </div>
+        </div>
+
+        <!-- 반례 2 -->
+        <div class="substep hidden" data-sub="3">
+            <div class="counter-card">
+                <div class="counter-label">반례 2</div>
+                <div class="counter-values">
+                    <span style="color:#ef4444;">수빈=4</span>,
+                    <span style="color:#3b82f6;">지원=4</span>,
+                    <span style="color:#22c55e;">선아=4</span>
+                </div>
+                <div class="mini-board">
+                    <div class="mini-cell" style="width:40px;height:40px;font-size:12px;">출발</div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">1</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">2</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">3</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell">
+                        <span class="cell-num">4</span>
+                        <div style="display:flex;gap:1px;">
+                            <div class="mini-marker marker-subin">수</div>
+                            <div class="mini-marker marker-jiwon">지</div>
+                            <div class="mini-marker marker-seona">선</div>
+                        </div>
+                    </div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">5</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">6</span></div>
+                </div>
+                <div class="counter-explain">셋 다 같은 자리 &rarr; &lsquo;사이&rsquo;라는 개념 자체가 없다</div>
+            </div>
+        </div>
+
+        <!-- 반례 3 -->
+        <div class="substep hidden" data-sub="4">
+            <div class="counter-card">
+                <div class="counter-label">반례 3</div>
+                <div class="counter-values">
+                    <span style="color:#ef4444;">수빈=2</span>,
+                    <span style="color:#3b82f6;">지원=5</span>,
+                    <span style="color:#22c55e;">선아=5</span>
+                </div>
+                <div class="mini-board">
+                    <div class="mini-cell" style="width:40px;height:40px;font-size:12px;">출발</div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">1</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell">
+                        <span class="cell-num">2</span>
+                        <div><div class="mini-marker marker-subin">수</div></div>
+                    </div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">3</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">4</span></div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell">
+                        <span class="cell-num">5</span>
+                        <div style="display:flex;gap:2px;">
+                            <div class="mini-marker marker-jiwon">지</div>
+                            <div class="mini-marker marker-seona">선</div>
+                        </div>
+                    </div>
+                    <div class="mini-arrow">&rarr;</div>
+                    <div class="mini-cell"><span class="cell-num">6</span></div>
+                </div>
+                <div class="counter-explain">지원이가 선아와 같은 자리 &rarr; &lsquo;사이&rsquo;가 아니다</div>
+            </div>
+        </div>
+
+        <!-- 결론 -->
+        <div class="substep hidden" data-sub="5">
+            <div class="highlight-box" style="background:#fef2f2; border-color:#ef4444; font-size:24px;">
+                지원이가 사이에 있으려면, <strong>세 수가 모두 달라야</strong> 합니다
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SLIDE 4: 서로 다른 3개의 수                            -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="card slide-step" data-step="4">
+        <div class="section-title">
+            <div class="section-number">4</div>
+            <h2>서로 다른 3개의 수 고르기</h2>
+        </div>
+
+        <div class="substep" data-sub="1">
+            <p style="font-size:22px; line-height:1.6; margin-bottom:12px;">
+                누가 던졌는지 잊고, 나온 수만 <strong>크기 순으로 정렬</strong>해 봅시다.
+            </p>
+            <div class="box-arrangement">
+                <div class="box-slot"><span style="font-size:28px;">?</span><span class="slot-label">작은 수</span></div>
+                <span style="font-size:36px; color:#64748b;">&lt;</span>
+                <div class="box-slot"><span style="font-size:28px;">?</span><span class="slot-label">가운데</span></div>
+                <span style="font-size:36px; color:#64748b;">&lt;</span>
+                <div class="box-slot"><span style="font-size:28px;">?</span><span class="slot-label">큰 수</span></div>
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="2">
+            <p style="font-size:20px; color:#64748b; margin-bottom:8px; text-align:center;">
+                1~6에서 서로 다른 3개를 순서대로 뽑는 경우의 수:
+            </p>
+            <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin:16px 0;">
+                <div style="text-align:center;">
+                    <div class="box-slot highlight" style="width:100px;height:70px;">
+                        <span style="font-size:24px;">6가지</span>
+                    </div>
+                    <div style="font-size:15px; color:#64748b; margin-top:4px;">1~6 중 하나</div>
+                </div>
+                <span style="font-size:32px; align-self:center; color:#94a3b8;">&times;</span>
+                <div style="text-align:center;">
+                    <div class="box-slot highlight" style="width:100px;height:70px;">
+                        <span style="font-size:24px;">5가지</span>
+                    </div>
+                    <div style="font-size:15px; color:#64748b; margin-top:4px;">첫째 제외</div>
+                </div>
+                <span style="font-size:32px; align-self:center; color:#94a3b8;">&times;</span>
+                <div style="text-align:center;">
+                    <div class="box-slot highlight" style="width:100px;height:70px;">
+                        <span style="font-size:24px;">4가지</span>
+                    </div>
+                    <div style="font-size:15px; color:#64748b; margin-top:4px;">첫째, 둘째 제외</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="3">
+            <div class="formula-big">
+                \(6 \times 5 \times 4 = 120 \text{가지}\)
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="4">
+            <div class="conclusion-box" style="text-align:center;">
+                예) \(\{1, 4, 6\}\) &rarr; \(1 < 4 < 6\)<br>
+                <span style="font-size:18px; color:#64748b;">이런 서로 다른 3개 수의 조합이 120가지</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SLIDE 5: 대칭성 — 핵심 슬라이드  ★                     -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="card slide-step" data-step="5">
+        <div class="section-title">
+            <div class="section-number" style="background:#f59e0b;">★</div>
+            <h2>대칭성 — 가운데 자리는 누구 것?</h2>
+        </div>
+
+        <!-- Sub-step 1: 가운데 자리 강조 -->
+        <div class="substep" data-sub="1">
+            <p style="font-size:22px; line-height:1.6; margin-bottom:16px;">
+                서로 다른 3개의 수를 크기 순으로 놓으면, <strong>가운데</strong>에 올 사람은 누구일까?
+            </p>
+            <div class="box-arrangement">
+                <div class="box-slot"><span style="font-size:22px;">□</span></div>
+                <span style="font-size:36px; color:#64748b;">&lt;</span>
+                <div class="box-slot highlight-gold" style="position:relative;">
+                    <span style="font-size:28px; color:#92400e;">?</span>
+                    <span class="slot-label" style="color:#92400e;">가운데 자리</span>
+                    <div style="position:absolute; top:-22px; font-size:28px;">&#8595;</div>
+                </div>
+                <span style="font-size:36px; color:#64748b;">&lt;</span>
+                <div class="box-slot"><span style="font-size:22px;">□</span></div>
+            </div>
+        </div>
+
+        <!-- Sub-step 2: 세 후보 -->
+        <div class="substep hidden" data-sub="2">
+            <p style="font-size:20px; color:#64748b; margin-bottom:12px; text-align:center;">
+                3명이 완전히 대등하므로, 각각 가운데에 올 가능성은 동일합니다.
+            </p>
+
+            <div class="sym-row">
+                <div class="sym-box">□</div>
+                <span>&lt;</span>
+                <div class="sym-box sym-highlight" style="border-color:#ef4444; background:#fef2f2; color:#dc2626;">수빈</div>
+                <span>&lt;</span>
+                <div class="sym-box">□</div>
+                <span style="font-size:18px; color:#64748b; margin-left:8px;">&larr; 수빈이가 가운데</span>
+            </div>
+
+            <div class="sym-row active-row">
+                <div class="sym-box">□</div>
+                <span>&lt;</span>
+                <div class="sym-box sym-highlight">지원</div>
+                <span>&lt;</span>
+                <div class="sym-box">□</div>
+                <span style="font-size:18px; color:#1d4ed8; margin-left:8px;">&larr; 지원이가 가운데 <span class="sym-star">★</span></span>
+            </div>
+
+            <div class="sym-row">
+                <div class="sym-box">□</div>
+                <span>&lt;</span>
+                <div class="sym-box sym-highlight" style="border-color:#22c55e; background:#f0fdf4; color:#16a34a;">선아</div>
+                <span>&lt;</span>
+                <div class="sym-box">□</div>
+                <span style="font-size:18px; color:#64748b; margin-left:8px;">&larr; 선아가 가운데</span>
+            </div>
+
+            <div class="formula-big" style="margin-top:20px;">
+                각 사람이 가운데에 올 확률 = \(\dfrac{1}{3}\)
+            </div>
+        </div>
+
+        <!-- Sub-step 3: 구체 검증 -->
+        <div class="substep hidden" data-sub="3">
+            <p style="font-size:20px; color:#64748b; margin-bottom:8px; text-align:center;">
+                검증: \(\{1, 4, 6\}\)일 때 가능한 배정
+            </p>
+            <table class="verify-table" style="max-width:600px; margin:0 auto;">
+                <thead>
+                    <tr>
+                        <th style="width:50px;">배정</th>
+                        <th><span class="marker-text-subin">수빈</span></th>
+                        <th><span class="marker-text-jiwon">지원</span></th>
+                        <th><span class="marker-text-seona">선아</span></th>
+                        <th>가운데는?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="marker-text-subin">4 (가운데)</td>
+                        <td class="marker-text-jiwon">1</td>
+                        <td class="marker-text-seona">6</td>
+                        <td><strong>수빈</strong></td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td>2</td>
+                        <td class="marker-text-subin">1</td>
+                        <td class="marker-text-jiwon">4 (가운데)</td>
+                        <td class="marker-text-seona">6</td>
+                        <td><strong style="color:#2563eb;">지원 ★</strong></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="marker-text-subin">1</td>
+                        <td class="marker-text-jiwon">6</td>
+                        <td class="marker-text-seona">4 (가운데)</td>
+                        <td><strong>선아</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size:18px; color:#64748b; text-align:center; margin-top:10px;">
+                어떤 수 조합이든, 가운데 자리에 각 사람이 올 확률은 동일
+            </p>
+        </div>
+
+        <!-- Sub-step 4: 핵심 계산 -->
+        <div class="substep hidden" data-sub="4">
+            <div class="highlight-box" style="font-size:26px;">
+                서로 다른 수 <strong>120</strong>가지 중 지원이가 가운데:<br>
+                \(\dfrac{120}{3} = \mathbf{40}\text{가지}\)
+            </div>
+            <div class="conclusion-box" style="text-align:center; font-size:22px;">
+                3명의 이름을 넣는 경우는 <strong>3가지</strong>,<br>
+                우리가 원하는 건 <strong>1가지</strong> (지원이가 가운데)
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SLIDE 6: 최종 계산                                     -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="card slide-step" data-step="6">
+        <div class="section-title">
+            <div class="section-number">6</div>
+            <h2>최종 계산</h2>
+        </div>
+
+        <div class="substep" data-sub="1">
+            <div class="calc-step">
+                <span class="step-num">1</span>
+                전체 경우의 수: \(n(S) = 6^3 = 216\)
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="2">
+            <div class="calc-step">
+                <span class="step-num">2</span>
+                서로 다른 수 3개가 나오는 경우: \(6 \times 5 \times 4 = 120\)
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="3">
+            <div class="calc-step">
+                <span class="step-num">3</span>
+                이 중 지원이가 가운데: \(\dfrac{120}{3} = 40\)
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="4">
+            <div class="calc-step" style="border-left-color:#22c55e;">
+                <span class="step-num" style="background:#22c55e;">4</span>
+                확률: \(P = \dfrac{40}{216} = \dfrac{5}{27}\)
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="5">
+            <div class="calc-step" style="border-left-color:#64748b;">
+                <span class="step-num" style="background:#64748b;">5</span>
+                \(\approx 0.185\) (약 18.5%)
+            </div>
+        </div>
+
+        <div class="substep hidden" data-sub="6">
+            <div class="final-box">
+                <div style="font-size:clamp(28px,4vw,40px); font-weight:800; color:#16a34a; margin-bottom:8px;">
+                    \(P = \dfrac{5}{27}\)
+                </div>
+                <div style="font-size:22px; font-weight:600; color:#334155;">
+                    약 <strong>5번 중 1번</strong>꼴로 지원이가 가운데에 온다
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /.container -->
+
+<!-- Firebase 슬라이드 버튼 -->
+<button class="slide-focus-btn" id="btnFocus" title="집중">👁️ 집중</button>
+<button class="slide-monitor-btn" id="btnMonitor" title="모니터">📊 모니터</button>
+
+<!-- 진행 카운터 -->
+<div class="progress-counter" id="progressCounter">1 / 6</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // KaTeX 렌더링
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+        });
+    } else {
+        document.addEventListener('DOMContentLoaded', function retry() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+        });
+    }
+
+    // ── 슬라이드 & 서브스텝 네비게이션 ──
+    const steps = document.querySelectorAll('.slide-step');
+    const counter = document.getElementById('progressCounter');
+    let currentStep = 0;
+
+    // 각 스텝별 서브스텝 정보
+    const stepData = [];
+    steps.forEach((step, i) => {
+        const subs = step.querySelectorAll('.substep');
+        // 첫 서브스텝은 이미 보이므로, 다음에 보여줄 인덱스는 1부터
+        let visibleCount = 0;
+        subs.forEach(s => { if (!s.classList.contains('hidden')) visibleCount++; });
+        stepData.push({
+            el: step,
+            subs: subs,
+            currentSub: visibleCount - 1, // 현재까지 보인 마지막 인덱스
+            totalSubs: subs.length
+        });
+    });
+
+    function showStep(idx) {
+        steps.forEach((s, i) => {
+            s.classList.toggle('active', i === idx);
+        });
+        currentStep = idx;
+        updateCounter();
+    }
+
+    function updateCounter() {
+        const sd = stepData[currentStep];
+        const subInfo = sd.totalSubs > 1 ? ` (${sd.currentSub + 1}/${sd.totalSubs})` : '';
+        counter.textContent = `${currentStep + 1} / ${steps.length}${subInfo}`;
+    }
+
+    function advance() {
+        const sd = stepData[currentStep];
+        // 아직 보여줄 서브스텝이 있으면 보여주기
+        if (sd.currentSub < sd.totalSubs - 1) {
+            sd.currentSub++;
+            const sub = sd.subs[sd.currentSub];
+            sub.classList.remove('hidden');
+            sub.classList.add('fade-in');
+            updateCounter();
+            // KaTeX 재렌더링
+            reRenderMath(sub);
+        } else if (currentStep < steps.length - 1) {
+            // 다음 스텝으로
+            showStep(currentStep + 1);
+            // KaTeX 재렌더링
+            reRenderMath(steps[currentStep]);
+        }
+    }
+
+    function goBack() {
+        const sd = stepData[currentStep];
+        // 서브스텝 숨기기
+        if (sd.currentSub > 0) {
+            const sub = sd.subs[sd.currentSub];
+            sub.classList.add('hidden');
+            sub.classList.remove('fade-in');
+            sd.currentSub--;
+            updateCounter();
+        } else if (currentStep > 0) {
+            // 이전 스텝으로
+            showStep(currentStep - 1);
+        }
+    }
+
+    function reRenderMath(el) {
+        if (typeof renderMathInElement === 'function') {
+            try {
+                renderMathInElement(el, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false
+                });
+            } catch(e) {}
+        }
+    }
+
+    // 키보드 네비게이션
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            goBack();
+        }
+    });
+
+    // 클릭 네비게이션 (빈 영역 클릭)
+    document.addEventListener('click', function(e) {
+        // 버튼, 링크, 입력 요소 등은 무시
+        if (e.target.closest('button, a, input, textarea, select, .answer-toggle, .answer-reveal')) return;
+        advance();
+    });
+
+    // 초기 카운터 업데이트
+    updateCounter();
+
+    // KaTeX auto-render 대기
+    const katexInterval = setInterval(function() {
+        if (typeof renderMathInElement === 'function') {
+            clearInterval(katexInterval);
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    }, 100);
+});
+</script>
+
+</body>
+</html>

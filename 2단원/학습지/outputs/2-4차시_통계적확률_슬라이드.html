@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>통계적 확률 — 수업 슬라이드</title>
+
+    <link rel="stylesheet" href="https://math-class.it.kr/lib/katex/katex.min.css">
+    <link rel="stylesheet" href="https://math-class.it.kr/lib/css/slide-common.css">
+
+    <!-- ★ 차시별 인터랙티브 CSS -->
+    <style>
+    /* ── 슬라이드 전용 레이아웃 ── */
+    .slide-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 32px 80px;
+        min-height: 100vh;
+        position: relative;
+    }
+    .slide-header {
+        display: flex;
+        align-items: stretch;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-bottom: 24px;
+        background: #fff;
+    }
+    .slide-unit {
+        background: #2563eb;
+        color: #fff;
+        padding: 14px 24px;
+        font-weight: 700;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+    .slide-title {
+        flex: 1;
+        padding: 14px 24px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+    }
+    .slide-page {
+        padding: 14px 24px;
+        font-size: 16px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+    .slide-content {
+        padding-bottom: 20px;
+    }
+
+    /* ── Step 시스템 ── */
+    .step {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 28px 32px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        transition: opacity 0.3s, transform 0.3s;
+    }
+    .step.hidden {
+        display: none;
+    }
+    .step-label {
+        display: inline-block;
+        background: #2563eb;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 3px 12px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+    }
+    .step h2 {
+        font-size: 28px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 16px;
+        line-height: 1.4;
+    }
+    .step h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 12px;
+    }
+    .step p, .step li {
+        font-size: 20px;
+        line-height: 1.7;
+        color: #334155;
+    }
+    .step ul, .step ol {
+        padding-left: 24px;
+        margin-bottom: 12px;
+    }
+    .step li {
+        margin-bottom: 8px;
+    }
+
+    /* ── 학습목표 박스 ── */
+    .obj-box {
+        background: #eff6ff;
+        border: 1.5px solid #bfdbfe;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-top: 16px;
+    }
+    .obj-box h3 {
+        font-size: 18px;
+        color: #2563eb;
+        margin-bottom: 10px;
+    }
+    .obj-box ol {
+        padding-left: 24px;
+    }
+    .obj-box li {
+        font-size: 18px;
+        color: #1e293b;
+        margin-bottom: 6px;
+    }
+
+    /* ── 개념 하이라이트 ── */
+    .concept-highlight {
+        background: #fff;
+        border: 2px solid #2563eb;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin: 16px 0;
+    }
+    .concept-highlight h3 {
+        color: #2563eb;
+    }
+
+    /* ── 공식 박스 ── */
+    .formula-box {
+        text-align: center;
+        margin: 20px 0;
+        padding: 20px;
+        background: #fffbeb;
+        border: 2px solid #fbbf24;
+        border-radius: 12px;
+        font-size: 28px;
+    }
+
+    /* ── 성질 카드 ── */
+    .property-card {
+        background: #f5f3ff;
+        border: 2px solid #8b5cf6;
+        border-radius: 14px;
+        padding: 24px 28px;
+        margin: 16px 0;
+    }
+    .property-card h3 {
+        color: #7c3aed;
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+    .property-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        font-size: 22px;
+        border-bottom: 1px solid #e9e5f5;
+    }
+    .property-item:last-child { border-bottom: none; }
+    .property-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: #7c3aed;
+        color: #fff;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    /* ── 탐구 테이블 ── */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 18px;
+    }
+    .data-table th, .data-table td {
+        padding: 12px 16px;
+        border: 1px solid #d1d5db;
+        text-align: center;
+    }
+    .data-table th {
+        background: #f1f5f9;
+        font-weight: 700;
+        color: #334155;
+    }
+    .data-table td {
+        background: #fff;
+        color: #1e293b;
+    }
+    .data-table .highlight-row td {
+        background: #eff6ff;
+        font-weight: 700;
+        color: #2563eb;
+    }
+
+    /* ── 팁 박스 ── */
+    .tip-slide {
+        background: #f0fdf4;
+        border-left: 4px solid #22c55e;
+        border-radius: 0 8px 8px 0;
+        padding: 14px 20px;
+        margin: 12px 0;
+        font-size: 18px;
+        color: #166534;
+    }
+
+    /* ── 문제 풀이 ── */
+    .problem-slide {
+        background: #fefce8;
+        border: 1.5px solid #eab308;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin: 16px 0;
+    }
+    .problem-slide .p-label {
+        display: inline-block;
+        background: #eab308;
+        color: #fff;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 3px 12px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+    }
+    .solution-box {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-top: 12px;
+        font-size: 20px;
+        line-height: 1.8;
+    }
+    .solution-box.hidden-sol {
+        filter: blur(6px);
+        cursor: pointer;
+        user-select: none;
+        transition: filter 0.3s;
+    }
+    .solution-box.hidden-sol:hover {
+        filter: blur(3px);
+    }
+    .solution-box.revealed {
+        filter: none;
+    }
+    .reveal-hint {
+        text-align: center;
+        font-size: 14px;
+        color: #94a3b8;
+        margin-top: 6px;
+    }
+
+    /* ── 시뮬레이션: 동전/주사위 ── */
+    .sim-container {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 24px;
+        margin: 16px 0;
+    }
+    .sim-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+    .sim-tabs button {
+        padding: 10px 24px;
+        border: 2px solid #cbd5e1;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+    }
+    .sim-tabs button.active {
+        border-color: #2563eb;
+        background: #eff6ff;
+        color: #2563eb;
+    }
+    .sim-tabs button:active { transform: scale(0.97); }
+    .sim-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+    .sim-controls button {
+        padding: 10px 20px;
+        border: 2px solid #cbd5e1;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+    }
+    .sim-controls button:active { transform: scale(0.97); }
+    .sim-controls .btn-primary {
+        border-color: #2563eb;
+        background: #2563eb;
+        color: #fff;
+    }
+    .sim-controls .btn-danger {
+        border-color: #ef4444;
+        color: #ef4444;
+    }
+    .sim-chart-wrap {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        margin-bottom: 12px;
+    }
+    .sim-chart-wrap canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .sim-stats {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #334155;
+    }
+    .sim-stats span { display: flex; align-items: center; gap: 6px; }
+    .sim-stats .val { color: #2563eb; }
+
+    /* ── 통계적 확률 계산 인터랙티브 ── */
+    .calc-interactive {
+        background: #fff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin: 16px 0;
+    }
+    .calc-problem {
+        margin-bottom: 20px;
+        padding: 16px 20px;
+        background: #f8fafc;
+        border-radius: 10px;
+    }
+    .calc-problem h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+    .calc-problem p {
+        font-size: 17px;
+    }
+    .calc-inputs {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 12px 0;
+        font-size: 20px;
+    }
+    .calc-inputs label {
+        font-weight: 600;
+        color: #334155;
+    }
+    .calc-inputs input {
+        width: 80px;
+        padding: 8px 12px;
+        border: 2px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 18px;
+        text-align: center;
+        font-family: inherit;
+    }
+    .calc-inputs input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+        outline: none;
+    }
+    .calc-inputs button {
+        padding: 8px 20px;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+    }
+    .calc-inputs button:active { transform: scale(0.97); }
+    .calc-feedback {
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 18px;
+        min-height: 40px;
+        margin-top: 8px;
+    }
+    .calc-feedback.correct {
+        background: #f0fdf4;
+        border: 1px solid #22c55e;
+        color: #166534;
+    }
+    .calc-feedback.wrong {
+        background: #fef2f2;
+        border: 1px solid #ef4444;
+        color: #991b1b;
+    }
+
+    /* ── 확률 카드 드래그 ── */
+    .card-activity {
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 24px;
+        margin: 16px 0;
+    }
+    .number-line-wrap {
+        position: relative;
+        width: 100%;
+        height: 100px;
+        margin: 20px 0 30px;
+    }
+    .number-line {
+        position: absolute;
+        left: 40px;
+        right: 40px;
+        top: 50%;
+        height: 4px;
+        background: #334155;
+        border-radius: 2px;
+    }
+    .nl-tick {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 2px;
+        height: 20px;
+        background: #334155;
+    }
+    .nl-label {
+        position: absolute;
+        top: calc(50% + 18px);
+        transform: translateX(-50%);
+        font-size: 16px;
+        font-weight: 700;
+        color: #334155;
+    }
+    .card-pool {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 16px;
+    }
+    .prob-card {
+        width: 120px;
+        padding: 12px 8px;
+        background: #fff;
+        border: 2px solid #cbd5e1;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #334155;
+        cursor: grab;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: all 0.2s;
+    }
+    .prob-card:active { cursor: grabbing; transform: scale(0.95); }
+    .prob-card .card-val { font-size: 22px; color: #2563eb; font-weight: 800; margin-bottom: 4px; }
+    .prob-card.placed { opacity: 0.4; pointer-events: none; }
+    .drop-zone {
+        position: absolute;
+        top: calc(50% - 50px);
+        transform: translateX(-50%);
+        width: 80px;
+        height: 44px;
+        border: 2px dashed #94a3b8;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #94a3b8;
+        transition: all 0.2s;
+    }
+    .drop-zone.filled {
+        border-style: solid;
+        border-color: #2563eb;
+        background: #eff6ff;
+        color: #1e293b;
+        font-weight: 700;
+        font-size: 16px;
+    }
+    .drop-zone.correct-drop {
+        border-color: #22c55e;
+        background: #f0fdf4;
+    }
+    .drop-zone.wrong-drop {
+        border-color: #ef4444;
+        background: #fef2f2;
+        animation: shake-card 0.4s;
+    }
+    @keyframes shake-card {
+        0%,100% { transform: translateX(-50%); }
+        25% { transform: translateX(calc(-50% - 6px)); }
+        75% { transform: translateX(calc(-50% + 6px)); }
+    }
+    .card-result {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        min-height: 30px;
+        margin-top: 12px;
+    }
+    .card-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 12px;
+    }
+    .card-controls button {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+    }
+    .card-controls button:active { transform: scale(0.97); }
+    .btn-check-cards { background: #2563eb; color: #fff; }
+    .btn-reset-cards { background: #64748b; color: #fff; }
+
+    /* ── 네비게이션 ── */
+    .slide-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 14px 0;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(8px);
+        border-top: 1px solid #e2e8f0;
+        z-index: 100;
+    }
+    .slide-nav-btn {
+        width: 52px;
+        height: 52px;
+        border: 2px solid #2563eb;
+        border-radius: 50%;
+        background: #fff;
+        color: #2563eb;
+        font-size: 22px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .slide-nav-btn:hover { background: #eff6ff; }
+    .slide-nav-btn:active { transform: scale(0.95); background: #dbeafe; }
+    .slide-progress {
+        font-size: 18px;
+        font-weight: 700;
+        color: #334155;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    /* ── Firebase 버튼 ── */
+    .slide-focus-btn, .slide-monitor-btn {
+        position: fixed;
+        z-index: 101;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .slide-focus-btn {
+        bottom: 80px;
+        right: 20px;
+        background: #2563eb;
+        color: #fff;
+    }
+    .slide-monitor-btn {
+        bottom: 80px;
+        right: 130px;
+        background: #3b82f6;
+        color: #fff;
+    }
+    .slide-focus-btn:active, .slide-monitor-btn:active { transform: scale(0.95); }
+
+    /* ── 유도 과정 스타일 ── */
+    .derivation {
+        font-size: 22px;
+        line-height: 2;
+        padding: 16px 20px;
+        background: #f8fafc;
+        border-radius: 10px;
+        margin: 12px 0;
+    }
+    .derivation .step-line {
+        margin-bottom: 8px;
+    }
+    .derivation .arrow-text {
+        color: #2563eb;
+        font-weight: 700;
+        font-size: 16px;
+        margin-left: 8px;
+    }
+    </style>
+
+    <script defer src="https://math-class.it.kr/lib/katex/katex.min.js"></script>
+    <script defer src="https://math-class.it.kr/lib/katex/contrib/auto-render.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <script type="module">
+        import { initFirebaseSlide } from 'https://math-class.it.kr/lib/js/firebase-slide.js';
+        initFirebaseSlide('PS_2-4차시_통계적확률');
+    </script>
+</head>
+<body>
+
+<div class="slide-container">
+
+    <!-- ── 헤더 ── -->
+    <div class="slide-header">
+        <div class="slide-unit">II. 확률</div>
+        <div class="slide-title">1. 확률의 뜻과 활용 &mdash; 통계적 확률</div>
+        <div class="slide-page">교과서 45~47쪽</div>
+    </div>
+
+    <div class="slide-content">
+
+        <!-- ================ Step 1: 제목 & 학습목표 ================ -->
+        <div class="step" data-step="1">
+            <span class="step-label">STEP 1</span>
+            <h2>통계적 확률이란 무엇일까?</h2>
+            <p>수학적 확률은 각 근원사건이 일어날 가능성이 <b>같은 정도로 기대</b>될 때 사용할 수 있었다.<br>
+            그렇다면, 각 결과가 일어날 가능성이 같다고 할 수 <b>없는</b> 경우에는 확률을 어떻게 구할까?</p>
+
+            <div class="obj-box">
+                <h3>학습목표</h3>
+                <ol>
+                    <li>같은 시행을 여러 번 반복할 때 상대도수가 일정한 값에 수렴함을 이해한다.</li>
+                    <li>통계적 확률의 뜻을 알고, 실생활 데이터에서 통계적 확률을 구한다.</li>
+                    <li>확률의 기본 성질을 이해한다.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ================ Step 2: 탐구 도입 ================ -->
+        <div class="step hidden" data-step="2">
+            <span class="step-label">STEP 2</span>
+            <h2>탐구: 동전 던지기의 상대도수</h2>
+            <p>동전을 여러 번 던져서 앞면이 나온 <b>상대도수</b>를 관찰해 보자.</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>시행 횟수</th>
+                        <th>200</th>
+                        <th>400</th>
+                        <th>600</th>
+                        <th>800</th>
+                        <th>1000</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>앞면 횟수</b></td>
+                        <td>92</td>
+                        <td>212</td>
+                        <td>288</td>
+                        <td>408</td>
+                        <td>500</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td><b>상대도수</b></td>
+                        <td>0.46</td>
+                        <td>0.53</td>
+                        <td>0.48</td>
+                        <td>0.51</td>
+                        <td>0.50</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-highlight" style="margin-top:20px;">
+                <h3>생각해 보기</h3>
+                <p>시행 횟수가 커지면 앞면의 상대도수가 어떤 값에 가까워지는지 추측해 보자.</p>
+                <div class="tip-slide" style="margin-top:12px;">
+                    <b>상대도수</b> = (앞면이 나온 횟수) &divide; (전체 시행 횟수)<br>
+                    예) 200번 중 92번 &rarr; 92 &divide; 200 = <b>0.46</b>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================ Step 3: 시뮬레이션 (Interactive 1) ================ -->
+        <div class="step hidden" data-step="3">
+            <span class="step-label">STEP 3 &mdash; 인터랙티브</span>
+            <h2>동전 &middot; 주사위 시뮬레이션</h2>
+            <p>시행 횟수를 늘려 가며 상대도수가 <b>어떤 값에 수렴</b>하는지 직접 확인해 보자.</p>
+
+            <div class="sim-container">
+                <!-- 탭 -->
+                <div class="sim-tabs" id="simTabs">
+                    <button class="active" data-mode="coin">동전 던지기</button>
+                    <button data-mode="dice">주사위 던지기</button>
+                </div>
+
+                <!-- 컨트롤 -->
+                <div class="sim-controls" id="simControls">
+                    <button class="btn-primary" data-n="10">10번 던지기</button>
+                    <button class="btn-primary" data-n="50">50번 던지기</button>
+                    <button class="btn-primary" data-n="100">100번 던지기</button>
+                    <button class="btn-primary" data-n="500">500번 던지기</button>
+                    <button class="btn-danger" id="simReset">초기화</button>
+                </div>
+
+                <!-- 차트 -->
+                <div class="sim-chart-wrap">
+                    <canvas id="simChart"></canvas>
+                </div>
+
+                <!-- 통계 -->
+                <div class="sim-stats" id="simStats">
+                    <span>총 시행: <span class="val" id="simTotal">0</span>회</span>
+                    <span>성공: <span class="val" id="simSuccess">0</span>회</span>
+                    <span>상대도수: <span class="val" id="simFreq">-</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================ Step 4: 통계적 확률 개념 ================ -->
+        <div class="step hidden" data-step="4">
+            <span class="step-label">STEP 4</span>
+            <h2>왜 통계적 확률이 필요할까?</h2>
+
+            <div class="concept-highlight">
+                <h3>수학적 확률의 한계</h3>
+                <p>수학적 확률 $P(A) = \dfrac{n(A)}{n(S)}$는 각 근원사건이 <b>같은 정도로 기대</b>될 때만 사용할 수 있다.</p>
+                <p style="margin-top:10px;">하지만 다음과 같은 상황에서는 각 결과가 일어날 가능성이 같다고 할 수 없다:</p>
+            </div>
+
+            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:16px;">
+                <div style="flex:1; min-width:280px; background:#fefce8; border:1.5px solid #eab308; border-radius:12px; padding:20px;">
+                    <h3 style="color:#854d0e; font-size:20px;">윷놀이</h3>
+                    <p style="font-size:18px;">도, 개, 걸, 윷, 모가 나올 가능성이 모두 같지 않다.<br>
+                    &rarr; 실제로 '도'와 '개'가 훨씬 자주 나온다!</p>
+                </div>
+                <div style="flex:1; min-width:280px; background:#fef2f2; border:1.5px solid #ef4444; border-radius:12px; padding:20px;">
+                    <h3 style="color:#991b1b; font-size:20px;">농구 자유투</h3>
+                    <p style="font-size:18px;">성공/실패 가능성이 반반이 아니다.<br>
+                    &rarr; 선수의 실력에 따라 성공률이 다르다!</p>
+                </div>
+            </div>
+
+            <div class="tip-slide" style="margin-top:16px;">
+                이런 경우에는 <b>실제 시행 데이터</b>(통계)를 이용하여 확률을 구한다!
+            </div>
+        </div>
+
+        <!-- ================ Step 5: 통계적 확률 정의 ================ -->
+        <div class="step hidden" data-step="5">
+            <span class="step-label">STEP 5</span>
+            <h2>통계적 확률의 정의</h2>
+
+            <div class="concept-highlight">
+                <h3>통계적 확률 (statistical probability)</h3>
+                <p>같은 시행을 $n$번 반복할 때, 사건 $A$가 일어난 횟수를 $r_n$이라 하면,<br>
+                시행 횟수 $n$이 한없이 커질 때 사건 $A$의 <b>상대도수</b> $\dfrac{r_n}{n}$이 일정한 값 $p$에 가까워진다.</p>
+            </div>
+
+            <div class="formula-box">
+                $$\frac{r_n}{n} \to p \quad (n \to \infty)$$
+            </div>
+
+            <p style="font-size:22px; text-align:center; margin-top:16px;">
+                이 값 $p$를 사건 $A$가 일어날 <b>통계적 확률</b>이라 한다.
+            </p>
+
+            <div class="tip-slide" style="margin-top:16px;">
+                <b>핵심</b>: 시행 횟수를 <b>충분히 많이</b> 해야 통계적 확률이 의미 있다!<br>
+                &bull; 수학적 확률이 존재하는 경우, 통계적 확률은 수학적 확률에 가까워진다.
+            </div>
+        </div>
+
+        <!-- ================ Step 6: 통계적 확률 계산 (Interactive 2) ================ -->
+        <div class="step hidden" data-step="6">
+            <span class="step-label">STEP 6 &mdash; 인터랙티브</span>
+            <h2>통계적 확률 구하기</h2>
+
+            <div class="calc-interactive">
+                <!-- 문제 A: 농구 자유투 -->
+                <div class="calc-problem">
+                    <h4>문제 A: 농구 자유투</h4>
+                    <p>A 선수가 자유투를 200번 던져서 <b>156번</b> 성공하였다.<br>
+                    이 선수가 자유투를 던질 때, 성공할 통계적 확률을 구하여라.</p>
+                </div>
+                <div class="calc-inputs">
+                    <label>$P(\text{성공})$ = </label>
+                    <input type="text" id="calcA_num" placeholder="분자" style="width:70px;">
+                    <span style="font-size:28px;">/</span>
+                    <input type="text" id="calcA_den" placeholder="분모" style="width:70px;">
+                    <span>=</span>
+                    <input type="text" id="calcA_dec" placeholder="소수" style="width:90px;">
+                    <button id="calcA_check">확인</button>
+                </div>
+                <div class="calc-feedback" id="calcA_fb"></div>
+
+                <hr style="margin:24px 0; border:none; border-top:1px solid #e2e8f0;">
+
+                <!-- 문제 B: 출생 통계 -->
+                <div class="calc-problem">
+                    <h4>문제 B: 출생 통계</h4>
+                    <p>어느 해 태어난 아이 1000명 중 남자아이가 <b>515명</b>이었다.<br>
+                    남자아이가 태어날 통계적 확률을 구하여라.</p>
+                </div>
+                <div class="calc-inputs">
+                    <label>$P(\text{남아})$ = </label>
+                    <input type="text" id="calcB_num" placeholder="분자" style="width:70px;">
+                    <span style="font-size:28px;">/</span>
+                    <input type="text" id="calcB_den" placeholder="분모" style="width:70px;">
+                    <span>=</span>
+                    <input type="text" id="calcB_dec" placeholder="소수" style="width:90px;">
+                    <button id="calcB_check">확인</button>
+                </div>
+                <div class="calc-feedback" id="calcB_fb"></div>
+            </div>
+        </div>
+
+        <!-- ================ Step 7: 확률의 기본 성질 탐구 (Interactive 3) ================ -->
+        <div class="step hidden" data-step="7">
+            <span class="step-label">STEP 7 &mdash; 인터랙티브</span>
+            <h2>확률의 기본 성질 탐구</h2>
+            <p>아래 확률 카드를 수직선 위 알맞은 위치에 놓아 보자.</p>
+
+            <div class="card-activity" id="cardActivity">
+                <!-- 수직선 -->
+                <div class="number-line-wrap" id="nlWrap">
+                    <div class="number-line" id="numLine"></div>
+                    <!-- 눈금과 라벨은 JS에서 생성 -->
+                </div>
+
+                <!-- 카드 풀 -->
+                <div class="card-pool" id="cardPool">
+                    <!-- JS에서 생성 -->
+                </div>
+
+                <div class="card-controls">
+                    <button class="btn-check-cards" id="btnCheckCards">확인</button>
+                    <button class="btn-reset-cards" id="btnResetCards">초기화</button>
+                </div>
+                <div class="card-result" id="cardResult"></div>
+            </div>
+        </div>
+
+        <!-- ================ Step 8: 확률의 기본 성질 유도 ================ -->
+        <div class="step hidden" data-step="8">
+            <span class="step-label">STEP 8</span>
+            <h2>확률의 기본 성질 유도</h2>
+
+            <div class="concept-highlight">
+                <h3>표본공간 $S$, 사건 $A$에 대하여</h3>
+                <div class="derivation">
+                    <div class="step-line"><b>Step 1.</b> &nbsp; $A \subseteq S$이므로 $\emptyset \subseteq A \subseteq S$</div>
+                    <div class="step-line"><b>Step 2.</b> &nbsp; 원소의 수: $0 \le n(A) \le n(S)$</div>
+                    <div class="step-line"><b>Step 3.</b> &nbsp; 양변을 $n(S)$로 나누면:</div>
+                    <div style="text-align:center; padding:16px; font-size:26px;">
+                        $$\frac{0}{n(S)} \le \frac{n(A)}{n(S)} \le \frac{n(S)}{n(S)}$$
+                    </div>
+                    <div class="step-line"><b>Step 4.</b> &nbsp; 즉,</div>
+                    <div style="text-align:center; padding:16px; font-size:28px; color:#2563eb; font-weight:700;">
+                        $$0 \le P(A) \le 1$$
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:16px;">
+                <div style="flex:1; min-width:240px; text-align:center; background:#eff6ff; border:2px solid #2563eb; border-radius:12px; padding:20px;">
+                    <p style="font-size:18px; color:#64748b; margin-bottom:8px;">반드시 일어나는 사건</p>
+                    <p style="font-size:26px; font-weight:800; color:#2563eb;">$P(S) = \dfrac{n(S)}{n(S)} = 1$</p>
+                </div>
+                <div style="flex:1; min-width:240px; text-align:center; background:#fef2f2; border:2px solid #ef4444; border-radius:12px; padding:20px;">
+                    <p style="font-size:18px; color:#64748b; margin-bottom:8px;">절대로 일어나지 않는 사건</p>
+                    <p style="font-size:26px; font-weight:800; color:#ef4444;">$P(\varnothing) = \dfrac{0}{n(S)} = 0$</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================ Step 9: 확률의 기본 성질 정리 ================ -->
+        <div class="step hidden" data-step="9">
+            <span class="step-label">STEP 9</span>
+            <h2>확률의 기본 성질</h2>
+
+            <div class="property-card">
+                <h3>확률의 기본 성질</h3>
+                <div class="property-item">
+                    <span class="property-num">1</span>
+                    <span>임의의 사건 $A$에 대하여 &nbsp; $0 \le P(A) \le 1$</span>
+                </div>
+                <div class="property-item">
+                    <span class="property-num">2</span>
+                    <span>반드시 일어나는 사건(전사건) &nbsp; $P(S) = 1$</span>
+                </div>
+                <div class="property-item">
+                    <span class="property-num">3</span>
+                    <span>절대로 일어나지 않는 사건(공사건) &nbsp; $P(\varnothing) = 0$</span>
+                </div>
+            </div>
+
+            <div class="tip-slide" style="margin-top:16px;">
+                <b>참고</b>: 통계적 확률도 위의 기본 성질을 만족한다.<br>
+                &bull; 상대도수 $\frac{r_n}{n}$은 항상 $0$ 이상 $1$ 이하이다.<br>
+                &bull; 모든 시행에서 사건 $S$는 반드시 일어나므로 상대도수가 $1$이다.
+            </div>
+        </div>
+
+        <!-- ================ Step 10: 문제 6 ================ -->
+        <div class="step hidden" data-step="10">
+            <span class="step-label">STEP 10</span>
+            <h2>문제 풀이</h2>
+
+            <div class="problem-slide">
+                <span class="p-label">문제 6</span>
+                <p style="font-size:20px;">어느 공장에서 생산하는 전구의 수명을 조사하였더니 다음 표와 같다.</p>
+
+                <table class="data-table" style="margin:16px 0;">
+                    <thead>
+                        <tr>
+                            <th>수명 (시간)</th>
+                            <th>900 이상<br>1000 미만</th>
+                            <th>1000 이상<br>1100 미만</th>
+                            <th>1100 이상<br>1200 미만</th>
+                            <th>1200 이상<br>1300 미만</th>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>전구 수</b></td>
+                            <td>60</td>
+                            <td>350</td>
+                            <td>480</td>
+                            <td>110</td>
+                            <td>1000</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="font-size:20px;">이 공장에서 생산하는 전구 1개의 수명이 1100시간 이상일 확률을 구하여라.</p>
+            </div>
+
+            <div class="solution-box hidden-sol" id="sol6" onclick="this.classList.toggle('hidden-sol'); this.classList.toggle('revealed');">
+                <p><b>풀이</b></p>
+                <p>1100시간 이상인 전구의 수 = 480 + 110 = <b>590</b>개</p>
+                <p>전체 전구 수 = <b>1000</b>개</p>
+                <p style="margin-top:8px;">$P(\text{1100시간 이상}) = \dfrac{590}{1000} = \boldsymbol{0.59}$</p>
+            </div>
+            <p class="reveal-hint" id="revealHint6">(클릭하면 풀이가 보입니다)</p>
+        </div>
+
+    </div><!-- /slide-content -->
+
+    <!-- ── 네비게이션 ── -->
+    <div class="slide-nav">
+        <button class="slide-nav-btn" id="btnPrev">&#9664;</button>
+        <span class="slide-progress" id="slideProgress">1 / 10</span>
+        <button class="slide-nav-btn" id="btnNext">&#9654;</button>
+    </div>
+
+    <!-- Firebase 버튼 -->
+    <button class="slide-focus-btn" id="btnFocus" title="집중">집중</button>
+    <button class="slide-monitor-btn" id="btnMonitor" title="모니터">모니터</button>
+
+</div><!-- /slide-container -->
+
+
+<!-- ======================== JavaScript ======================== -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    /* ── KaTeX 렌더링 ── */
+    function renderKaTeX() {
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false }
+                ],
+                throwOnError: false
+            });
+        }
+    }
+    // 약간의 딜레이 후 렌더링 (defer 스크립트 로딩 대기)
+    setTimeout(renderKaTeX, 200);
+
+    /* ═══════════════════════════════════════
+       1. Step 네비게이션
+    ═══════════════════════════════════════ */
+    const steps = document.querySelectorAll('.step');
+    const totalSteps = steps.length;
+    let currentStep = 0;
+
+    function showStep(index) {
+        steps.forEach((s, i) => {
+            s.classList.toggle('hidden', i > index);
+        });
+        document.getElementById('slideProgress').textContent = `${index + 1} / ${totalSteps}`;
+        steps[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // 새 step 표시 후 KaTeX 재렌더링
+        setTimeout(renderKaTeX, 50);
+    }
+
+    document.getElementById('btnNext').addEventListener('click', () => {
+        if (currentStep < totalSteps - 1) { currentStep++; showStep(currentStep); }
+    });
+    document.getElementById('btnPrev').addEventListener('click', () => {
+        if (currentStep > 0) { currentStep--; showStep(currentStep); }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            if (currentStep < totalSteps - 1) { currentStep++; showStep(currentStep); }
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            if (currentStep > 0) { currentStep--; showStep(currentStep); }
+        }
+    });
+
+    showStep(0);
+
+
+    /* ═══════════════════════════════════════
+       2. Step 3: 동전 / 주사위 시뮬레이션
+    ═══════════════════════════════════════ */
+    let simMode = 'coin'; // 'coin' | 'dice'
+    let simData = { total: 0, success: 0, history: [] };
+    let simChart = null;
+
+    function initSimChart() {
+        const ctx = document.getElementById('simChart');
+        if (!ctx) return;
+        if (simChart) simChart.destroy();
+        simChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '상대도수',
+                    data: [],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.08)',
+                    borderWidth: 2.5,
+                    pointRadius: 0,
+                    fill: true,
+                    tension: 0.3
+                }, {
+                    label: '이론값',
+                    data: [],
+                    borderColor: '#ef4444',
+                    borderWidth: 2,
+                    borderDash: [8, 4],
+                    pointRadius: 0,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 300 },
+                scales: {
+                    x: { title: { display: true, text: '시행 횟수', font: { size: 14, weight: 'bold' } } },
+                    y: { min: 0, max: 1, title: { display: true, text: '상대도수', font: { size: 14, weight: 'bold' } } }
+                },
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 14 } } }
+                }
+            }
+        });
+    }
+
+    function runSimulation(n) {
+        const theoryVal = simMode === 'coin' ? 0.5 : (1/6);
+        for (let i = 0; i < n; i++) {
+            simData.total++;
+            let success = false;
+            if (simMode === 'coin') {
+                success = Math.random() < 0.5;
+            } else {
+                success = (Math.floor(Math.random() * 6) + 1) === 1;
+            }
+            if (success) simData.success++;
+            // 기록 (너무 많으면 샘플링)
+            if (simData.total <= 50 || simData.total % Math.max(1, Math.floor(simData.total / 200)) === 0) {
+                simData.history.push({ x: simData.total, y: simData.success / simData.total });
+            }
+        }
+        // 마지막 점 반드시 추가
+        const lastFreq = simData.success / simData.total;
+        if (simData.history.length === 0 || simData.history[simData.history.length - 1].x !== simData.total) {
+            simData.history.push({ x: simData.total, y: lastFreq });
+        }
+
+        // 차트 업데이트
+        if (simChart) {
+            simChart.data.labels = simData.history.map(h => h.x);
+            simChart.data.datasets[0].data = simData.history.map(h => h.y);
+            simChart.data.datasets[1].data = simData.history.map(() => theoryVal);
+            simChart.update();
+        }
+
+        // 통계 업데이트
+        document.getElementById('simTotal').textContent = simData.total;
+        document.getElementById('simSuccess').textContent = simData.success;
+        document.getElementById('simFreq').textContent = lastFreq.toFixed(4);
+    }
+
+    function resetSim() {
+        simData = { total: 0, success: 0, history: [] };
+        document.getElementById('simTotal').textContent = '0';
+        document.getElementById('simSuccess').textContent = '0';
+        document.getElementById('simFreq').textContent = '-';
+        initSimChart();
+    }
+
+    // 탭 전환
+    document.getElementById('simTabs').addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        document.querySelectorAll('#simTabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        simMode = btn.dataset.mode;
+        resetSim();
+    });
+
+    // 던지기 버튼
+    document.getElementById('simControls').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-n]');
+        if (btn) runSimulation(parseInt(btn.dataset.n));
+    });
+    document.getElementById('simReset').addEventListener('click', resetSim);
+
+    // Chart.js 로딩 대기 후 초기화
+    function waitForChartJS() {
+        if (typeof Chart !== 'undefined') {
+            initSimChart();
+        } else {
+            setTimeout(waitForChartJS, 100);
+        }
+    }
+    waitForChartJS();
+
+
+    /* ═══════════════════════════════════════
+       3. Step 6: 통계적 확률 계산
+    ═══════════════════════════════════════ */
+    function setupCalc(prefix, correctNum, correctDen, correctDec) {
+        const numEl = document.getElementById(`${prefix}_num`);
+        const denEl = document.getElementById(`${prefix}_den`);
+        const decEl = document.getElementById(`${prefix}_dec`);
+        const fbEl = document.getElementById(`${prefix}_fb`);
+        const btnEl = document.getElementById(`${prefix}_check`);
+
+        btnEl.addEventListener('click', () => {
+            const num = parseInt(numEl.value);
+            const den = parseInt(denEl.value);
+            const dec = parseFloat(decEl.value);
+
+            if (isNaN(num) || isNaN(den)) {
+                fbEl.textContent = '분자와 분모를 입력해 주세요.';
+                fbEl.className = 'calc-feedback wrong';
+                return;
+            }
+
+            const numOk = (num === correctNum);
+            const denOk = (den === correctDen);
+            const decOk = !isNaN(dec) && Math.abs(dec - correctDec) < 0.005;
+
+            if (numOk && denOk && decOk) {
+                fbEl.innerHTML = `정답! $P = \\frac{${correctNum}}{${correctDen}} = ${correctDec}$`;
+                fbEl.className = 'calc-feedback correct';
+            } else if (numOk && denOk && isNaN(dec)) {
+                fbEl.textContent = `분수는 맞습니다! 소수로도 나타내 보세요.`;
+                fbEl.className = 'calc-feedback correct';
+            } else {
+                fbEl.textContent = `다시 생각해 보세요. 상대도수 = (해당 횟수) ÷ (전체 횟수)`;
+                fbEl.className = 'calc-feedback wrong';
+            }
+            setTimeout(renderKaTeX, 50);
+        });
+    }
+
+    setupCalc('calcA', 156, 200, 0.78);
+    setupCalc('calcB', 515, 1000, 0.515);
+
+
+    /* ═══════════════════════════════════════
+       4. Step 7: 확률 카드 배치 활동
+    ═══════════════════════════════════════ */
+    const cardData = [
+        { label: '동전 앞면', val: '1/2', numVal: 0.5 },
+        { label: '주사위 1', val: '1/6', numVal: 1/6 },
+        { label: '전사건 S', val: '1', numVal: 1.0 },
+        { label: '공사건 ∅', val: '0', numVal: 0.0 },
+        { label: '자유투 성공', val: '0.78', numVal: 0.78 },
+        { label: '남아 출생', val: '0.515', numVal: 0.515 }
+    ];
+
+    const dropPositions = [0, 1/6, 0.5, 0.515, 0.78, 1.0]; // 수직선 위 위치
+    let placedCards = {};
+    let selectedCard = null;
+
+    function initCardActivity() {
+        const nlWrap = document.getElementById('nlWrap');
+        const numLine = document.getElementById('numLine');
+        const cardPool = document.getElementById('cardPool');
+        if (!nlWrap || !numLine || !cardPool) return;
+
+        // 눈금 생성
+        const existingTicks = nlWrap.querySelectorAll('.nl-tick, .nl-label, .drop-zone');
+        existingTicks.forEach(el => el.remove());
+
+        const ticks = [0, 0.25, 0.5, 0.75, 1.0];
+        ticks.forEach(t => {
+            const pct = t * 100;
+            const tick = document.createElement('div');
+            tick.className = 'nl-tick';
+            tick.style.left = `calc(40px + ${pct}% * (100% - 80px) / 100)`;
+            tick.style.left = `calc(40px + (100% - 80px) * ${t})`;
+            numLine.appendChild(tick);
+
+            const lbl = document.createElement('div');
+            lbl.className = 'nl-label';
+            lbl.style.left = `calc(40px + (100% - 80px) * ${t})`;
+            lbl.textContent = t;
+            nlWrap.appendChild(lbl);
+        });
+
+        // 드롭존 생성
+        dropPositions.forEach((pos, i) => {
+            const dz = document.createElement('div');
+            dz.className = 'drop-zone';
+            dz.style.left = `calc(40px + (100% - 80px) * ${pos})`;
+            dz.dataset.pos = pos;
+            dz.dataset.idx = i;
+            dz.textContent = '?';
+            dz.addEventListener('click', () => {
+                if (selectedCard !== null) {
+                    placeCard(selectedCard, i, pos);
+                }
+            });
+            nlWrap.appendChild(dz);
+        });
+
+        // 카드 풀 생성
+        cardPool.innerHTML = '';
+        const shuffled = [...cardData].sort(() => Math.random() - 0.5);
+        shuffled.forEach((cd, i) => {
+            const card = document.createElement('div');
+            card.className = 'prob-card';
+            card.dataset.idx = cardData.indexOf(cd);
+            card.innerHTML = `<div class="card-val">${cd.val}</div>${cd.label}`;
+            card.addEventListener('click', () => {
+                if (card.classList.contains('placed')) return;
+                document.querySelectorAll('.prob-card').forEach(c => c.style.borderColor = '#cbd5e1');
+                card.style.borderColor = '#2563eb';
+                selectedCard = cardData.indexOf(cd);
+            });
+            cardPool.appendChild(card);
+        });
+
+        placedCards = {};
+        selectedCard = null;
+        document.getElementById('cardResult').textContent = '';
+    }
+
+    function placeCard(cardIdx, dzIdx, pos) {
+        const cd = cardData[cardIdx];
+        const dzs = document.querySelectorAll('.drop-zone');
+        const dz = dzs[dzIdx];
+
+        // 이미 놓인 자리면 제거
+        if (placedCards[dzIdx] !== undefined) {
+            const prevIdx = placedCards[dzIdx];
+            const prevCard = document.querySelector(`.prob-card[data-idx="${prevIdx}"]`);
+            if (prevCard) prevCard.classList.remove('placed');
+            delete placedCards[dzIdx];
+        }
+
+        placedCards[dzIdx] = cardIdx;
+        dz.textContent = cd.val;
+        dz.classList.add('filled');
+        dz.classList.remove('correct-drop', 'wrong-drop');
+
+        const cardEl = document.querySelector(`.prob-card[data-idx="${cardIdx}"]`);
+        if (cardEl) cardEl.classList.add('placed');
+
+        selectedCard = null;
+        document.querySelectorAll('.prob-card').forEach(c => c.style.borderColor = '#cbd5e1');
+    }
+
+    document.getElementById('btnCheckCards')?.addEventListener('click', () => {
+        const dzs = document.querySelectorAll('.drop-zone');
+        let correct = 0;
+
+        dzs.forEach((dz, i) => {
+            const dzPos = parseFloat(dz.dataset.pos);
+            const cardIdx = placedCards[i];
+            if (cardIdx === undefined) return;
+
+            const cd = cardData[cardIdx];
+            if (Math.abs(cd.numVal - dzPos) < 0.01) {
+                dz.classList.add('correct-drop');
+                dz.classList.remove('wrong-drop');
+                correct++;
+            } else {
+                dz.classList.add('wrong-drop');
+                dz.classList.remove('correct-drop');
+            }
+        });
+
+        const total = dropPositions.length;
+        const placed = Object.keys(placedCards).length;
+        const resultEl = document.getElementById('cardResult');
+
+        if (placed < total) {
+            resultEl.textContent = `카드를 먼저 선택한 후 수직선의 ? 위치를 클릭하세요. (${placed}/${total} 배치됨)`;
+            resultEl.style.color = '#64748b';
+        } else if (correct === total) {
+            resultEl.textContent = `모두 정답입니다! 확률은 0 이상 1 이하의 값을 가집니다.`;
+            resultEl.style.color = '#16a34a';
+        } else {
+            resultEl.textContent = `${correct}/${total} 정답. 틀린 카드(빨간색)를 다시 배치해 보세요.`;
+            resultEl.style.color = '#dc2626';
+        }
+    });
+
+    document.getElementById('btnResetCards')?.addEventListener('click', initCardActivity);
+
+    // 초기화
+    initCardActivity();
+});
+</script>
+
+</body>
+</html>
